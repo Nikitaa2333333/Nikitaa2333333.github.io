@@ -1,0 +1,545 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import FooterContacts from '../components/sections/FooterContacts.astro';
+import PageCta from '../components/sections/PageCta.astro';
+
+/* ============================================================
+   «Молекулярно-генетические исследования» — страница раздела
+   «Диагностика» (ТЗ, пункт меню 3). Сестра /onkomarkery: тот же
+   page-hero, .sec / .sec-head / .sec-lead, те же карточки, статичный
+   FAQ, CTA + нормативная плашка ФЗ-38, reveal-скрипт.
+
+   Заменяет прежнюю «статью блога» /stati/molekulyarnaya-diagnostika
+   (устаревшая шапка, собственный подвал, .prose, blockquote, автор
+   с аватаркой). Смысл текста сохранён и развёрнут до объёма страницы.
+
+   Сценарий:
+   1) hero + главная мысль «лечим не орган, а мишень»;
+   2) от лечения «по органу» к лечению «по мишени» (две колонки);
+   3) что показывают тесты (мутации, слияния, амплификации, MSI);
+   4) три метода — ПЦР / FISH / NGS (справочная таблица);
+   5) на каком материале делают тест (блок и стёкла, жидкостная биопсия);
+   6) кому показано (чек-лист);
+   7) сроки и как выглядит результат + молекулярный консилиум;
+   8) мишень найдена / мишень не найдена + клинические исследования;
+   9) как подготовиться и что принести (чек-лист);
+   10) что дальше — внутренние ссылки;
+   11) FAQ;
+   12) CTA + нормативная плашка.
+   Конкретика клиники (сроки, панели, цены, ФИО) — видимыми заглушками.
+   ============================================================ */
+
+const icon: Record<string, string> = {
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+};
+
+// — Экран 3. Что именно ищут в опухоли —
+const findings = [
+  {
+    t: 'Драйверные мутации',
+    d: 'Поломки в&nbsp;генах, которые «включают» бесконтрольное деление клетки&nbsp;— например EGFR, KRAS, BRAF. Для части из&nbsp;них уже существуют препараты, действующие точно на&nbsp;этот механизм.',
+  },
+  {
+    t: 'Перестройки и&nbsp;слияния генов',
+    d: 'Два гена соединяются в&nbsp;один и&nbsp;дают белок, которого в&nbsp;норме нет&nbsp;— так работают ALK и&nbsp;ROS1. Это отдельный класс мишеней со&nbsp;своими препаратами.',
+  },
+  {
+    t: 'Амплификации',
+    d: 'Избыточное число копий гена: клетка производит слишком много «сигнала к&nbsp;росту». Классический пример&nbsp;— HER2 при раке молочной железы и&nbsp;желудка.',
+  },
+  {
+    t: 'Микросателлитная нестабильность (MSI)',
+    d: 'Признак того, что в&nbsp;клетке нарушена починка ДНК. Такие опухоли чаще отвечают на&nbsp;иммунотерапию, поэтому MSI проверяют отдельно.',
+  },
+];
+
+// — Экран 4. Три метода: что находит и когда выбирают —
+const methods = [
+  {
+    abbr: 'ПЦР',
+    what: 'Известную мутацию в&nbsp;конкретной точке гена',
+    when: 'Когда врач проверяет одну-две заранее очерченные мишени. Быстро и&nbsp;прицельно, но&nbsp;находит только то, что искали.',
+  },
+  {
+    abbr: 'FISH',
+    what: 'Перестройки и&nbsp;амплификации прямо в&nbsp;ткани',
+    when: 'Незаменима там, где нужно увидеть событие в&nbsp;клетке&nbsp;— HER2, ALK. Результат оценивают под микроскопом.',
+  },
+  {
+    abbr: 'NGS',
+    what: 'Десятки и&nbsp;сотни генов за&nbsp;один запуск',
+    when: 'Когда мишень неизвестна или прицельные тесты ничего не&nbsp;дали. Находит редкие изменения, которые узкие методы пропускают.',
+  },
+];
+
+// — Экран 5. Материал для теста —
+const material = [
+  {
+    t: 'Опухолевая ткань: блок и&nbsp;стёкла',
+    d: 'Основной материал&nbsp;— парафиновый блок и&nbsp;стёкла, полученные при <a href="/biopsiya">биопсии</a> или операции. Отдельно брать анализ крови «на&nbsp;генетику опухоли» не&nbsp;нужно: тест делают из&nbsp;того&nbsp;же материала, по&nbsp;которому поставлен диагноз.',
+  },
+  {
+    t: 'Жидкостная биопсия',
+    d: 'Фрагменты ДНК опухоли иногда удаётся поймать в&nbsp;крови. Это выручает, когда ткани мало или повторная биопсия трудна&nbsp;— но&nbsp;метод не&nbsp;универсален: при небольшой опухолевой нагрузке ДНК может не&nbsp;попасть в&nbsp;кровь, и&nbsp;отрицательный результат мишень не&nbsp;исключает.',
+  },
+];
+
+// — Экран 6. Кому показано —
+const whoFor = [
+  { t: 'Опухоль распространённая или вернулась', d: 'Именно в&nbsp;этих ситуациях выбор препарата чаще всего зависит от&nbsp;молекулярного профиля.' },
+  { t: 'Стандартная схема перестала работать', d: 'Тест помогает найти следующий вариант терапии, а&nbsp;не&nbsp;перебирать схемы наугад.' },
+  { t: 'Для вашей нозологии есть таргетные препараты или иммунотерапия', d: 'Тогда исследование назначают, чтобы понять, подходит&nbsp;ли препарат именно вам.' },
+  { t: 'Обсуждается участие в&nbsp;клиническом исследовании', d: 'Протоколы почти всегда требуют подтверждённый молекулярный статус опухоли.' },
+  { t: 'Диагноз неясен или первичный очаг не&nbsp;найден', d: 'Молекулярный профиль иногда подсказывает происхождение опухоли, когда обычные методы молчат.' },
+];
+
+// — Экран 7. Как выглядит результат —
+const result = [
+  { t: 'Сроки', d: 'Прицельные тесты выполняются быстрее, широкие панели&nbsp;— дольше: [X]&nbsp;рабочих дней. Точный срок для вашего исследования&nbsp;— [уточняется у&nbsp;клиники].' },
+  { t: 'Что в&nbsp;заключении', d: 'Перечень исследованных генов, найденные изменения и&nbsp;их клиническая значимость: есть&nbsp;ли зарегистрированный препарат, есть&nbsp;ли подходящий протокол.' },
+  { t: 'Кто разбирает', d: 'Заключение не&nbsp;остаётся набором букв и&nbsp;цифр: его читают вместе с&nbsp;историей болезни, снимками и&nbsp;гистологией.' },
+];
+
+// — Экран 8. Мишень найдена / не найдена —
+const outcome = [
+  {
+    t: 'Мишень найдена',
+    d: 'Врач сопоставляет находку с&nbsp;зарегистрированными показаниями и&nbsp;подбирает схему&nbsp;— таргетный препарат, иммунотерапию или их комбинацию с&nbsp;<a href="/lechenie/himioterapiya">химиотерапией</a>. Само наличие мутации ещё не&nbsp;означает, что препарат назначат: учитываются стадия, состояние, сопутствующие болезни.',
+  },
+  {
+    t: 'Мишень не&nbsp;найдена',
+    d: 'Это не&nbsp;тупик и&nbsp;не&nbsp;плохой прогноз. Лечение строится по&nbsp;стандартам для вашей нозологии&nbsp;— <a href="/lechenie">как выбирается метод</a>. При прогрессировании тест иногда повторяют или расширяют панель: опухоль меняется со&nbsp;временем, и&nbsp;новая мишень может появиться.',
+  },
+];
+
+// — Экран 9. Подготовка и что принести —
+const prep = [
+  { t: 'Возьмите гистологическое заключение', d: 'В&nbsp;нём указан диагноз, номер исследования и&nbsp;лаборатория&nbsp;— по&nbsp;этим данным запрашивают архивный материал.' },
+  { t: 'Уточните, где хранится блок и&nbsp;стёкла', d: 'Материал остаётся в&nbsp;патологоанатомическом отделении той больницы, где делали биопсию или операцию. Его выдают на&nbsp;руки по&nbsp;заявлению.' },
+  { t: 'Принесите выписки о&nbsp;прошлом лечении', d: 'Какие схемы вы&nbsp;получали и&nbsp;как на&nbsp;них отвечала опухоль&nbsp;— это влияет на&nbsp;выбор объёма тестирования.' },
+  { t: 'Захватите снимки и&nbsp;диски', d: 'КТ, МРТ, ПЭТ&nbsp;— заключения и&nbsp;сами исследования на&nbsp;диске или в&nbsp;виде ссылки.' },
+  { t: 'Готовиться физически не&nbsp;нужно', d: 'Тест делают из&nbsp;уже взятого материала&nbsp;— ни&nbsp;диеты, ни&nbsp;голодания, ни&nbsp;отмены лекарств не&nbsp;требуется.' },
+];
+
+// — Экран 10. Что дальше: внутренние ссылки —
+const next = [
+  {
+    t: 'Биопсия и&nbsp;гистология',
+    d: 'Материал для молекулярного теста даёт биопсия&nbsp;— и&nbsp;она&nbsp;же ставит окончательный диагноз. Здесь&nbsp;же&nbsp;— пересмотр стёкол.',
+    href: '/biopsiya',
+  },
+  {
+    t: 'Онкомаркеры',
+    d: 'Анализ крови, который отражает динамику процесса, но&nbsp;диагноз не&nbsp;ставит и&nbsp;мишень для препарата не&nbsp;показывает.',
+    href: '/onkomarkery',
+  },
+  {
+    t: 'Как выбирается метод лечения',
+    d: 'Что происходит после теста: чем отличаются таргетная терапия, иммунотерапия и&nbsp;химиотерапия и&nbsp;почему их комбинируют.',
+    href: '/lechenie',
+  },
+  {
+    t: 'Цены',
+    d: 'Стоимость консультаций и&nbsp;исследований. Молекулярные тесты различаются по&nbsp;объёму, поэтому цену считают под конкретную задачу.',
+    href: '/stoimost',
+  },
+];
+
+// — Экран 11. FAQ (статичный список, две колонки) —
+const faq = [
+  {
+    q: 'Это то&nbsp;же самое, что тест на&nbsp;наследственный рак?',
+    a: 'Нет. Здесь исследуют ДНК самой опухоли&nbsp;— изменения, возникшие в&nbsp;её клетках и&nbsp;по&nbsp;наследству не&nbsp;передающиеся. Наследственная предрасположенность (например BRCA в&nbsp;здоровых клетках) изучается отдельным тестом, по&nbsp;крови или слюне, и&nbsp;решает другую задачу.',
+  },
+  {
+    q: 'Нужно&nbsp;ли делать тест каждому пациенту?',
+    a: 'Нет. Исследование имеет смысл, когда от&nbsp;его результата зависит решение о&nbsp;лечении. Если для вашей ситуации нет препаратов с&nbsp;мишенью, а&nbsp;стандартная схема работает, тест ничего не&nbsp;изменит. Показания определяет лечащий врач.',
+  },
+  {
+    q: 'Придётся делать повторную биопсию?',
+    a: 'Чаще всего нет: подходит архивный материал прошлой биопсии или операции. Повторный забор обсуждают, если ткани не&nbsp;хватило, материал слишком старый или опухоль после лечения изменилась и&nbsp;нужен свежий срез.',
+  },
+  {
+    q: 'Сколько ждать результат?',
+    a: 'Прицельные методы дают ответ быстрее, широкие NGS-панели&nbsp;— дольше. Ориентир&nbsp;— [X]&nbsp;рабочих дней; срок по&nbsp;конкретному исследованию&nbsp;— [уточняется у&nbsp;клиники]. Часть времени уходит на&nbsp;получение материала из&nbsp;другой больницы.',
+  },
+  {
+    q: 'Можно&nbsp;ли обойтись анализом крови вместо биопсии?',
+    a: 'Иногда&nbsp;— да, это жидкостная биопсия. Но&nbsp;она не&nbsp;заменяет исследование ткани: если опухолевой ДНК в&nbsp;крови мало, тест может ничего не&nbsp;найти при реально существующей мишени. Отрицательный результат в&nbsp;крови обычно требует проверки по&nbsp;ткани.',
+  },
+  {
+    q: 'А&nbsp;если мишень нашли, но&nbsp;препарат не&nbsp;зарегистрирован в&nbsp;России?',
+    a: 'Такое бывает. Тогда обсуждают участие в&nbsp;клиническом исследовании либо лечение по&nbsp;стандартам с&nbsp;другим механизмом действия. Возможности по&nbsp;конкретной мишени врач разбирает на&nbsp;приёме&nbsp;— [уточняется у&nbsp;клиники].',
+  },
+  {
+    q: 'Можно принести результат теста, сделанного в&nbsp;другом месте?',
+    a: 'Да. Врач оценит, что именно исследовали, каким методом и&nbsp;достаточен&nbsp;ли объём для решения о&nbsp;терапии. Иногда прошлого заключения хватает, иногда нужно дополнить его отдельным тестом.',
+  },
+  {
+    q: 'Сколько это стоит?',
+    a: 'Цена зависит от&nbsp;метода и&nbsp;числа генов в&nbsp;панели: прицельная ПЦР и&nbsp;широкое секвенирование различаются в&nbsp;разы. Актуальные позиции&nbsp;— в&nbsp;<a href="/stoimost">разделе «Цены»</a>, расчёт под вашу задачу&nbsp;— [уточняется у&nbsp;клиники].',
+  },
+];
+---
+
+<Base
+  title="Молекулярно-генетические исследования: NGS, ПЦР, FISH — КТМ"
+  description="Молекулярно-генетическая диагностика опухоли в Санкт-Петербурге: NGS, ПЦР, FISH. Что показывают тесты, на каком материале их делают, кому показано и как результат меняет выбор препарата."
+>
+  <Header current="mgi" />
+
+  <!-- HERO страницы -->
+  <section class="page-hero">
+    <div class="blob" style="width:480px;height:480px;background:var(--c-wash-teal);top:-160px;left:-60px;"></div>
+    <div class="blob" style="width:420px;height:420px;background:var(--c-wash-blue);top:-80px;right:-40px;"></div>
+    <div class="wrap" style="position:relative;z-index:1;">
+      <nav class="crumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a><span aria-hidden="true">/</span><a href="/onkomarkery">Диагностика</a><span aria-hidden="true">/</span><span>Молекулярно-генетические исследования</span>
+      </nav>
+      <div class="page-eyebrow">Диагностика</div>
+      <h1 class="page-title">Молекулярно-генетические <em class="i-serif">исследования</em></h1>
+      <p class="page-sub">Две внешне похожие опухоли могут нести совершенно разные генетические поломки&nbsp;— и&nbsp;отвечать на&nbsp;лечение по-разному. Молекулярные тесты читают «инструкции» опухоли и&nbsp;показывают, какой препарат имеет шанс подействовать именно в&nbsp;этом случае.</p>
+      <div class="hero-cta">
+        <a href="#contacts" class="btn btn-dark">Записаться на&nbsp;консультацию</a>
+        <a href="#methods" class="btn btn-light">Три метода: ПЦР, FISH, NGS</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ОТ ОРГАНА К МИШЕНИ -->
+  <section class="sec" id="target">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>От&nbsp;лечения «по&nbsp;органу»&nbsp;— к&nbsp;лечению «по&nbsp;мишени»</h2>
+      </div>
+      <!-- Ровно ДВЕ равные колонки: широкого лида над ними нет (правило меры строки) -->
+      <div class="lead-grid">
+        <div class="lead-col">
+          <p class="lead-para">Классическая онкология опирается на&nbsp;то, где возникла опухоль и&nbsp;как она выглядит под микроскопом. Этого достаточно, чтобы поставить диагноз, но&nbsp;не&nbsp;всегда достаточно, чтобы выбрать препарат: под одним названием скрываются опухоли с&nbsp;разной «начинкой».</p>
+          <p class="lead-para">Молекулярно-генетическое исследование смещает фокус с&nbsp;вопроса «где» на&nbsp;вопрос «что именно сломалось». Оно анализирует ДНК и&nbsp;РНК опухолевых клеток и&nbsp;ищет изменения, которые движут ростом.</p>
+        </div>
+        <div class="lead-col">
+          <p class="lead-para">Найденная поломка&nbsp;— это потенциальная мишень. Если для неё есть препарат, лечение перестаёт быть подбором «по&nbsp;нозологии» и&nbsp;становится точечным воздействием на&nbsp;конкретный механизм.</p>
+          <p class="lead-para">Молекулярный профиль <mark>не&nbsp;заменяет диагноз</mark>, а&nbsp;делает его объёмным. Диагноз по-прежнему ставит <a href="/biopsiya">гистология</a>; профиль отвечает на&nbsp;следующий вопрос&nbsp;— чем эту опухоль лечить.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ЧТО ПОКАЗЫВАЮТ ТЕСТЫ -->
+  <section class="sec" id="findings">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Что показывают тесты</h2>
+        <p class="sec-lead">Изменений в&nbsp;опухоли бывает много, но&nbsp;практический интерес представляют те, для которых существует лечение или подходящий протокол исследования. Их условно делят на&nbsp;четыре группы.</p>
+      </div>
+      <div class="why-grid">
+        {findings.map((f, i) => (
+          <article class="why-card reveal" style={`--d:${(i * 0.06).toFixed(2)}s`}>
+            <h3 set:html={f.t} />
+            <p set:html={f.d} />
+          </article>
+        ))}
+      </div>
+      <p class="table-note">Перечень условный: наборы генов и&nbsp;трактовка находок обновляются вместе с&nbsp;появлением новых препаратов. Объём тестирования под конкретную ситуацию определяет лечащий врач.</p>
+    </div>
+  </section>
+
+  <!-- ТРИ МЕТОДА -->
+  <section class="sec" id="methods">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Три метода&nbsp;— три задачи</h2>
+        <p class="sec-lead">Методы не&nbsp;конкурируют, а&nbsp;дополняют друг друга. Выбор зависит от&nbsp;того, что именно нужно найти и&nbsp;сколько материала есть в&nbsp;распоряжении.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="mk-table">
+          <thead>
+            <tr>
+              <th>Метод</th>
+              <th>Что находит</th>
+              <th>Когда выбирают</th>
+            </tr>
+          </thead>
+          <tbody>
+            {methods.map((m) => (
+              <tr class="reveal">
+                <td class="mk-abbr" set:html={m.abbr} />
+                <td set:html={m.what} />
+                <td class="mk-note" set:html={m.when} />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">На&nbsp;практике методы нередко сочетают: прицельный тест отвечает быстро, а&nbsp;широкая панель подключается, если ответа нет. Какие панели и&nbsp;платформы доступны в&nbsp;клинике&nbsp;— [уточняется у&nbsp;клиники].</p>
+    </div>
+  </section>
+
+  <!-- МАТЕРИАЛ ДЛЯ ТЕСТА -->
+  <section class="sec" id="material">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>На&nbsp;каком материале делают тест</h2>
+        <p class="sec-lead">Отдельной процедуры «сдать генетику» не&nbsp;существует: исследуют опухолевые клетки. Откуда их берут&nbsp;— два основных варианта.</p>
+      </div>
+      <div class="why-grid">
+        {material.map((m, i) => (
+          <article class="why-card reveal" style={`--d:${(i * 0.08).toFixed(2)}s`}>
+            <h3 set:html={m.t} />
+            <p set:html={m.d} />
+          </article>
+        ))}
+      </div>
+      <p class="table-note">Материал должен содержать достаточно опухолевых клеток и&nbsp;не&nbsp;быть слишком старым&nbsp;— иначе ДНК разрушена и&nbsp;тест не&nbsp;состоится. Поэтому первым делом врач смотрит, что сохранилось в&nbsp;архиве лаборатории, где делали биопсию.</p>
+    </div>
+  </section>
+
+  <!-- КОМУ ПОКАЗАНО -->
+  <section class="sec" id="who">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Кому показано исследование</h2>
+        <p class="sec-lead">Тестирование обсуждают с&nbsp;лечащим врачом: оно нужно не&nbsp;всем и&nbsp;не&nbsp;в&nbsp;любой момент болезни. Ситуации, в&nbsp;которых к&nbsp;нему прибегают чаще всего.</p>
+      </div>
+      <ul class="prep-list">
+        {whoFor.map((w, i) => (
+          <li class="prep-item reveal" style={`--d:${(i * 0.06).toFixed(2)}s`}>
+            <span class="prep-ic" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={icon.check}></svg></span>
+            <div class="prep-body">
+              <h3 set:html={w.t} />
+              <p set:html={w.d} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- СРОКИ И РЕЗУЛЬТАТ -->
+  <section class="sec" id="result">
+    <div class="wrap">
+      <div class="dyn-block">
+        <h2>Сроки и&nbsp;как выглядит результат</h2>
+        <p class="dyn-lead">Результат&nbsp;— не&nbsp;цифра «норма&nbsp;/ не&nbsp;норма», а&nbsp;заключение о&nbsp;том, какие изменения найдены и&nbsp;что они означают для лечения.</p>
+        <div class="dyn-grid">
+          {result.map((r) => (
+            <div class="dyn-card">
+              <h3 set:html={r.t} />
+              <p set:html={r.d} />
+            </div>
+          ))}
+        </div>
+        <p class="dyn-note">Пока идёт исследование, лечение не&nbsp;останавливается: врач заранее обговаривает, что делать в&nbsp;период ожидания.</p>
+      </div>
+      <div class="callout">
+        <h3>Молекулярный консилиум</h3>
+        <p>Заключение разбирают онколог и&nbsp;специалист по&nbsp;молекулярной диагностике вместе&nbsp;— соотносят находки с&nbsp;клинической картиной, предыдущим лечением и&nbsp;доступными препаратами. На&nbsp;выходе пациент получает не&nbsp;список мутаций, а&nbsp;понятную рекомендацию по&nbsp;терапии. Состав и&nbsp;порядок работы консилиума&nbsp;— [уточняется у&nbsp;клиники].</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- МИШЕНЬ НАЙДЕНА / НЕ НАЙДЕНА -->
+  <section class="sec" id="outcome">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Что происходит после теста</h2>
+        <p class="sec-lead">Оба исхода&nbsp;— рабочие. Отсутствие мишени тоже информация: она снимает лишние ожидания и&nbsp;экономит время.</p>
+      </div>
+      <div class="why-grid">
+        {outcome.map((o, i) => (
+          <article class="why-card reveal" style={`--d:${(i * 0.08).toFixed(2)}s`}>
+            <h3 set:html={o.t} />
+            <p set:html={o.d} />
+          </article>
+        ))}
+      </div>
+      <div class="callout">
+        <h3>Связь с&nbsp;клиническими исследованиями</h3>
+        <p>Многие протоколы отбирают пациентов именно по&nbsp;молекулярному профилю: без подтверждённой мишени участие невозможно. Поэтому тест часто становится входным билетом к&nbsp;препаратам, которые пока не&nbsp;вышли в&nbsp;широкую практику. Перечень активных протоколов клиники&nbsp;— [уточняется у&nbsp;клиники].</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПОДГОТОВКА -->
+  <section class="sec" id="prep">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Как подготовиться и&nbsp;что принести</h2>
+        <p class="sec-lead">Главная подготовка&nbsp;— собрать документы и&nbsp;материал. Чем полнее папка, тем меньше времени уйдёт на&nbsp;запросы в&nbsp;другие лаборатории.</p>
+      </div>
+      <ul class="prep-list">
+        {prep.map((p, i) => (
+          <li class="prep-item reveal" style={`--d:${(i * 0.06).toFixed(2)}s`}>
+            <span class="prep-ic" aria-hidden="true"><svg viewBox="0 0 24 24" set:html={icon.check}></svg></span>
+            <div class="prep-body">
+              <h3 set:html={p.t} />
+              <p set:html={p.d} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ЧТО ДАЛЬШЕ -->
+  <section class="sec" id="next">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Что дальше</h2>
+        <p class="sec-lead">Молекулярный тест&nbsp;— звено в&nbsp;цепочке. Слева от&nbsp;него&nbsp;— исследования, которые дают материал и&nbsp;диагноз, справа&nbsp;— выбор лечения.</p>
+      </div>
+      <div class="next-grid">
+        {next.map((n, i) => (
+          <a class="next-card reveal" href={n.href} style={`--d:${(i * 0.08).toFixed(2)}s`}>
+            <h3 set:html={n.t} />
+            <p set:html={n.d} />
+            <span class="next-link">Подробнее<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ — паттерн главной (Faq.astro): статичный список, две колонки,
+       по левому краю. Аккордеонов на сайте нет нигде. -->
+  <section class="wrap sec faq-sec" id="faq">
+    <div class="sec-head">
+      <h2>Частые вопросы</h2>
+    </div>
+    <div class="faq">
+      {faq.map((item) => (
+        <div class="faq-item">
+          <h3 class="faq-q" set:html={item.q} />
+          <div class="faq-a">
+            <p set:html={item.a} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- CTA + НОРМАТИВНАЯ ПЛАШКА -->
+  <PageCta
+    title="Нужно понять, показан&nbsp;ли тест в&nbsp;вашем случае?"
+    text="Принесите гистологическое заключение, выписки и&nbsp;снимки&nbsp;— врач разберёт ситуацию, скажет, изменит&nbsp;ли молекулярный тест тактику лечения, и&nbsp;объяснит, где взять материал для исследования."
+  />
+
+
+  <!-- КОНТАКТЫ + ПОДВАЛ -->
+  <FooterContacts />
+
+  <style is:global>
+    /* Стили шапки и кнопок здесь НЕ дублируются: шапка — в Header.astro,
+       кнопки .btn/.btn-dark/.btn-light — в global.css. */
+
+    /* — hero страницы (паттерн page-hero) — */
+    .page-hero { position:relative; overflow:hidden; background:var(--grad-uni); padding-block:52px 46px; }
+    .crumbs { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:var(--fs-caption); color:var(--text-muted); margin:0 0 20px; }
+    .crumbs a { color:var(--accent-soft); }
+    .crumbs a:hover { color:var(--accent); }
+    .page-eyebrow { font-size:var(--fs-caption); font-weight:600; letter-spacing:.02em; color:var(--accent); margin:0 0 14px; }
+    .page-title { font-size:var(--fs-hero); line-height:1.02; letter-spacing:-.035em; font-weight:600; color:var(--text-strong); margin:0 0 18px; max-width:var(--measure-head-lg); }
+    .page-sub { font-size:var(--fs-sub); line-height:1.55; color:var(--text-body); max-width:var(--measure-lead); margin:0 0 30px; }
+    .hero-cta { display:flex; gap:14px; flex-wrap:wrap; }
+
+    /* — секции: мера строки токенами (заголовок в 2 строки, а не одна длинная) — */
+    .sec { padding-block:var(--section-gap); }
+    .sec-head { margin-bottom:var(--head-gap); }
+    .sec-head h2 { font-size:var(--fs-h-lg); letter-spacing:-.025em; font-weight:600; margin:0; max-width:var(--measure-head); }
+    .sec-lead { margin:16px 0 0; max-width:var(--measure-lead); font-size:var(--fs-body-lg); line-height:var(--lh-body-lg); letter-spacing:var(--tr-body-lg); color:var(--text-body); }
+
+    /* Ссылки внутри наборного текста (акцент + подчёркивание) — в global.css,
+       единым правилом для всего сайта; per-page их не переопределяем. */
+
+    /* — «от органа к мишени»: ДВЕ РАВНЫЕ колонки, широкого лида над ними нет — */
+    .lead-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:36px; }
+    .lead-col { display:grid; gap:16px; align-content:start; }
+    .lead-para { margin:0; font-size:var(--fs-body-lg); line-height:1.65; color:var(--text-body); }
+
+    /* — карточки-находки и парные блоки: белая плашка + hairline, одинаковые в ряду — */
+    .why-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    .why-card { background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-card); padding:26px 28px; }
+    .why-card h3 { font-size:var(--fs-h); font-weight:600; letter-spacing:-.02em; line-height:1.2; margin:0 0 10px; color:var(--text-strong); }
+    .why-card p { margin:0; font-size:var(--fs-body-sm); line-height:1.55; color:var(--text-body); }
+
+    /* — таблица методов (линии — часть структуры таблицы) — */
+    .table-wrap { overflow-x:auto; border:1px solid var(--border-hairline); border-radius:var(--r-card); background:var(--surface-card); }
+    .mk-table { width:100%; border-collapse:collapse; min-width:640px; }
+    .mk-table thead th { text-align:left; font-family:var(--ff-body); font-size:var(--fs-caption); font-weight:600; letter-spacing:.01em; color:var(--text-muted); padding:18px 24px; border-bottom:1px solid var(--border-strong); background:var(--surface-mist); }
+    .mk-table tbody td { padding:18px 24px; font-size:var(--fs-body-sm); line-height:1.5; color:var(--text-body); border-bottom:1px solid var(--border-hairline); vertical-align:top; }
+    .mk-table tbody tr:last-child td { border-bottom:0; }
+    .mk-table tbody tr:hover td { background:var(--c-wash-teal); }
+    .mk-abbr { font-weight:600; color:var(--text-strong); white-space:nowrap; }
+    .mk-note { color:var(--text-body); }
+    /* сноска под блоком — на холсте, поэтому мера нужна */
+    .table-note { margin:18px 0 0; max-width:var(--measure-text); font-size:var(--fs-caption); line-height:1.55; color:var(--text-muted); }
+
+    /* — блок-вывод: без плашки, текст на холсте (поэтому мера обязательна) — */
+    .callout { margin-top:var(--s-32); }
+    .callout h3 { font-size:var(--fs-h); font-weight:600; letter-spacing:-.02em; margin:0 0 10px; color:var(--text-strong); }
+    .callout p { margin:0 0 12px; max-width:var(--measure-text); font-size:var(--fs-body); line-height:1.6; color:var(--text-body); }
+    .callout p:last-child { margin-bottom:0; }
+
+    /* — чек-листы (кому показано, подготовка): галочка без плашки, без буллитов и линий — */
+    .prep-list { list-style:none; margin:0; padding:0; display:grid; gap:14px; }
+    .prep-item { display:flex; gap:16px; align-items:flex-start; }
+    .prep-ic { flex:none; display:inline-flex; color:var(--accent-soft); }
+    .prep-ic svg { width:20px; height:20px; }
+    .prep-body h3 { font-size:var(--fs-body-lg); font-weight:600; letter-spacing:-.02em; line-height:1.2; color:var(--text-strong); margin:0 0 4px; }
+    .prep-body p { margin:0; max-width:var(--measure-text); font-size:var(--fs-body-sm); line-height:1.55; color:var(--text-body); }
+
+    /* — сроки и результат: заголовок блока + три белые плашки в ряд — */
+    .dyn-block h2 { font-size:var(--fs-h-lg); letter-spacing:-.025em; font-weight:600; margin:0; max-width:var(--measure-head); }
+    .dyn-lead { margin:16px 0 var(--s-32); max-width:var(--measure-lead); font-size:var(--fs-body-lg); line-height:var(--lh-body-lg); color:var(--text-body); }
+    .dyn-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+    .dyn-card { background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-card); padding:24px 26px; }
+    .dyn-card h3 { font-size:var(--fs-body-lg); font-weight:600; letter-spacing:-.02em; color:var(--text-strong); margin:0 0 10px; }
+    .dyn-card p { margin:0; font-size:var(--fs-body-sm); line-height:1.55; color:var(--text-body); }
+    .dyn-note { margin:var(--s-24) 0 0; max-width:var(--measure-text); font-size:var(--fs-body-sm); line-height:1.55; color:var(--text-body); }
+
+    /* — что дальше: ссылки-карточки (hover красит только ссылку внутри) — */
+    .next-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    .next-card { display:block; background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-card); padding:30px 32px; }
+    .next-card:hover .next-link { color:var(--accent); }
+    .next-card h3 { font-size:var(--fs-h); font-weight:600; letter-spacing:-.02em; line-height:1.2; margin:0 0 12px; color:var(--text-strong); }
+    .next-card p { margin:0 0 18px; font-size:var(--fs-body-sm); line-height:1.55; color:var(--text-body); }
+    .next-link { display:inline-flex; align-items:center; gap:4px; font-size:var(--fs-body-sm); font-weight:600; color:var(--accent-soft); }
+    .next-link .chev-r { width:16px; height:16px; }
+
+    /* — FAQ: 1:1 паттерн Faq.astro — статичный список, две колонки, левый край,
+         без линий между вопросами. Аккордеона нет. — */
+    .faq { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:clamp(32px,5vw,72px); }
+    .faq-item { padding:14px 0; }
+    .faq-q { font-size:var(--fs-h); font-weight:600; line-height:1.3; letter-spacing:-.01em; color:var(--text-strong); margin:0 0 10px; }
+    .faq-a p { font-size:var(--fs-body-sm); line-height:1.6; color:var(--text-body); margin:0; }
+
+    /* — CTA + нормативная плашка — */
+    /* Нормативная плашка — единственное разрешённое центрирование текста; сужена */
+    /* — reveal (паттерн главной) — */
+    .reveal { opacity:0; transform:translateY(18px); transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); transition-delay:var(--d,0s); }
+    .reveal.in { opacity:1; transform:none; }
+    @media (prefers-reduced-motion:reduce) { .reveal { opacity:1; transform:none; transition:none; } }
+
+    /* — адаптив — */
+    @media (max-width:960px) {
+      .lead-grid { grid-template-columns:1fr; gap:16px; }
+      .sec-head h2, .dyn-block h2, .page-title { max-width:none; }
+      .faq { grid-template-columns:1fr; }
+      .why-grid { grid-template-columns:1fr; }
+      .dyn-grid { grid-template-columns:1fr; }
+      .next-grid { grid-template-columns:1fr; }
+    }
+  </style>
+
+  <script>
+    // появление блоков при скролле (паттерн главной)
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  </script>
+</Base>

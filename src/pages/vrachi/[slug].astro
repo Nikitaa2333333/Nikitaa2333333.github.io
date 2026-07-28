@@ -1,0 +1,224 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import FooterContacts from '../../components/sections/FooterContacts.astro';
+import { doctors } from '../../data/doctors';
+import { clinic } from '../../data/clinic';
+
+/* ============================================================
+   /vrachi/<slug> — персональная страница врача (ТЗ, пункт 5:
+   «каждая карточка → персональная страница врача: образование,
+   история, цена приёма»).
+   Статическая генерация из src/data/doctors.ts: один URL на врача —
+   так страницу видит поиск (Яндекс) и на неё можно вести рекламу.
+   Цена приёма — видимая заглушка, пока клиника не дала цифры.
+   ============================================================ */
+export function getStaticPaths() {
+  return doctors.map((d) => ({ params: { slug: d.slug }, props: { doctor: d } }));
+}
+
+const { doctor: d } = Astro.props;
+
+// Соседние врачи — блок «Другие специалисты» внизу страницы
+const others = doctors.filter((x) => x.slug !== d.slug);
+
+// Разметка для поиска: врач как Physician в составе MedicalClinic
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Physician',
+  name: d.fio,
+  jobTitle: d.role,
+  image: d.img,
+  medicalSpecialty: d.spec,
+  worksFor: { '@type': 'MedicalClinic', name: clinic.nameBrand },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: clinic.city,
+    streetAddress: clinic.addrSchema,
+    postalCode: clinic.zip,
+    addressCountry: 'RU',
+  },
+};
+---
+
+<Base
+  title={`${d.fio} — ${d.role}, Санкт-Петербург`}
+  description={`${d.fio} — ${d.role}, ${d.deg}. Стаж ${d.expN} ${d.expW}. ${d.bio}`}
+>
+  <Header current="vrachi" />
+
+  <!-- HERO ВРАЧА: фото во всю ширину плашки + основные данные -->
+  <section class="page-hero doc-hero">
+    <div class="blob" style="width:480px;height:480px;background:var(--c-wash-teal);top:-180px;left:-80px;"></div>
+    <div class="blob" style="width:420px;height:420px;background:var(--c-wash-blue);top:-60px;right:-60px;"></div>
+    <div class="wrap doc-hero-in">
+      <nav class="crumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a><span aria-hidden="true">/</span><a href="/vrachi">Врачи</a><span aria-hidden="true">/</span><span>{d.fio}</span>
+      </nav>
+      <div class="doc-hero-grid">
+        <figure class="doc-hero-photo">
+          <img src={d.img} alt={d.fio} width="560" height="700" fetchpriority="high" decoding="async" />
+        </figure>
+        <div class="doc-hero-text">
+          <h1 class="doc-hero-fio">{d.fio}</h1>
+          <p class="doc-hero-role">{d.role} · {d.deg}</p>
+          <div class="doc-hero-stats">
+            <div class="doc-hero-stat">
+              <span class="doc-hero-n">{d.expN}</span>
+              <span class="doc-hero-l">{d.expW} врачебного стажа</span>
+            </div>
+            {d.pubs && (
+              <div class="doc-hero-stat">
+                <span class="doc-hero-n">{d.pubs}</span>
+                <span class="doc-hero-l">научных публикаций</span>
+              </div>
+            )}
+          </div>
+          <div class="hero-cta">
+            <a href="#contacts" class="btn btn-dark">Записаться на приём</a>
+            <a href="/s-chego-nachat#upload" class="btn btn-light">Отправить документы</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- О ВРАЧЕ: образование, место работы, специализация, научная работа -->
+  <section class="sec">
+    <div class="wrap doc-cols">
+      <div class="doc-about">
+        <h2>О&nbsp;враче</h2>
+        {d.back.map((par) => (<p>{par}</p>))}
+      </div>
+      <aside class="doc-side">
+        <h3>Приём</h3>
+        <dl class="doc-facts">
+          <div class="doc-fact">
+            <dt>Первичная консультация</dt>
+            <dd>{d.price}</dd>
+          </div>
+          <div class="doc-fact">
+            <dt>Длительность приёма</dt>
+            <dd>до&nbsp;60&nbsp;минут</dd>
+          </div>
+          <div class="doc-fact">
+            <dt>Адрес</dt>
+            <dd>{clinic.city}, {clinic.street}</dd>
+          </div>
+        </dl>
+        <a href="#contacts" class="btn btn-dark doc-side-cta">Записаться к&nbsp;врачу</a>
+        <p class="doc-side-note">Возьмите на&nbsp;приём выписки, результаты исследований, снимки, стёкла и&nbsp;блоки&nbsp;— <a href="/s-chego-nachat#checklist">полный чек-лист</a>. Документы можно прислать заранее, врач изучит их до&nbsp;визита.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ДРУГИЕ СПЕЦИАЛИСТЫ — перелинковка между страницами врачей -->
+  <section class="sec doc-others-sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Другие специалисты клиники</h2>
+      </div>
+      <div class="doc-others">
+        {others.map((o) => (
+          <a class="doc-other" href={`/vrachi/${o.slug}`}>
+            <img src={o.img} alt={o.fio} width="120" height="150" loading="lazy" decoding="async" />
+            <div>
+              <b>{o.fio}</b>
+              <span>{o.role}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+      <a href="/vrachi" class="link-chip link-chip--accent doc-others-all">
+        Все врачи клиники
+        <svg viewBox="0 0 24 24" class="chev-r" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <FooterContacts />
+
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+
+  <style is:global>
+    /* — hero страницы врача — */
+    .page-hero { position:relative; overflow:hidden; background:var(--grad-uni); padding-block:44px 46px; }
+    .doc-hero-in { position:relative; z-index:1; }
+    .crumbs { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:var(--fs-caption); color:var(--text-muted); margin:0 0 24px; }
+    .crumbs a { color:var(--accent-soft); }
+    .crumbs a:hover { color:var(--accent); }
+
+    /* Высоту hero задаёт ТЕКСТ, а не фото. Раньше фото было 420px с
+       пропорцией 4/5 (525px), а колонка текста — вдвое ниже: под текстом
+       зияла дыра в полэкрана. Теперь колонки тянутся по высоте (stretch),
+       фото занимает ровно столько, сколько текст рядом. */
+    /* Текстовая колонка ОГРАНИЧЕНА (600px), а не 1fr на весь остаток:
+       на 1fr модуль растягивался на ~800px, имя влезало в одну строку
+       через весь экран, а подпись шла простынёй. Меру внутри колонки
+       не дублируем — ширину задаёт сам модуль. */
+    .doc-hero-grid { display:grid; grid-template-columns:minmax(0,380px) minmax(0,600px); gap:40px; align-items:stretch; }
+    .doc-hero-photo { margin:0; border-radius:var(--r-card); overflow:hidden; border:1px solid var(--border-hairline); background:var(--surface-card); min-height:400px; }
+    .doc-hero-photo img { width:100%; height:100%; object-fit:cover; object-position:top; display:block; }
+    /* текст по центру своей колонки — колонка теперь тянется на всю строку */
+    .doc-hero-text { display:flex; flex-direction:column; justify-content:center; }
+    .doc-hero-fio { font-size:var(--fs-display); line-height:1.05; letter-spacing:-.03em; font-weight:600; color:var(--text-strong); margin:0 0 12px; }
+    /* Должность, степень и подписи под цифрами — ОДИН кегль (--fs-sub).
+       Было три ступени подряд (20 / 16 / 13) — набор дробился на лесенку
+       там, где это просто представление врача. Иерархию держат имя (h1)
+       и цифры, а не разнокалиберный текст под ними.
+       Должность и степень идут ОДНОЙ строкой через «·»: двумя абзацами
+       они читались как два разных факта, хотя это одна подпись к имени. */
+    .doc-hero-role { font-size:var(--fs-sub); line-height:1.45; color:var(--text-strong); margin:0 0 26px; }
+    /* Числа и подписи — чёрные, без акцентного цвета: выделяет размер,
+       а не краска. Мера снята: на 11em «года врачебного стажа» ломалось
+       на две строки и «стажа» висело отдельным огрызком. Отступы поджаты —
+       число и его подпись должны читаться одним блоком. */
+    /* подпись сбоку от числа, по базовой линии — как в карточке врача */
+    .doc-hero-stats { display:flex; gap:36px; margin:0 0 28px; }
+    .doc-hero-stat { display:flex; flex-direction:row; align-items:baseline; gap:10px; }
+    .doc-hero-n { font-family:var(--ff-body); font-size:var(--fs-num); font-weight:600; letter-spacing:-.03em; line-height:1.05; color:var(--text-strong); }
+    .doc-hero-l { font-size:var(--fs-sub); line-height:1.3; color:var(--text-strong); max-width:9em; }
+    .hero-cta { display:flex; gap:14px; flex-wrap:wrap; }
+
+    /* — секции — */
+    .sec { padding-block:var(--section-gap); }
+    .sec-head { margin-bottom:var(--head-gap); }
+    .sec-head h2 { font-size:var(--fs-h-lg); letter-spacing:-.025em; font-weight:600; margin:0; }
+
+    /* — «О враче» + карточка приёма — */
+    .doc-cols { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,360px); gap:44px; align-items:start; }
+    .doc-about h2 { font-size:var(--fs-h-lg); letter-spacing:-.025em; font-weight:600; margin:0 0 20px; }
+    .doc-about p { max-width:var(--measure-text); font-size:var(--fs-body-lg); line-height:var(--lh-body-lg); color:var(--text-body); margin:0 0 16px; }
+    .doc-about p:last-child { margin-bottom:0; }
+
+    .doc-side { background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-card); padding:28px; position:sticky; top:96px; }
+    .doc-side h3 { font-size:var(--fs-h); font-weight:600; letter-spacing:-.02em; margin:0 0 20px; }
+    .doc-facts { margin:0 0 22px; display:grid; gap:14px; }
+    .doc-fact { display:grid; gap:3px; }
+    .doc-fact:last-child { padding-bottom:0; border-bottom:0; }
+    .doc-facts dt { font-size:var(--fs-caption); color:var(--text-muted); } /* служебная подпись поля */
+    .doc-facts dd { margin:0; font-size:var(--fs-body-sm); font-weight:600; color:var(--text-strong); line-height:1.4; }
+    .doc-side-cta { width:100%; justify-content:center; }
+    .doc-side-note { font-size:var(--fs-caption); line-height:1.5; color:var(--text-body); margin:16px 0 0; }
+    /* цвет и подчёркивание ссылок в абзаце — глобальным правилом (global.css) */
+    .doc-side-note a:hover { color:var(--accent); }
+
+    /* — другие специалисты — */
+    .doc-others { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    .doc-other { display:flex; gap:18px; align-items:center; background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-card); padding:16px; }
+    .doc-other:hover b { color:var(--accent-soft); }
+    .doc-other img { width:96px; height:120px; object-fit:cover; object-position:top; border-radius:var(--r-input); flex:none; }
+    .doc-other b { display:block; font-size:var(--fs-body-lg); font-weight:600; color:var(--text-strong); margin-bottom:4px; line-height:1.25; }
+    .doc-other span { display:block; font-size:var(--fs-caption); line-height:1.4; color:var(--text-body); }
+    .doc-others-all { margin-top:24px; }
+
+    @media (max-width:1000px) {
+      .doc-hero-grid { grid-template-columns:1fr; gap:28px; }
+      /* в одну колонку фото уже не тянется по тексту — возвращаем пропорцию */
+      .doc-hero-photo { max-width:360px; min-height:0; aspect-ratio:4/5; }
+      .doc-cols { grid-template-columns:1fr; }
+      .doc-side { position:static; }
+      .doc-others { grid-template-columns:1fr; }
+    }
+  </style>
+</Base>

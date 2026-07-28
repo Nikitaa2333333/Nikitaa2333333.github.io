@@ -1,0 +1,75 @@
+---
+/* ============================================================
+   ФИНАЛЬНЫЙ CTA внутренней страницы — общий компонент.
+
+   Раньше этот блок жил копией в пяти страницах (онкомаркеры, биопсия,
+   молекулярная диагностика, лечение, химиотерапия). Разметка разъехалась:
+   где-то одна кнопка справа от текста, где-то две под текстом, иконка
+   то «капля», то «телефон», нормативная плашка с тремя разными отступами.
+   Блоки одного смысла выглядели по-разному — теперь источник один.
+
+   Решения, зафиксированные здесь:
+   · кнопки ВСЕГДА под текстом и по левому краю. Раскладка «текст слева,
+     кнопка справа» ломалась при второй кнопке: она переносилась вниз,
+     и соседние страницы выглядели по-разному;
+   · телемедицина есть на каждой странице — по ТЗ это не вкладка,
+     а функциональный вход из любого раздела;
+   · вторичная кнопка — .btn-ice: плашка белая, белая кнопка на ней не видна;
+   · нормативная плашка ФЗ-38 — часть компонента, а не забота страницы;
+   · телемедицина ведёт на «/#tele»: блок живёт на главной, и на внутренней
+     странице голый «#tele» никуда бы не привёл.
+   ============================================================ */
+interface Props {
+  title: string;           // заголовок-обращение, допускает &nbsp;
+  text: string;            // абзац-пояснение, допускает &nbsp;
+  note?: string;           // необязательная сноска (информационный характер материала)
+  telemed?: boolean;       // вторая кнопка; выключать, только если раздел без телемедицины
+  id?: string;
+}
+const { title, text, note, telemed = true, id = 'cta' } = Astro.props;
+
+const icPhone = '<path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>';
+const icVideo = '<rect x="3" y="6" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M15 11l6-3v8l-6-3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>';
+---
+
+<section class="sec cta-sec" id={id}>
+  <div class="blob" style="width:440px;height:440px;background:var(--c-wash-teal);top:-60px;left:8%;"></div>
+  <div class="blob" style="width:400px;height:400px;background:var(--c-wash-blue);bottom:-90px;right:10%;"></div>
+  <div class="wrap" style="position:relative;z-index:1;">
+    <div class="cta-tile">
+      <div class="cta-text">
+        <h2 set:html={title} />
+        <p set:html={text} />
+      </div>
+      <div class="cta-actions">
+        <a href="#contacts" class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s" set:html={icPhone}></svg>Записаться на&nbsp;консультацию</a>
+        {telemed && (
+          <a href="/#tele" class="btn btn-ice"><svg viewBox="0 0 24 24" class="ic-s" set:html={icVideo}></svg>Телемедицинская консультация</a>
+        )}
+      </div>
+    </div>
+    {note && <p class="cta-note" set:html={note} />}
+    <p class="compliance-note">Имеются противопоказания. Необходима консультация специалиста.</p>
+  </div>
+</section>
+
+<style is:global>
+  .cta-sec { position:relative; overflow:hidden; }
+  /* белая плашка + hairline — одна из двух разрешённых заливок */
+  .cta-tile { background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-glass); padding:40px; }
+  /* мера — на самих текстовых элементах: ch считается от их кегля */
+  .cta-text h2 { font-size:var(--fs-h); letter-spacing:-.025em; font-weight:600; line-height:1.15; margin:0 0 12px; max-width:var(--measure-head); color:var(--text-strong); }
+  .cta-text p { margin:0; max-width:var(--measure-text); font-size:var(--fs-body); line-height:1.55; color:var(--text-body); }
+  /* кнопки всегда под текстом и слева — раскладка не зависит от их числа */
+  .cta-actions { display:flex; gap:14px; flex-wrap:wrap; margin-top:24px; }
+  .cta-note { margin:24px 0 0; max-width:var(--measure-text); font-size:var(--fs-caption); line-height:1.55; color:var(--text-muted); }
+  /* ФЗ-38 — единственное место, где текст центрован (плашка сужена как блок) */
+  .compliance-note { max-width:var(--tile-narrow); margin:24px auto 0; text-align:center; font-size:var(--fs-caption); color:var(--text-muted); background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-input); padding:14px; }
+  .ic-s { width:16px; height:16px; }
+
+  @media (max-width:720px) {
+    .cta-tile { padding:32px 24px; }
+    .cta-text h2 { max-width:none; }
+    .cta-actions .btn { justify-content:center; width:100%; }
+  }
+</style>

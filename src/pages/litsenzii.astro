@@ -1,0 +1,177 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import FooterContacts from '../components/sections/FooterContacts.astro';
+import { clinic } from '../data/clinic';
+
+/* ============================================================
+   /litsenzii — «Сведения о клинике»: лицензия, реквизиты,
+   разрешённые работы и услуги (приказ Минздрава 956н — сведения,
+   которые медорганизация обязана разместить на своём сайте).
+   Раньше пункт меню «Лицензии и сертификаты» вёл в никуда.
+
+   Все данные — из выписки реестра лицензий Росздравнадзора,
+   единый источник src/data/clinic.ts. Чего в выписке нет
+   (скан документа, КПП) — видимая заглушка.
+   ============================================================ */
+const l = clinic.license;
+---
+
+<Base
+  title="Лицензия и сведения о клинике — Клиника трансляционной медицины"
+  description={`Лицензия на медицинскую деятельность № ${l.number} от ${l.date}, выдана: ${l.authority}. Реквизиты ООО «Клиника трансляционной медицины», разрешённые работы и услуги.`}
+>
+  <Header current="litsenzii" />
+
+  <!-- HERO раздела -->
+  <section class="page-hero">
+    <div class="blob" style="width:480px;height:480px;background:var(--c-wash-teal);top:-160px;left:-60px;"></div>
+    <div class="blob" style="width:420px;height:420px;background:var(--c-wash-blue);top:-80px;right:-40px;"></div>
+    <div class="wrap" style="position:relative;z-index:1;">
+      <nav class="crumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a><span aria-hidden="true">/</span><span>Сведения о клинике</span>
+      </nav>
+      <h1 class="page-title">Лицензия и&nbsp;<em class="i-serif">сведения</em> о&nbsp;клинике</h1>
+      <p class="page-sub">Мы&nbsp;работаем по&nbsp;действующей лицензии на&nbsp;медицинскую деятельность. Ниже&nbsp;— полные реквизиты юридического лица и&nbsp;перечень работ и&nbsp;услуг, которые лицензия разрешает: <mark>это можно проверить</mark> в&nbsp;реестре Росздравнадзора.</p>
+    </div>
+  </section>
+
+  <!-- ЛИЦЕНЗИЯ -->
+  <section class="wrap sec">
+    <div class="sec-head"><h2>Лицензия на&nbsp;медицинскую деятельность</h2></div>
+    <!-- Документ и его реквизиты — ОДИН блок в две колонки. Раньше превью
+         стояло отдельной строкой под сеткой: картинка висела сама по себе,
+         а справа от неё зияла пустота во всю ширину контента. -->
+    <div class="license-grid">
+      <figure class="license-doc">
+        <a href={l.file} target="_blank" rel="noopener" class="license-page">
+          <img src={l.preview} alt={`Выписка из реестра лицензий № ${l.number}, первая страница`} width="1190" height="1584" loading="lazy" decoding="async" />
+        </a>
+        <a href={l.file} target="_blank" rel="noopener" class="btn btn-ice license-open">
+          <svg viewBox="0 0 24 24" class="ic-s" aria-hidden="true"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v5h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Открыть PDF ({l.fileSize})
+        </a>
+        <figcaption>Первая страница выписки. Документ открывается целиком по&nbsp;клику.</figcaption>
+      </figure>
+
+      <div class="license-info">
+        <dl class="license-card">
+          <div class="req-line"><dt>Номер лицензии</dt><dd>{l.number}</dd></div>
+          <div class="req-line"><dt>Статус</dt><dd>{l.status}</dd></div>
+          <div class="req-line"><dt>Дата предоставления</dt><dd>{l.date}</dd></div>
+          <div class="req-line"><dt>Лицензирующий орган</dt><dd>{l.authority}</dd></div>
+          <div class="req-line"><dt>Приказ (распоряжение)</dt><dd>{l.order}</dd></div>
+          <div class="req-line"><dt>Вид деятельности</dt><dd>{l.activity}</dd></div>
+          <div class="req-line"><dt>Адрес места осуществления</dt><dd>{clinic.zip}, г.&nbsp;{clinic.city}, {clinic.street}, {clinic.room}</dd></div>
+        </dl>
+        <aside class="license-aside">
+          <h3>Как проверить</h3>
+          <p>Сведения о&nbsp;лицензии открыты: их&nbsp;можно сверить в&nbsp;реестре лицензий на&nbsp;портале Росздравнадзора по&nbsp;номеру лицензии или ИНН организации.</p>
+          <p class="license-note">Данные приведены по&nbsp;выписке из&nbsp;реестра лицензий, сформированной {l.extractDate}. Выписка носит информационный характер: после её&nbsp;составления в&nbsp;реестр могли быть внесены изменения.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- РАБОТЫ И УСЛУГИ ПО ЛИЦЕНЗИИ -->
+  <section class="wrap sec">
+    <div class="sec-head"><h2>Работы и&nbsp;услуги, разрешённые лицензией</h2></div>
+    <p class="sec-lead">Перечень по&nbsp;приказу&nbsp;866н&nbsp;— в&nbsp;том виде, как он&nbsp;указан в&nbsp;реестре. Проще говоря: мы&nbsp;имеем право вести приём по&nbsp;онкологии и&nbsp;смежным специальностям амбулаторно и&nbsp;лечить в&nbsp;условиях дневного стационара.</p>
+    <div class="works">
+      {clinic.licenseWorks.map((g) => (
+        <div class="works-group">
+          <h3>{g.group}</h3>
+          {g.items.map((it) => (
+            <div class="works-row">
+              <p class="works-cond">{it.cond}</p>
+              <p class="works-list">{it.list.join(' · ')}</p>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- РЕКВИЗИТЫ -->
+  <section class="wrap sec">
+    <div class="sec-head"><h2>Реквизиты организации</h2></div>
+    <dl class="license-card license-card--wide">
+      <div class="req-line"><dt>Полное наименование</dt><dd>{clinic.nameFull}</dd></div>
+      <div class="req-line"><dt>Сокращённое наименование</dt><dd>{clinic.nameShort}</dd></div>
+      <div class="req-line"><dt>ОГРН</dt><dd>{clinic.ogrn}</dd></div>
+      <div class="req-line"><dt>ИНН</dt><dd>{clinic.inn}</dd></div>
+      <div class="req-line"><dt>КПП</dt><dd>{clinic.kpp}</dd></div>
+      <div class="req-line"><dt>Адрес места нахождения</dt><dd>{clinic.addrLegal}</dd></div>
+      <div class="req-line"><dt>Режим работы</dt><dd>{clinic.hours}</dd></div>
+      <div class="req-line"><dt>Телефон</dt><dd><a href={clinic.phoneHref}>{clinic.phone}</a></dd></div>
+      <div class="req-line"><dt>Электронная почта</dt><dd><a href={`mailto:${clinic.email}`}>{clinic.email}</a></dd></div>
+    </dl>
+    <p class="compliance-note">Имеются противопоказания. Необходима консультация специалиста.</p>
+  </section>
+
+  <FooterContacts />
+
+  <style is:global>
+    /* — hero раздела (паттерн page-hero, как на /vrachi) — */
+    .page-hero { position:relative; overflow:hidden; background:var(--grad-uni); padding-block:52px 46px; }
+    .page-title { font-size:var(--fs-hero); line-height:1.02; letter-spacing:-.035em; font-weight:600; color:var(--text-strong); max-width:var(--measure-head-lg); margin:0 0 18px; }
+    .page-sub { font-size:var(--fs-sub); line-height:1.55; color:var(--text-body); max-width:var(--measure-lead); margin:0; }
+    .crumbs { display:flex; align-items:center; gap:10px; font-size:var(--fs-caption); color:var(--text-muted); margin:0 0 20px; }
+    .crumbs a { color:var(--accent-soft); }
+    .crumbs a:hover { color:var(--accent); }
+
+    .sec { padding-block:var(--section-gap); }
+    .sec-head { margin-bottom:var(--head-gap); }
+    .sec-head h2 { font-size:var(--fs-h-lg); letter-spacing:-.025em; font-weight:600; margin:0; max-width:var(--measure-head); }
+    .sec-lead { font-size:var(--fs-body-lg); line-height:var(--lh-body-lg); color:var(--text-body); max-width:var(--measure-text); margin:0 0 28px; }
+
+    /* — Лицензия: слева документ, справа его реквизиты и «как проверить».
+         Колонка документа фиксированной ширины — лист А4 шире 340px
+         превращается в плакат, а текст на нём всё равно не читается. — */
+    .license-grid { display:grid; grid-template-columns:minmax(0,340px) minmax(0,1fr); gap:24px; align-items:start; }
+    .license-info { display:flex; flex-direction:column; gap:20px; }
+    .license-card { background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-card); padding:24px; margin:0; }
+    /* строки-реквизиты: подпись слева, значение справа. Разделительных
+       линий нет — перечисление держит вертикальный ритм (правило 6.1),
+       поэтому и шаг между строками маленький, 13px */
+    .req-line { display:grid; grid-template-columns:minmax(0,220px) minmax(0,1fr); gap:16px; margin-bottom:13px; }
+    .req-line:last-child { margin-bottom:0; }
+    .req-line dt { font-size:var(--fs-body-sm); color:var(--text-muted); }
+    .req-line dd { font-size:var(--fs-body-sm); line-height:1.5; color:var(--text-strong); margin:0; }
+    /* цвет и подчёркивание ссылок в dd — глобальным правилом (global.css) */
+    .license-card--wide .req-line { grid-template-columns:minmax(0,280px) minmax(0,1fr); }
+
+    .license-aside { background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-card); padding:24px; }
+    .license-aside h3 { font-size:var(--fs-h-sm); font-weight:600; letter-spacing:-.02em; margin:0 0 12px; }
+    .license-open { justify-content:center; }
+    .license-open .ic-s { width:16px; height:16px; }
+
+    /* — Превью документа: страница-картинка + кнопка под ней — */
+    .license-doc { margin:0; display:flex; flex-direction:column; align-items:stretch; gap:14px; }
+    .license-page { display:block; border:1px solid var(--border-hairline); border-radius:var(--r-card); overflow:hidden; background:var(--surface-card); }
+    .license-page img { display:block; width:100%; height:auto; }
+    .license-doc figcaption { font-size:var(--fs-caption); line-height:1.5; color:var(--text-muted); }
+    .license-aside p { font-size:var(--fs-body-sm); line-height:1.55; color:var(--text-body); margin:0 0 12px; }
+    .license-aside p:last-child { margin-bottom:0; }
+    .license-note { color:var(--text-muted); }
+
+    /* — Работы и услуги: группы, внутри — условие оказания и перечень — */
+    .works { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; align-items:start; }
+    .works-group { background:var(--surface-card); border:1px solid var(--border-hairline); border-radius:var(--r-card); padding:24px; }
+    .works-group h3 { font-size:var(--fs-h-sm); font-weight:600; letter-spacing:-.02em; line-height:1.25; margin:0 0 18px; }
+    /* перечисление без буллитов и без линий — держит вертикальный ритм */
+    .works-row { margin:0 0 14px; }
+    .works-row:last-child { margin-bottom:0; }
+    .works-cond { font-size:var(--fs-caption); color:var(--text-muted); margin:0 0 2px; }
+    .works-list { font-size:var(--fs-body-sm); line-height:1.5; color:var(--text-strong); margin:0; }
+
+    .compliance-note { font-size:var(--fs-caption); color:var(--text-muted); border:1px solid var(--border-hairline); border-radius:var(--r-input); background:var(--surface-card); padding:14px; margin:28px auto 0; max-width:var(--tile-narrow); text-align:center; }
+
+    @media (max-width:900px) {
+      .license-grid, .works { grid-template-columns:minmax(0,1fr); }
+      /* в одну колонку лист не должен распухать на всю ширину экрана */
+      .license-doc { max-width:340px; }
+      .req-line, .license-card--wide .req-line { grid-template-columns:minmax(0,1fr); gap:4px; }
+    }
+  </style>
+</Base>

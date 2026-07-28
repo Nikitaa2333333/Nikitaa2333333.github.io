@@ -1,0 +1,131 @@
+---
+// ФУТЕР / КОНТАКТЫ (по ТЗ) — секция контактов + подвал с нормативкой.
+// Основа — существующие блоки index.astro (#contacts + <footer class="foot">):
+// классы и вид сохранены (contact-grid, ci-row, map-stub, contact-form, fi,
+// consent, foot, compliance-note, foot-grid, foot-h), состав приведён к ТЗ:
+// адрес, карта (заглушка «Яндекс.Карты» — подключается позже), телефоны, e-mail,
+// форма «Задать вопрос» (согласие ПДн, ФЗ-152, «серверы в РФ»), реквизиты юрлица,
+// навигация по разделам, нормативный блок (ФЗ-38, 956н, ФЗ-323).
+import { clinic } from '../../data/clinic';
+
+const nav = [
+  { t: 'Главная', href: '/' },
+  { t: 'С чего начать', href: '/s-chego-nachat' },
+  { t: 'Диагностика', href: '#' },
+  { t: 'Лечение', href: '#' },
+  { t: 'Врачи', href: '/vrachi' },
+  { t: 'Цены', href: '/stoimost' },
+  { t: 'Блог', href: '/stati' },
+  { t: 'О клинике', href: '#' },
+  { t: 'Контакты', href: '#contacts' },
+];
+---
+
+<!-- КОНТАКТЫ + ФОРМА (ФЗ-152) -->
+<section class="wrap sec" id="contacts">
+  <div class="sec-head"><h2>Мы&nbsp;рядом и&nbsp;на&nbsp;связи</h2></div>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="ci-row"><b>Адрес</b><p>{clinic.zip}, г.&nbsp;{clinic.city}, {clinic.street}, {clinic.room}<br/>м.&nbsp;«{clinic.metro}», Аптекарский остров</p></div>
+      <div class="ci-row"><b>Телефоны</b><p><a href={clinic.phoneHref} class="ci-link">{clinic.phone}</a> — запись на&nbsp;приём<br/><a href={clinic.phoneStacHref} class="ci-link">{clinic.phoneStac}</a> — дневной стационар<br/>{clinic.hoursShort}</p></div>
+      <div class="ci-row"><b>Почта</b><p><a href={`mailto:${clinic.email}`} class="ci-link">{clinic.email}</a></p></div>
+      <!-- Заглушка карты: интерактивные Яндекс.Карты подключаются на этапе интеграций -->
+      <div class="map-stub"><span>Яндекс.Карты — подключим позже</span></div>
+    </div>
+    <form class="glass contact-form" onsubmit="return false">
+      <h3>Задать вопрос</h3>
+      <input class="fi" type="text" placeholder="Ваше имя" />
+      <input class="fi" type="tel" placeholder="Телефон" />
+      <textarea class="fi" rows="4" placeholder="Ваш вопрос"></textarea>
+      <label class="consent">
+        <input type="checkbox" />
+        <span>Согласен(на) на&nbsp;обработку персональных данных. Данные хранятся на&nbsp;серверах в&nbsp;РФ (ФЗ-152).</span>
+      </label>
+      <button class="btn btn-dark" type="submit">Отправить</button>
+    </form>
+  </div>
+</section>
+
+<!-- ПОДВАЛ + НОРМАТИВКА -->
+<footer class="wrap foot">
+  <!-- ФЗ-38: обязательная плашка -->
+  <div class="compliance-note">Имеются противопоказания. Необходима консультация специалиста.</div>
+  <div class="foot-grid">
+    <div>
+      <p class="foot-h">Сведения о&nbsp;клинике</p>
+      <p>Лицензия №&nbsp;{clinic.license.number}<br/>от&nbsp;{clinic.license.date}, статус&nbsp;— {clinic.license.status}<br/>Режим работы: {clinic.hoursShort}<br/><a href="/litsenzii">Сведения по&nbsp;приказу 956н</a></p>
+    </div>
+    <nav aria-label="Разделы сайта">
+      <p class="foot-h">Разделы сайта</p>
+      <ul class="foot-nav">
+        {nav.map((n) => (
+          <li><a href={n.href}>{n.t}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div>
+      <p class="foot-h">Пациентам</p>
+      <p>Права пациента (ФЗ-323)<br/>Подготовка к&nbsp;визиту<br/>Согласие на&nbsp;обработку ПДн</p>
+    </div>
+    <div>
+      <p class="foot-h">Данные под защитой</p>
+      <p>Серверы на&nbsp;территории РФ<br/>Соответствие ФЗ-152<br/>Версия для слабовидящих</p>
+    </div>
+  </div>
+  <!-- Реквизиты юридического лица — из выписки реестра лицензий (src/data/clinic.ts) -->
+  <div class="foot-legal">
+    <p>{clinic.nameShort} · ИНН {clinic.inn} · КПП {clinic.kpp} · ОГРН {clinic.ogrn}</p>
+    <p>Юридический адрес: {clinic.addrLegal}</p>
+  </div>
+</footer>
+
+<style>
+  .sec { padding-block: var(--section-gap); }
+  .sec-head { margin-bottom: var(--head-gap); }
+  .kicker { font-size: var(--fs-caption); letter-spacing: .06em; text-transform: none; color: var(--accent); margin: 0 0 12px; }
+  .sec-head h2 { font-size: var(--fs-h-lg); letter-spacing: -.025em; font-weight: 600; margin: 0; }
+
+  /* кнопка (как в index) */
+
+  /* контакты + форма (перенос из index) */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  .contact-info { display: grid; gap: 20px; }
+  .ci-row b { display: block; font-size: var(--fs-body-sm); font-weight: 600; color: var(--text-strong); margin-bottom: 4px; }
+  .ci-row p { font-size: var(--fs-body-sm); line-height: 1.55; margin: 0; }
+  .ci-link { color: var(--accent); font-weight: 500; white-space: nowrap; }
+  .map-stub { height: 200px; border-radius: var(--r-card); background: linear-gradient(150deg, var(--c-wash-blue), var(--c-wash-teal)); border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: center; }
+  .map-stub span { font-size: var(--fs-caption); letter-spacing: .06em; color: rgba(10, 13, 18, .4); } /* декоративная подпись заглушки */
+  .contact-form { padding: 32px 34px; display: grid; gap: 14px; }
+  .contact-form h3 { font-size: var(--fs-h); margin: 0 0 6px; }
+  .fi { font-family: var(--ff-body); font-size: var(--fs-body-sm); color: var(--text-strong); background: var(--veil-strong); border: 1px solid var(--border-hairline); border-radius: var(--r-input); padding: 13px 16px; outline: none; transition: border-color .2s; resize: vertical; }
+  .fi:focus { border-color: var(--accent); }
+  .fi::placeholder { color: var(--text-muted); } /* плейсхолдер — разрешённое исключение */
+  .consent { display: flex; gap: 10px; align-items: flex-start; font-size: var(--fs-caption); color: var(--text-muted); line-height: 1.45; }
+  .consent input { margin-top: 2px; accent-color: var(--accent); }
+  .contact-form .btn { justify-content: center; }
+
+  /* подвал (перенос из index) */
+  .foot { padding-block: 20px 72px; }
+  .compliance-note { text-align: center; font-size: var(--fs-caption); color: var(--text-muted); border: 1px solid var(--border-hairline); border-radius: var(--r-input); padding: 14px; background: var(--surface-card); margin-bottom: 40px; }
+  .foot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+  .foot-h { font-size: var(--fs-body-sm); font-weight: 600; color: var(--text-strong); margin: 0 0 10px; }
+  .foot-grid p { font-size: var(--fs-caption); line-height: 1.7; color: var(--text-body); margin: 0; }
+
+  /* навигация по разделам */
+  .foot-nav { list-style: none; margin: 0; padding: 0; }
+  .foot-nav a { font-size: var(--fs-caption); line-height: 1.7; color: var(--text-body); transition: color .2s; }
+  .foot-nav a:hover { color: var(--accent); }
+
+  /* реквизиты юрлица — мелкая служебная подпись (серый разрешён) */
+  .foot-legal { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-hairline); }
+  .foot-legal p { font-size: var(--fs-caption); line-height: 1.7; color: var(--text-muted); margin: 0; }
+
+  /* адаптив (как в index) */
+  @media (max-width: 960px) {
+    .contact-grid { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .foot-grid { grid-template-columns: 1fr; }
+  }
+</style>

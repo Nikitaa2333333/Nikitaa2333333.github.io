@@ -1,0 +1,282 @@
+/* ============================================================
+   ГЛОБАЛЬНЫЙ ВХОД + СЛОЙ 3 (мост в Tailwind v4 @theme)
+   Порядок: Tailwind → примитивы → семантика → @theme → база.
+   ============================================================ */
+@import "tailwindcss";
+@import "./tokens.base.css";
+@import "./tokens.semantic.css";
+
+/* @theme = стабильный API утилит. Значения ссылаются на семантику,
+   поэтому смена темы/пресета не трогает компоненты. */
+@theme {
+  /* Цвета → bg-canvas, text-ink, border-hairline, text-accent, bg-cta … */
+  --color-canvas:   var(--bg-canvas);
+  --color-surface:  var(--surface-card);
+  --color-elevated: var(--surface-elevated);
+  --color-mist:     var(--surface-mist);
+  --color-ink:      var(--text-strong);
+  --color-body:     var(--text-body);
+  --color-muted:    var(--text-muted);
+  --color-accent:   var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-cta:      var(--cta-fill);
+  --color-hairline: var(--border-hairline);
+  --color-wash-lavender: var(--c-wash-lavender);
+  --color-wash-mint:     var(--c-wash-mint);
+  --color-wash-powder:   var(--c-wash-powder);
+  --color-wash-aqua:     var(--c-wash-aqua);
+  --color-wash-peach:    var(--c-wash-peach);
+
+  /* Шрифты → font-display, font-body */
+  --font-display: var(--ff-display);
+  --font-body:    var(--ff-body);
+
+  /* Радиусы → rounded-card, rounded-glass, rounded-input, rounded-pill */
+  --radius-input: var(--r-input);
+  --radius-card:  var(--r-card);
+  --radius-glass: var(--r-glass);
+  --radius-pill:  var(--r-pill);
+}
+
+/* — Базовые стили элементов — */
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-body);
+    font-family: var(--ff-body);
+    font-size: var(--fs-body);
+    font-weight: 500; /* наборный — Manrope Medium (Regular 400 слишком тонкий) */
+    line-height: var(--lh-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--ff-display);
+    color: var(--text-strong);
+    font-weight: 600;
+    line-height: 1.1;            /* заголовки — плотный межстрочный 110% */
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    text-transform: none; /* КАПС ЗАПРЕЩЁН — нигде */
+  }
+
+  em, i, cite, dfn, address { font-style: normal; } /* ITALIC ЗАПРЕЩЁН — нигде */
+
+  /* ПРЕДОХРАНИТЕЛЬ ПЛОТНОСТИ: жирность внутри наборного текста запрещена —
+     наборный идёт одним начертанием. Единственный разрешённый способ выделить
+     фразу — фирменный <mark> (см. ниже), а не вес и не цвет.
+     Бьём по b/strong/em внутри абзаца и по прямым детям <li>; заголовки-лейблы
+     (b с display:block внутри div) и служебные b (.ti, .brand-name, .drop-it,
+     .pr-name, .mk-abbr) под селектор не попадают. !important нужен, чтобы
+     перебить локальные `.lead-para b { font-weight:600 }` в страницах. */
+  p b, p strong, p em, p i,
+  li > b, li > strong, li > em, li > i,
+  dd b, dd strong, td b, td strong,
+  figcaption b, figcaption strong {
+    font-weight: inherit !important;
+    color: inherit !important;
+    font-style: normal;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* Ссылка ВНУТРИ НАБОРНОГО ТЕКСТА должна быть видна. Глобальный сброс выше
+     делал её неотличимой от абзаца (ссылки в лиде /onkomarkery читались как
+     обычный текст), а страницы начали чинить это каждая по-своему — где-то
+     подчёркиванием, где-то только цветом. Единый источник — здесь.
+     Жирностью и border-bottom ссылку не выделяем (запрет плотности и линий):
+     акцентный цвет + подчёркивание. Служебные ссылки (кнопки, чипы, крошки,
+     карточки-ссылки, меню) живут вне <p>/<li> и под селектор не попадают. */
+  /* Кнопка или чип, оказавшиеся внутри абзаца/пункта, исключены через :not() —
+     перекрывать их цвет отдельным правилом нельзя, оно побьёт .btn-dark. */
+  p a:not(.btn):not(.link-chip), li a:not(.btn):not(.link-chip),
+  dd a:not(.btn):not(.link-chip), td a:not(.btn):not(.link-chip) {
+    color: var(--accent-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  p a:not(.btn):not(.link-chip):hover, li a:not(.btn):not(.link-chip):hover,
+  dd a:not(.btn):not(.link-chip):hover, td a:not(.btn):not(.link-chip):hover {
+    color: var(--accent);
+  }
+
+  ::selection { background: var(--c-wash-powder); }
+}
+
+/* — Утилиты уникального слоя (стекло + размытые блобы) — */
+@layer components {
+  /* Контейнер контента. Поля УЗКИЕ: по ~4% с каждого края,
+     контент — центральные ~92%. Глобальное правило для всех страниц/секций. */
+  .wrap {
+    width: 100%;
+    max-width: 92%;
+    margin-inline: auto;
+  }
+  @media (max-width: 640px) { .wrap { max-width: 100%; padding-inline: 16px; } }
+
+  /* Стеклянная плашка: полупрозрачность + backdrop-blur + hairline */
+  /* Бывшее «стекло» — теперь плотная белая плашка: без backdrop-blur
+     и полупрозрачности (отказ от стекломорфизма зафиксирован). */
+  .glass {
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-glass);
+    box-shadow: var(--sh-glass);
+  }
+
+  /* ============================================================
+     КНОПКИ — единый источник (per-page дубли удалены).
+     ОБВОДКИ НА КНОПКАХ НЕТ НИГДЕ: только заливка (чипы — наоборот,
+     контурные, см. .link-chip). На hover кнопка ТОЛЬКО КРАСИТСЯ —
+     никаких translateY/подпрыгиваний (утверждено).
+       .btn-dark  — основная: бирюза бренда (--cta-fill)
+       .btn-light — вторичная: сплошной белый — на холсте, фото, градиенте
+       .btn-ice   — вторичная НА БЕЛОЙ ПЛАШКЕ: ледяная заливка
+                    (белая на белом не читается)
+     Псевдонимы .btn-ghost / .btn-ghost-dark ведут себя как .btn-light —
+     оставлены, чтобы не переписывать разметку страниц.
+     ============================================================ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--ff-body);
+    font-size: var(--fs-body-sm);
+    font-weight: 500;
+    border: 0;
+    border-radius: var(--r-pill);
+    padding: 14px 25px; /* = бывшие 13px 24px + 1px снятого бордера */
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+  .btn-dark { background: var(--cta-fill); color: var(--cta-text); box-shadow: var(--sh-soft); }
+  .btn-dark:hover { background: var(--cta-hover); }
+  .btn-light, .btn-ghost, .btn-ghost-dark {
+    background: var(--btn2-fill);
+    color: var(--btn2-text);
+    box-shadow: var(--sh-soft);
+  }
+  .btn-light:hover, .btn-ghost:hover, .btn-ghost-dark:hover { background: var(--btn2-hover); }
+  .btn-ice { background: var(--btn3-fill); color: var(--btn3-text); box-shadow: none; }
+  .btn-ice:hover { background: var(--btn3-hover); }
+  .btn-mini { background: var(--cta-fill); color: var(--cta-text); font-size: var(--fs-caption); padding: 8px 15px; }
+  .btn svg { flex: none; }
+
+  /* Акцентное слово в заголовке — засечка Lora, ПРЯМОЕ начертание
+     (italic запрещён в дизайн-системе). */
+  .i-serif {
+    font-family: var(--ff-accent);
+    font-style: normal;
+    letter-spacing: -0.01em;
+  }
+
+  /* «Маркер» внимания — фирменный приём: чёткий прямоугольник под ключевой фразой,
+     как выделение текста курсором. Углы НЕ скругляем — в резкости весь приём.
+     ВАЖНО: фраза должна укладываться в ОДНУ строку. Подложка, разорванная переносами
+     на три куска (особенно в лиде на градиенте), выглядит грязно — тогда выделять
+     не надо вовсе. Не более одной-двух фраз на секцию, никогда не абзац целиком. */
+  mark {
+    background: var(--hl-fill);
+    color: var(--hl-ink);
+    padding: 0.09em 0.3em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* Сценарная ссылка-чип (единый вид всех гиперссылок в секциях):
+     pill с hairline-обводкой, БЕЗ заливки (утверждено: кнопки — заливные,
+     чипы — контурные) + обязательный шеврон › , если чип куда-то ведёт.
+     Использование: <a class="link-chip">Текст <svg class="chev-r">…</svg></a>
+     Шеврон: <path d="M9 6l6 6-6 6"/> stroke=currentColor.
+     На hover — только перекраска обводки и текста, без сдвига. */
+  .link-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-pill);
+    font-family: var(--ff-body);
+    font-size: var(--fs-body-sm);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-strong);
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .link-chip:hover { border-color: var(--accent); color: var(--accent-soft); }
+  .link-chip .chev-r { width: 14px; height: 14px; flex: none; margin-right: -4px; }
+  .link-chip--accent { color: var(--accent-soft); border-color: var(--accent); }
+  .link-chip--accent:hover { color: var(--accent); }
+
+  /* Заголовки секций НЕ тянутся на всю страницу: мера в ch на САМОМ заголовке
+     (проценты считались от случайного родителя, а ch на контейнере — от его кегля). */
+  .sec h2 { max-width: var(--measure-head); }
+  @media (max-width: 720px) { .sec h2 { max-width: none; } }
+
+  /* Скрытие элементов (фильтры, вкладки) */
+  .is-hidden { display: none !important; }
+
+  /* Секции ниже фолда не рендерятся, пока к ним не подъехали (ускоряет
+     первый кадр и скролл длинных страниц). Блобы в секциях и так живут
+     под overflow:hidden, так что paint-containment ничего не меняет визуально. */
+  .sec { content-visibility: auto; contain-intrinsic-size: auto 700px; }
+
+  /* Верхняя утилити-полоса шапки (слабовидящие + адрес/телефон/режим).
+     Сворачивается при скролле: JS вешает .shrink на .site-head (см. Base.astro). */
+  .topbar { overflow: hidden; overflow-anchor: none; max-height: 42px; border-bottom: 1px solid var(--border-hairline); transition: max-height .3s ease, opacity .25s ease; }
+  .site-head.shrink .topbar { max-height: 0; opacity: 0; border-bottom-color: transparent; }
+  .topbar-in { display: flex; align-items: center; justify-content: space-between; height: 42px; gap: 20px; }
+  .a11y-link, .ti { display: inline-flex; align-items: center; gap: 7px; font-size: var(--fs-caption); color: var(--text-muted); white-space: nowrap; }
+  .a11y-link { background: none; border: 0; cursor: pointer; padding: 0; font-family: var(--ff-body); }
+  .a11y-link:hover { color: var(--accent); }
+  .a11y-link svg, .ti svg { width: 15px; height: 15px; flex: none; color: var(--accent); }
+  .topbar-info { display: flex; align-items: center; gap: 22px; min-width: 0; }
+  .ti b { font-weight: 600; color: var(--text-strong); }
+  .ti-hours { color: var(--text-muted); }
+  a.ti:hover b { color: var(--accent); }
+  @media (max-width: 900px) { .ti-hours { display: none; } }
+  @media (max-width: 680px) { .topbar { display: none; } }
+
+  /* ============================================================
+     ВЕРСИЯ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ Р 52872) — включается data-a11y="on"
+     на <html> кнопкой «Аа»: крупный шрифт, высокий контраст, без
+     декоративных пятен/прозрачностей/градиентов.
+     ============================================================ */
+  :root[data-a11y="on"] { font-size: 20px; }
+  :root[data-a11y="on"] body { background: #ffffff; color: #000000; font-size: 1.05rem; }
+  :root[data-a11y="on"] .blob { display: none; }
+  :root[data-a11y="on"] .glass,
+  :root[data-a11y="on"] [class*="tile-"] {
+    background: #ffffff !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+  }
+  :root[data-a11y="on"] h1, :root[data-a11y="on"] h2,
+  :root[data-a11y="on"] h3, :root[data-a11y="on"] h4 { color: #000000; }
+  :root[data-a11y="on"] p, :root[data-a11y="on"] li,
+  :root[data-a11y="on"] span, :root[data-a11y="on"] dd { color: #000000; }
+  :root[data-a11y="on"] a { color: #0000cc; text-decoration: underline; }
+  :root[data-a11y="on"] section, :root[data-a11y="on"] header,
+  :root[data-a11y="on"] footer { background: #ffffff !important; background-image: none !important; }
+
+  /* Размытое пастельное пятно фона — позиционируется в родителе с overflow:hidden.
+     Мягкость даёт radial-маска поверх inline-цвета, а НЕ filter: blur(80px):
+     визуально то же пятно, но без тяжёлой GPU-растеризации на каждый скролл. */
+  .blob {
+    position: absolute;
+    border-radius: 9999px;
+    -webkit-mask-image: radial-gradient(closest-side, rgb(0 0 0 / 0.9) 25%, transparent);
+    mask-image: radial-gradient(closest-side, rgb(0 0 0 / 0.9) 25%, transparent);
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+}

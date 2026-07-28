@@ -1,0 +1,118 @@
+---
+/* ============================================================
+   ШАПКА САЙТА — общий компонент.
+   Раньше разметка шапки дублировалась в каждой странице; с появлением
+   персональных страниц врачей (/vrachi/*) вынесена сюда (CLAUDE.md:
+   «при росте — вынести Header/Footer в компоненты»).
+   Существующие страницы (index, s-chego-nachat, onkomarkery, …) пока
+   держат свою копию — переводить их на компонент можно постепенно.
+   Стили — is:global: шапка живёт вне scope компонента-страницы.
+   ============================================================ */
+import { clinic } from '../data/clinic';
+
+interface Props {
+  current?: string; // подсветка активного пункта меню: 'vrachi' | 'stoimost' | …
+}
+const { current } = Astro.props;
+---
+
+<header class="site-head" id="site-head">
+  <!-- верхняя утилити-полоса (сворачивается при скролле, JS — в Base.astro) -->
+  <div class="topbar">
+    <div class="wrap topbar-in">
+      <button class="a11y-link" aria-label="Версия для слабовидящих">
+        <svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        Версия для слабовидящих
+      </button>
+      <div class="topbar-info">
+        <span class="ti"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><b>{clinic.addrShort}</b></span>
+        <a href={clinic.phoneHref} class="ti"><svg viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>{clinic.phone}</b></a>
+        <span class="ti ti-hours">{clinic.hours}</span>
+      </div>
+    </div>
+  </div>
+  <div class="wrap head-inner">
+    <a href="/" class="brand">
+      <img src="/images/logo-mark.svg" alt="Клиника трансляционной медицины" class="brand-mark" />
+      <span class="brand-name">Клиника<br/><b>трансляционной медицины</b></span>
+    </a>
+    <nav class="nav">
+      <div class="nav-item"><a href="/s-chego-nachat" class={`nav-link${current === 'start' ? ' is-current' : ''}`} aria-current={current === 'start' ? 'page' : undefined}>С чего начать</a></div>
+      <div class="nav-item">
+        <a href="#" class={`nav-link${current === 'diagnostika' ? ' is-current' : ''}`}>Диагностика <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="drop">
+          <a href="/molekulyarnaya-diagnostika" class={`drop-it${current === 'mgi' ? ' is-current' : ''}`}><b>Молекулярно-генетические исследования</b><span>NGS · ПЦР · FISH — подбор препарата</span></a>
+          <a href="/biopsiya" class={`drop-it${current === 'biopsiya' ? ' is-current' : ''}`}><b>Биопсия и гистология</b><span>Пересмотр стёкол — «не отменяем, уточняем»</span></a>
+          <a href="/onkomarkery" class={`drop-it${current === 'onkomarkery' ? ' is-current' : ''}`}><b>Онкомаркеры</b><span>Что показывают и как сдать</span></a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a href="#" class={`nav-link${current === 'lechenie' ? ' is-current' : ''}`}>Лечение <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="drop drop-wide">
+          <a href="/lechenie" class={`drop-it${current === 'lechenie-obzor' ? ' is-current' : ''}`}><b>Как выбирается метод</b><span>Обзор: чем отличаются варианты</span></a>
+          <a href="/lechenie/himioterapiya" class={`drop-it${current === 'himio' ? ' is-current' : ''}`}><b>Химиотерапия</b><span>Современные схемы в дневном стационаре</span></a>
+          <a href="/lechenie/targetnaya-terapiya" class={`drop-it${current === 'target' ? ' is-current' : ''}`}><b>Таргетная терапия</b><span>Точечное воздействие на мишени</span></a>
+          <a href="/lechenie/immunoterapiya" class={`drop-it${current === 'immuno' ? ' is-current' : ''}`}><b>Иммунотерапия</b><span>Активация собственного иммунитета</span></a>
+          <a href="#" class="drop-it"><b>Побочные эффекты и восстановление</b><span>Сопроводительная терапия, питание</span></a>
+          <a href="#" class="drop-it"><b>Клинические исследования</b><span>Реестр активных протоколов, GCP</span></a>
+        </div>
+      </div>
+      <div class="nav-item"><a href="/vrachi" class={`nav-link${current === 'vrachi' ? ' is-current' : ''}`} aria-current={current === 'vrachi' ? 'page' : undefined}>Врачи</a></div>
+      <div class="nav-item"><a href="/stoimost" class={`nav-link${current === 'stoimost' ? ' is-current' : ''}`} aria-current={current === 'stoimost' ? 'page' : undefined}>Цены</a></div>
+      <div class="nav-item"><a href="/stati" class={`nav-link${current === 'blog' ? ' is-current' : ''}`} aria-current={current === 'blog' ? 'page' : undefined}>Блог</a></div>
+      <div class="nav-item">
+        <a href="#" class="nav-link">О клинике <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="drop">
+          <a href="/#stationar" class="drop-it"><b>Дневной стационар</b><span>Палаты, оборудование, условия</span></a>
+          <a href="/litsenzii" class={`drop-it${current === 'litsenzii' ? ' is-current' : ''}`}><b>Лицензии и сертификаты</b><span>Документы клиники — приказ 956н</span></a>
+          <a href="/#stories" class="drop-it"><b>Истории пациентов</b><span>Путь от диагноза до результата</span></a>
+        </div>
+      </div>
+      <div class="nav-item"><a href="#contacts" class="nav-link">Контакты</a></div>
+    </nav>
+    <div class="head-actions">
+      <button class="a11y" title="Версия для слабовидящих" aria-label="Версия для слабовидящих">Аа</button>
+      <a href="#contacts" class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Записаться на приём</a>
+    </div>
+  </div>
+</header>
+
+<style is:global>
+  /* Кнопки .btn/.btn-dark/.btn-light — в global.css (единый источник, без обводок) */
+  .ic-s { width:16px; height:16px; }
+
+  /* — шапка — */
+  .site-head { position:sticky; top:0; z-index:50; overflow-anchor:none; background:var(--head-fill); border-bottom:1px solid var(--border-hairline); }
+  .head-inner { display:flex; align-items:center; justify-content:space-between; height:74px; gap:24px; }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .brand-mark { height:44px; width:auto; flex:none; }
+  .brand-name { font-size:var(--fs-caption); line-height:1.25; color:var(--text-body); letter-spacing:.01em; }
+  .brand-name b { color:var(--text-strong); font-weight:600; }
+  .nav { display:flex; gap:6px; }
+  .nav-item { position:relative; }
+  .nav-link { display:inline-flex; align-items:center; gap:5px; font-size:var(--fs-body-sm); color:var(--text-body); padding:10px 12px; border-radius:var(--r-pill); transition:.2s; }
+  .nav-link:hover { color:var(--text-strong); background:var(--veil); }
+  .nav-link.is-current { color:var(--accent-soft); font-weight:600; }
+  .chev { width:14px; height:14px; opacity:.55; transition:transform .25s; }
+  .nav-item:hover .chev, .nav-item:focus-within .chev { transform:rotate(180deg); }
+  .drop { position:absolute; top:calc(100% + 10px); left:0; min-width:290px; padding:10px;
+    background:var(--surface-elevated);
+    border:1px solid var(--border-hairline); border-radius:var(--r-glass); box-shadow:var(--sh-glass);
+    display:grid; gap:2px; opacity:0; visibility:hidden; transform:translateY(10px);
+    transition:opacity .22s ease, transform .22s ease, visibility .22s; z-index:60; }
+  .drop::before { content:""; position:absolute; top:-12px; left:0; right:0; height:14px; }
+  .drop-wide { min-width:340px; }
+  .nav-item:hover .drop, .nav-item:focus-within .drop { opacity:1; visibility:visible; transform:translateY(0); }
+  .drop-it { display:grid; gap:2px; padding:11px 14px; border-radius:var(--r-input); transition:.18s; }
+  .drop-it b { font-size:var(--fs-body-sm); font-weight:600; color:var(--text-strong); }
+  .drop-it span { font-size:var(--fs-caption); color:var(--text-muted); line-height:1.35; }
+  .drop-it:hover { background:var(--c-wash-teal); }
+  .drop-it:hover b { color:var(--c-teal-deep); }
+  .drop-it.is-current { background:var(--c-wash-teal); }
+  .drop-it.is-current b { color:var(--c-teal-deep); }
+  .head-actions { display:flex; align-items:center; gap:14px; }
+  .a11y { width:40px; height:40px; border-radius:var(--r-pill); border:1px solid var(--border-strong); background:var(--veil); color:var(--text-body); font-size:var(--fs-body-sm); cursor:pointer; }
+  .a11y.is-on { background:var(--cta-fill); color:var(--cta-text); border-color:transparent; }
+
+  @media (max-width:960px) { .nav { display:none; } }
+</style>

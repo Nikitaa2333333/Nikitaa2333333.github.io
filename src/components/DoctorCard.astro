@@ -1,0 +1,89 @@
+---
+/* ============================================================
+   КАРТОЧКА ВРАЧА — общий компонент (экран 9 главной + /vrachi).
+   Перевёртыш убран: «Подробнее» — обычная ссылка на персональную
+   страницу врача /vrachi/<slug> (отдельный URL под индексацию).
+   Стили — is:global, чтобы карточка одинаково выглядела на любой
+   странице; в index.astro своих .doc-правил больше нет.
+   ============================================================ */
+import type { Doctor } from '../data/doctors';
+
+interface Props {
+  doctor: Doctor;
+}
+const { doctor: d } = Astro.props;
+const href = `/vrachi/${d.slug}`;
+---
+
+<article class="doc glass" data-spec={d.spec}>
+  <a class="doc-photo" href={href} aria-label={`Подробнее о враче: ${d.fio}`}>
+    <img src={d.img} alt={d.fio} width="340" height="427" loading="lazy" decoding="async" class="doc-img" />
+    <!-- градиент снизу + имя на нём — как в hero -->
+    <div class="doc-scrim"></div>
+    <div class="doc-caption">
+      <h3 class="doc-fio">{d.fio}</h3>
+      <p class="doc-role">{d.role}</p>
+    </div>
+  </a>
+  <div class="doc-body">
+    <div class="doc-stats">
+      <div class="doc-stat">
+        <span class="doc-exp-n">{d.expN}</span>
+        <span class="doc-exp-l">{d.expW} опыта</span>
+      </div>
+      {d.pubs && (
+        <div class="doc-stat">
+          <span class="doc-exp-n">{d.pubs}</span>
+          <span class="doc-exp-l">научных публикаций</span>
+        </div>
+      )}
+    </div>
+    <!-- степень отдельной строкой: в подписи к «34» она раздувала колонку -->
+    <p class="doc-deg">{d.deg}</p>
+    <!-- «Подробнее о враче» — гиперссылка внутри описания, не кнопка -->
+    <p class="doc-bio">{d.bio} <a class="doc-more" href={href}>Подробнее о&nbsp;враче<svg viewBox="0 0 24 24" class="chev-r" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+    <div class="doc-actions">
+      <a href="#contacts" class="btn btn-dark">Записаться на приём</a>
+    </div>
+  </div>
+</article>
+
+<style is:global>
+  /* карточка: стекло + hairline; при наведении/фокусе — акцентная рамка */
+  .doc { position:relative; overflow:hidden; padding:0; }
+  .doc:hover .doc-more, .doc:focus-within .doc-more { color:var(--accent); }
+  .doc-photo { position:relative; display:block; width:100%; aspect-ratio:3/3.5; overflow:hidden; }
+  .doc-img { width:100%; height:100%; object-fit:cover; object-position:top; transition:transform .5s cubic-bezier(.16,1,.3,1); }
+  .doc-photo:hover .doc-img { transform:scale(1.03); }
+  /* плашка со специализацией поверх фото убрана — она перекрывала лицо
+     врача. Направление читается в .doc-role под именем; data-spec на .doc
+     оставлен как зацепка для будущего фильтра на /vrachi (сейчас фильтра
+     на странице нет). */
+  .doc-scrim { position:absolute; inset:0; background:linear-gradient(to top, rgba(10,13,18,.72) 0%, rgba(10,13,18,.28) 26%, rgba(10,13,18,0) 48%); pointer-events:none; }
+  .doc-caption { position:absolute; left:0; right:0; bottom:0; padding:16px 18px; z-index:1; }
+  .doc-fio { font-size:var(--fs-body-lg); font-weight:600; margin:0 0 3px; line-height:1.25; color:#fff; }
+  .doc-role { font-size:var(--fs-caption); color:#fff; margin:0; }
+  .doc-body { padding:16px 20px 20px; }
+  /* Два показателя рядом: стаж и публикации. Числа и подписи — чёрные,
+     как на странице врача: акцентный цвет тут ничего не сообщал, а блок
+     из-за него читался как отдельная «бирюзовая» врезка.
+     Межстрочное у подписей — 1.3: на 0.9 трёхстрочная подпись слипалась.
+     Подпись стоит СБОКУ от числа, по базовой линии, показатели — в две
+     колонки. Чтобы это влезло в узкую карточку, степень («д.м.н.,
+     профессор…») вынесена из подписи к числу отдельной строкой ниже:
+     в колонке ~110px она ломалась по слову и распирала блок. */
+  .doc-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 14px; margin:0 0 10px; }
+  .doc-stat { display:flex; flex-direction:row; align-items:baseline; gap:8px; }
+  .doc-deg { margin:0 0 14px; font-size:var(--fs-caption); line-height:1.35; color:var(--text-strong); }
+  .doc-exp-n { font-family:var(--ff-body); font-size:var(--fs-h); font-weight:600; letter-spacing:-.02em; line-height:1; color:var(--text-strong); flex:none; }
+  .doc-exp-l { flex:1; font-size:var(--fs-caption); line-height:1.3; color:var(--text-strong); }
+  .doc-bio { font-size:var(--fs-caption); line-height:1.55; color:var(--text-body); margin:0 0 16px; }
+  /* «Подробнее о враче» — гиперссылка в потоке текста. Цвет и подчёркивание
+     даёт глобальное правило `p a` (global.css); свой border-bottom здесь
+     рисовал ВТОРУЮ линию под ссылкой. Оставляем только раскладку. */
+  .doc-more { display:inline-flex; align-items:center; gap:4px; vertical-align:baseline; font-weight:600; white-space:nowrap; transition:.2s; }
+  /* шеврон — тот же, что у .link-chip (единый приём «стрелочки» на сайте) */
+  .doc-more .chev-r { width:13px; height:13px; flex:none; }
+  .doc-actions { display:flex; flex-direction:column; align-items:stretch; gap:10px; }
+  .doc-actions .btn { justify-content:center; font-size:var(--fs-caption); padding:11px 16px; }
+</style>

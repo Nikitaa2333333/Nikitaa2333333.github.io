@@ -1,0 +1,98 @@
+---
+/* Экран 4 «Рак лечится» — текстовый блок в общем стиле секций:
+   обычный h2 слева + наборный текст, без декорации.
+   Внизу — сдержанные ссылки-чипы на страницы локализаций (раздел «Блог»). */
+const chev =
+  '<path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
+
+const links = [
+  { href: '#', t: 'Рак молочной железы' },
+  { href: '#', t: 'Рак лёгкого' },
+  { href: '#', t: 'Рак кишечника' },
+];
+---
+
+<section class="sec ct-sec">
+  <div class="wrap">
+  <h2 class="ct-title">Рак можно лечить</h2>
+
+  <div class="ct-col">
+    <p>
+      За&nbsp;последние пятнадцать лет лечение опухолей изменилось принципиально.
+      Появились препараты, которые действуют точечно&nbsp;— на&nbsp;конкретную поломку
+      в&nbsp;клетках опухоли, а&nbsp;не&nbsp;на&nbsp;весь организм. Многие виды рака
+      перешли в&nbsp;разряд хронических заболеваний, которые контролируются годами.
+    </p>
+    <p>
+      Мы&nbsp;расскажем всё о&nbsp;вашей опухоли: пересмотрим гистологию, выполним
+      молекулярно-генетические исследования и&nbsp;объясним, что означает каждый
+      результат. Даже на&nbsp;поздних стадиях есть варианты&nbsp;—
+      от&nbsp;продления жизни до&nbsp;длительной ремиссии, и&nbsp;мы&nbsp;честно
+      скажем, что возможно в&nbsp;вашей ситуации.
+    </p>
+  </div>
+
+  <nav class="ct-links" aria-label="Страницы по локализациям">
+    {links.map((l) => (
+      <a href={l.href} class="link-chip">
+        {l.t}
+        <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
+      </a>
+    ))}
+    <a href="#" class="link-chip">
+      Все локализации
+      <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
+    </a>
+  </nav>
+  </div>
+</section>
+
+<style>
+  /* Тёмная полоса в тоне «Историй пациентов»: фон лежит на общем
+     контейнере .band-dark (index) — вместе с «Как мы лечим», без швов.
+     Внутренние поля тёмного полотна — «просторная» ручка ритма. */
+  /* секция идёт ВТОРОЙ (последней) в полосе: сверху один «просторный» отступ —
+     это и есть весь разрыв между блоками полосы (у «Как мы лечим» низ = 0) */
+  .ct-sec { padding-block: var(--section-gap-roomy); }
+
+  /* Заголовок — размер как у остальных секций, по ЛЕВОМУ краю (центровка текста
+     на сайте запрещена), мера — токен: длинный заголовок ломается на строки */
+  .ct-title {
+    font-size: var(--fs-h-lg);
+    letter-spacing: -.025em;
+    font-weight: 600;
+    max-width: var(--measure-head-lg);
+    color: var(--text-onDark);
+    margin: 0 0 var(--s-24);
+  }
+
+  /* Наборный текст — общий body-пресет; колонка узкая, текст по левому краю */
+  .ct-col { max-width: var(--measure-text); }
+  .ct-col p {
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+    letter-spacing: var(--tr-body-lg);
+    color: var(--text-onDark);
+    margin: 0 0 var(--s-16);
+  }
+  .ct-col p:last-of-type { margin-bottom: 0; }
+
+  /* Ссылки локализаций — глобальный .link-chip */
+  .ct-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: var(--s-8) var(--s-12);
+    margin-top: clamp(var(--s-24), 3vw, var(--s-40));
+  }
+  /* Чипы — как везде, контурные (без заливки); на тёмном полотне
+     обводка и текст белые, акцентный — ледяной accent-on-dark */
+  .ct-links :global(.link-chip) {
+    color: var(--text-onDark);
+    border-color: var(--text-onDark);
+  }
+  .ct-links :global(.link-chip:hover) {
+    color: var(--accent-on-dark);
+    border-color: var(--accent-on-dark);
+  }
+</style>

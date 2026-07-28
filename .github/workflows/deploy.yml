@@ -1,0 +1,67 @@
+# Публикация сайта.
+#
+# Живая ссылка: https://nikitaa2333333.github.io/
+#
+# Репозиторий ОДИН: здесь и исходники, и публикация. Пуш в main → GitHub сам
+# собирает сайт и выкладывает его. Переносить сборку руками не нужно, секретов
+# и токенов не нужно: всё происходит внутри одного репозитория.
+#
+# Репозиторий называется <логин>.github.io, поэтому сайт отдаётся С КОРНЯ домена.
+# Отсюда важное следствие: ссылки в страницах остаются корневыми (`/vrachi`),
+# префикс пути нигде не нужен.
+name: Публикация сайта
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Права для штатного механизма Pages: читать код, публиковать сайт,
+# подтвердить деплой одноразовым токеном.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Важна последняя версия main; промежуточные публикации отменяем.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      # enablement: true — включает Pages и переводит их на публикацию
+      # из Actions, если в настройках репозитория это ещё не сделано.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Сборка сайта
+        run: npm run build
+        env:
+          PUBLIC_SITE: https://nikitaa2333333.github.io
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

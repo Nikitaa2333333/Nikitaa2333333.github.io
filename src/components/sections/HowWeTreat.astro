@@ -1,0 +1,191 @@
+---
+// Экран 6. «Как мы лечим» — три приёма с выделенным результатом
+// + отдельная плашка про клинические исследования.
+// Стиль: editorial-ряды БЕЗ плашек (контент фундаментальный, важная информация):
+// слева заголовок приёма, справа текст, между рядами hairline-onDark;
+// «Результат» — строка-итог под фирменным <mark>.
+---
+
+<section class="sec hwt" id="how-we-treat">
+  <div class="wrap">
+  <div class="hwt-head">
+    <h2>Как проходит лечение: две консультации — и&nbsp;начало терапии</h2>
+    <p class="hwt-intro">
+      Мы&nbsp;понимаем главное опасение, что&nbsp;придётся неделями ходить
+      по&nbsp;разным врачам, собирать анализы без&nbsp;ясного итога, пытаться
+      проанализировать их. Путь в&nbsp;нашей клинике устроен иначе&nbsp;—
+      у&nbsp;каждого визита есть конкретный ответ и&nbsp;план действий.
+    </p>
+  </div>
+
+  <div class="hwt-list">
+    <!-- Приём 1 -->
+    <article class="hwt-row reveal">
+      <div class="hwt-row-head">
+        <h3>Первая консультация</h3>
+      </div>
+      <div class="hwt-row-body">
+        <p>
+          Обстоятельная беседа, осмотр и&nbsp;подробный анализ всех медицинских
+          документов: мы&nbsp;хотим услышать вас и&nbsp;понять болезнь —
+          не&nbsp;только по&nbsp;бумагам. Если полная картина не&nbsp;складывается,
+          мы&nbsp;определяем, что нужно дополнить: берём анализы крови прямо
+          в&nbsp;клинике, пересматриваем гистологические препараты
+          и&nbsp;выполняем молекулярно-генетические исследования.
+        </p>
+        <p class="hwt-result">
+          <mark>Полная картина ситуации и&nbsp;необходимые исследования.</mark>
+        </p>
+      </div>
+    </article>
+
+    <!-- Приём 2 -->
+    <article class="hwt-row reveal" style="--d:.08s">
+      <div class="hwt-row-head">
+        <h3>Вторая консультация</h3>
+      </div>
+      <div class="hwt-row-body">
+        <p>
+          С&nbsp;учётом результатов исследований у&nbsp;нас формируется полный
+          «паспорт опухоли». Опираясь на&nbsp;наш и&nbsp;мировой опыт лечения,
+          врачи определяют наиболее правильную схему лекарственной
+          терапии именно для вашей опухоли&nbsp;— и&nbsp;обязательно объясняют,
+          почему предлагают именно её. Вывод может совпадать с&nbsp;назначенным
+          ранее, а&nbsp;может заметно отличаться.
+        </p>
+        <p>
+          Если вы&nbsp;готовы и&nbsp;согласны на&nbsp;лечение, начать терапию
+          мы&nbsp;можем сразу.
+        </p>
+        <p class="hwt-result">
+          <mark>Уточнённый диагноз, «второе мнение» и&nbsp;схема лечения.</mark>
+        </p>
+      </div>
+    </article>
+
+    <!-- Приём 3 -->
+    <article class="hwt-row reveal" style="--d:.16s">
+      <div class="hwt-row-head">
+        <h3>Начало лечения</h3>
+      </div>
+      <div class="hwt-row-body">
+        <p>
+          Терапия современными лекарственными препаратами, доступными
+          на&nbsp;текущий момент в&nbsp;России. Первый
+          день терапии проходит в&nbsp;дневном стационаре: вы&nbsp;получаете
+          препараты в&nbsp;отдельной палате и&nbsp;в&nbsp;тот&nbsp;же день
+          возвращаетесь домой. Рядом&nbsp;— медицинская сестра и&nbsp;дежурный
+          врач, которые следят за&nbsp;самочувствием на&nbsp;всём протяжении
+          процедуры.
+        </p>
+        <p class="hwt-result">
+          <mark>Начало терапии.</mark>
+        </p>
+      </div>
+    </article>
+
+    <!-- Дополнительная возможность: клинические исследования — тот же ряд -->
+    <article class="hwt-row reveal" style="--d:.22s">
+      <div class="hwt-row-head">
+        <h3>Клинические исследования</h3>
+      </div>
+      <div class="hwt-row-body">
+        <p>
+          Бесплатное участие в&nbsp;исследованиях новейших препаратов
+          под&nbsp;нашим контролем — при&nbsp;соблюдении правил протокола: визиты
+          и&nbsp;анализы в&nbsp;срок.
+        </p>
+        <a class="link-chip hwt-link" href="#">
+          Клинические исследования<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+  </div>
+  </div>
+</section>
+
+<style>
+  /* Продолжение тёмной полосы «Рак лечится»: фон — на общем контейнере
+     .band-dark (index), секция сама фона не несёт. Секция идёт ПЕРВОЙ в полосе:
+     сверху двойной «просторный» отступ (заголовок не утыкается в кромку),
+     снизу нуль — внутренний разрыв задаёт следующая секция полосы. */
+  .hwt { padding-block: calc(var(--section-gap-roomy) * 2) 0; }
+
+  /* — Шапка секции — */
+  .hwt-head { margin-bottom: var(--head-gap); }
+  .hwt-kicker {
+    font-size: var(--fs-caption);
+    letter-spacing: .06em;
+    text-transform: none;
+    color: var(--accent);
+    margin: 0 0 var(--s-12);
+  }
+  .hwt-head h2 {
+    font-size: var(--fs-h-lg);
+    letter-spacing: -.025em;
+    font-weight: 600;
+    color: var(--text-onDark);
+    margin: 0 0 var(--s-16);
+  }
+  .hwt-intro {
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+    letter-spacing: var(--tr-body-lg);
+    color: var(--text-onDark);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  /* — Editorial-ряды приёмов: без плашек, hairline-разделители на тёмном — */
+  .hwt-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: var(--s-8) var(--s-48);
+    align-items: start;
+    padding-block: var(--s-16) var(--s-24);
+  }
+  /* Заголовок ряда: «Первый приём: тема» — одним цветом, без выделений */
+  .hwt-row-head h3 {
+    font-size: var(--fs-h);
+    font-weight: 600;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    color: var(--text-onDark);
+    margin: 0;
+    max-width: 12em;
+  }
+  .hwt-row-body p:not(.hwt-result) {
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+    color: var(--text-onDark);
+    margin: 0 0 var(--s-16);
+    max-width: 62ch;
+  }
+
+  /* «Результат» — строка-итог ряда под фирменным <mark> (приём выделения важного).
+     Строка короткая и лежит одна — подложка не рвётся переносами. */
+  .hwt-result {
+    margin: 0;
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+  }
+
+  /* Ссылка на раздел КИ — глобальный .link-chip (контурный); на тёмном
+     полотне обводка и текст белые (как чипы локализаций в «Рак лечится») */
+  .hwt-link {
+    display: inline-flex;
+    margin-top: var(--s-8);
+    color: var(--text-onDark);
+    border-color: var(--text-onDark);
+  }
+  .hwt-link:hover {
+    color: var(--accent-on-dark);
+    border-color: var(--accent-on-dark);
+  }
+
+  /* — Адаптив — */
+  @media (max-width: 960px) {
+    .hwt-row { grid-template-columns: 1fr; gap: var(--s-12); }
+    .hwt-row-head h3 { max-width: none; }
+  }
+</style>

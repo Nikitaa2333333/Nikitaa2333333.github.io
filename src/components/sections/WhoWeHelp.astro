@@ -1,0 +1,130 @@
+---
+/* Экран 3 «Кому мы помогаем» — три кликабельные карточки в ряд.
+   Белые карточки (surface-card + hairline), вёрстка во всех трёх идентичная:
+   заголовок сверху, текст с одной линии, стрелка в правом верхнем углу. */
+const arrow =
+  '<path d="M5 12h14m-6-6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
+
+const cards = [
+  {
+    href: '/biopsiya#peresmotr', // «Диагностика → Биопсия и гистология», блок «Пересмотр стёкол»
+    t: '«Мне поставили диагноз»',
+    d: 'Диагноз уже есть, и&nbsp;хочется убедиться, что он&nbsp;верный. Мы&nbsp;подробно анализируем все результаты исследований и&nbsp;даём глубокую расшифровку.',
+  },
+  {
+    href: '/s-chego-nachat#blizkim', // «С чего начать», ветка «Если вы ищете помощь для близкого»
+    t: '«Я&nbsp;ищу помощь для близкого»',
+    d: 'Вы&nbsp;решаете за&nbsp;маму, папу или супруга и&nbsp;не&nbsp;знаете, куда везти и&nbsp;что спрашивать. Мы&nbsp;подскажем, с&nbsp;чего начать, какие документы собрать и&nbsp;как устроен первый визит.',
+  },
+  {
+    href: '/biopsiya#peresmotr', // «Диагностика → Биопсия и гистология», блок «Пересмотр стёкол»
+    t: '«Я&nbsp;уже лечусь, но&nbsp;есть сомнения»',
+    d: 'Лечение идёт, а&nbsp;результата нет, или назначения вызывают вопросы. Мы&nbsp;пересмотрим тактику: изучим документы, уточним диагноз и&nbsp;обоснуем, что стоит оставить, а&nbsp;что&nbsp;— изменить.',
+  },
+];
+---
+
+<section class="wrap sec who-sec">
+  <div class="who-head">
+    <h2>В&nbsp;каких случаях к&nbsp;нам обращаться</h2>
+    <p class="who-lead">Чаще всего к&nbsp;нам приходят в&nbsp;трёх ситуациях.</p>
+  </div>
+
+  <div class="who-grid">
+    {cards.map((c) => (
+      <a href={c.href} class="who-card">
+        <span class="who-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" set:html={arrow} />
+        </span>
+        <span class="who-body">
+          <h3 set:html={c.t} />
+          <p set:html={c.d} />
+        </span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .sec.who-sec { padding-block: var(--section-gap); }
+
+  .who-head { margin-bottom: var(--head-gap); }
+  .kicker {
+    font-size: var(--fs-caption);
+    letter-spacing: 0.06em;
+    text-transform: none;
+    color: var(--accent);
+    margin: 0 0 var(--s-12);
+  }
+  .who-head h2 {
+    font-size: var(--fs-h-lg);
+    letter-spacing: -0.025em;
+    font-weight: 600;
+    margin: 0;
+  }
+  .who-lead {
+    max-width: var(--measure-lead);
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+    color: var(--text-body);
+    margin: var(--s-16) 0 0;
+  }
+
+  .who-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  /* Белая карточка (surface-card + hairline — как плашки «Как мы лечим»).
+     Вёрстка ЖЁСТКАЯ и одинаковая во всех трёх: заголовок с самого верха
+     (резерв под 2 строки), наборный текст стартует с одной линии; стрелка —
+     в правом верхнем углу, из потока вынута. */
+  .who-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: var(--s-24);
+    padding-right: calc(var(--s-24) + 50px); /* чтобы заголовок не заезжал под стрелку */
+    border-radius: var(--r-card);
+    background: var(--surface-card);
+    border: 1px solid var(--border-hairline);
+    color: var(--text-strong);
+  }
+
+  /* Стрелка-аффорданс — голая иконка (плашек под иконками нет), hover только красит */
+  .who-arrow {
+    position: absolute;
+    top: var(--s-24);
+    right: var(--s-24);
+    display: block;
+    color: var(--accent-soft);
+  }
+  .who-arrow svg { width: 20px; height: 20px; transform: rotate(-45deg); }
+  .who-card:hover .who-arrow { color: var(--accent); }
+
+  /* Отступ заголовок → текст ФИКСИРОВАННЫЙ (--s-16), в каждой карточке свой
+     поток: заголовок сверху, после него текст — не зависит от соседних. */
+  .who-body h3 {
+    font-size: var(--fs-h);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0 0 var(--s-16);
+    color: inherit;
+  }
+  .who-body p {
+    font-size: var(--fs-body-sm);
+    line-height: 1.55;
+    margin: 0;
+    max-width: 30em;
+    color: inherit;
+  }
+
+  /* Карточки текстовые — двухколоночный шаг пропускаем, сразу в одну колонку */
+  @media (max-width: 960px) {
+    .who-grid { grid-template-columns: 1fr; }
+    .who-card { min-height: 0; }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import FooterContacts from '../../components/sections/FooterContacts.astro';
+import DoctorCard from '../../components/DoctorCard.astro';
+import { doctors } from '../../data/doctors';
+
+/* ============================================================
+   /vrachi — раздел «Врачи» (ТЗ, пункт меню 5).
+   Список всех специалистов; каждая карточка ведёт на персональную
+   страницу /vrachi/<slug> — отдельный URL под индексацию.
+   ============================================================ */
+---
+
+<Base
+  title="Врачи клиники — онкологи и генетики, Санкт-Петербург"
+  description="Врачи клиники лекарственного лечения онкозаболеваний в Санкт-Петербурге: онкологи, генетик, торакальный хирург. Степени, стаж, научные публикации, запись на приём."
+>
+  <Header current="vrachi" />
+
+  <!-- HERO раздела -->
+  <section class="page-hero">
+    <div class="blob" style="width:480px;height:480px;background:var(--c-wash-teal);top:-160px;left:-60px;"></div>
+    <div class="blob" style="width:420px;height:420px;background:var(--c-wash-blue);top:-80px;right:-40px;"></div>
+    <div class="wrap" style="position:relative;z-index:1;">
+      <nav class="crumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a><span aria-hidden="true">/</span><span>Врачи</span>
+      </nav>
+      <h1 class="page-title">Наши <em class="i-serif">врачи</em></h1>
+      <p class="page-sub">Доктора медицинских наук, профессора, члены-корреспонденты РАН&nbsp;— специалисты с&nbsp;многолетним практическим опытом, которые ведут пациентов лично. У&nbsp;каждого врача&nbsp;— отдельная страница: образование, специализация, научная работа и&nbsp;условия приёма.</p>
+    </div>
+  </section>
+
+  <!-- СПИСОК ВРАЧЕЙ -->
+  <section class="wrap sec">
+    <div class="doc-grid">
+      {doctors.map((d) => (<DoctorCard doctor={d} />))}
+    </div>
+    <p class="docs-note">Первичная консультация&nbsp;— платная: врач изучает документы, разбирает ситуацию и&nbsp;отвечает на&nbsp;вопросы. Стоимость приёма&nbsp;— на&nbsp;странице врача и&nbsp;в&nbsp;<a href="/stoimost">разделе «Цены»</a>.</p>
+  </section>
+
+  <FooterContacts />
+
+  <style is:global>
+    /* — hero раздела (паттерн page-hero) — */
+    .page-hero { position:relative; overflow:hidden; background:var(--grad-uni); padding-block:52px 46px; }
+    .page-title { font-size:var(--fs-hero); line-height:1.02; letter-spacing:-.035em; font-weight:600; color:var(--text-strong); margin:0 0 18px; }
+    .page-sub { font-size:var(--fs-sub); line-height:1.55; color:var(--text-body); max-width:var(--measure-lead); margin:0; }
+    .crumbs { display:flex; align-items:center; gap:10px; font-size:var(--fs-caption); color:var(--text-muted); margin:0 0 20px; }
+    .crumbs a { color:var(--accent-soft); }
+    .crumbs a:hover { color:var(--accent); }
+
+    .sec { padding-block:var(--section-gap); }
+    /* сетка карточек — та же доля колонки, что на главной (4 колонки, врачей трое) */
+    .doc-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px; }
+    .docs-note { margin:28px 0 0; max-width:var(--measure-text); font-size:var(--fs-body-lg); line-height:var(--lh-body-lg); color:var(--text-body); }
+    /* цвет и подчёркивание ссылок в абзаце — глобальным правилом (global.css) */
+
+    @media (max-width:1100px) { .doc-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:560px) { .doc-grid { grid-template-columns:1fr; } }
+  </style>
+</Base>

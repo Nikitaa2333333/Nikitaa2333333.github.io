@@ -1,0 +1,157 @@
+---
+/* ============================================================
+   Экран 12. Первый шаг — «Ответим на вопросы, которые вас беспокоят».
+   Повтор плана из пяти шагов в компактном виде (горизонтальная полоса,
+   ≤960px — столбец). По ТЗ: промежуточные шаги (2–4) — полупрозрачные
+   (единственное разрешённое исключение из правила контраста), шаг 1
+   подсвечен акцентом + кнопка записи, шаг 5 «Лечение» — спокойный teal.
+   Контент — дословно из docs/ТЗ-главная.md.
+   ============================================================ */
+const steps = [
+  { n: '1', t: 'Изучаем ваши документы', mod: 'is-first' },
+  { n: '2', t: 'Уточняем диагноз, если необходимо', mod: 'is-mid' },
+  { n: '3', t: 'Рассказываем всё о&nbsp;вашей опухоли', mod: 'is-mid' },
+  { n: '4', t: 'Объясняем все варианты лечения', mod: 'is-mid' },
+  { n: '5', t: 'Лечение', mod: 'is-last' },
+];
+---
+
+<section class="sec fs-sec" id="first-step">
+  <div class="wrap">
+    <div class="fs-head">
+      <h2>Ответим на&nbsp;вопросы, которые вас беспокоят</h2>
+      <p>
+        Мы не&nbsp;рассказываем о&nbsp;космических кораблях — мы формируем
+        конкретный пошаговый план действий и&nbsp;идём к&nbsp;результату.
+        На&nbsp;консультации вы получите ответы на&nbsp;свои вопросы
+        и&nbsp;ясное понимание, что делать дальше.
+      </p>
+      <p>
+        Консультация платная — и&nbsp;это осознанная позиция. В&nbsp;её
+        стоимость входит не&nbsp;только профессионализм наших специалистов,
+        но&nbsp;и&nbsp;скорость принятых решений, объективность
+        и&nbsp;ответственность. Мы знаем цену времени в&nbsp;онкологии.
+      </p>
+    </div>
+
+    <ol class="fs-strip">
+      {steps.map((s, i) => (
+        <li class={`fs-item ${s.mod} reveal`} style={`--d:${(i * 0.08).toFixed(2)}s`}>
+          <span class="fs-num" aria-hidden="true">{s.n}</span>
+          <h3 class="fs-title" set:html={s.t} />
+          {s.mod === 'is-first' && (
+            <a class="btn btn-dark" href="#">Записаться на&nbsp;консультацию</a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .fs-sec { padding-block: var(--section-gap); }
+
+  /* — Шапка секции (паттерн sec-head/kicker главной) — */
+  /* Мера — на самих текстовых элементах, НЕ на контейнере: ch считается от кегля
+     элемента, на контейнере 16px он даёт совсем другую ширину (+ .sec h2 70% сверху) */
+  .fs-head { margin-bottom: var(--head-gap); }
+  .kicker { font-size: var(--fs-caption); letter-spacing: .06em; text-transform: none; color: var(--accent); margin: 0 0 12px; }
+  .fs-head h2 { font-size: var(--fs-h-lg); letter-spacing: -.025em; font-weight: 600; margin: 0; max-width: var(--measure-head); }
+  .fs-head p { margin: 16px 0 0; max-width: var(--measure-lead); font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); letter-spacing: var(--tr-body-lg); color: var(--text-body); }
+
+  /* — Компактная полоса из 5 шагов — */
+  .fs-strip {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    /* первая колонка шире (не уже кнопки в одну строку), остальные делят остаток */
+    grid-template-columns: minmax(max-content, 1.4fr) repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .fs-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 22px 20px;
+    border-radius: var(--r-glass);
+    border: 1px solid var(--border-hairline);
+    background: var(--veil-strong);
+    min-height: 168px;
+  }
+  .fs-num {
+    font-family: var(--ff-display);
+    font-weight: 600;
+    font-size: var(--fs-h);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--accent-soft);
+  }
+  .fs-title {
+    font-size: var(--fs-body-lg);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--text-strong);
+  }
+
+  /* Шаг 1 — подсвечен акцентом, на нём кнопка записи */
+  .fs-item.is-first { background: var(--accent); border-color: var(--accent); }
+  .fs-item.is-first .fs-num,
+  .fs-item.is-first .fs-title { color: var(--text-onDark); }
+  /* Кнопка на акцентной плашке — белая (тёмная сливалась с teal-фоном)
+     и на всю ширину карточки, чтобы перенос текста не ломал пилюлю */
+  .fs-item.is-first .btn {
+    margin-top: auto;
+    width: 100%;
+    background: var(--veil-strong);
+    color: var(--accent-soft);
+    box-shadow: none;
+    padding: 13px 20px;
+    white-space: nowrap;
+  }
+  .fs-item.is-first .btn:hover { background: var(--btn2-hover); }
+
+  /* Шаги 2–4 — полупрозрачные (единственное разрешённое ТЗ исключение
+     из правила контраста: промежуточные шаги приглушены сознательно) */
+  .fs-item.is-mid { background: var(--veil); opacity: .55; }
+
+  /* Шаг 5 «Лечение» — спокойный умиротворяющий teal-тон */
+  .fs-item.is-last { background: var(--tile-teal); border-color: var(--tile-teal); }
+  .fs-item.is-last .fs-num { color: var(--tile-teal-icon); }
+
+  /* Кнопка — паттерн .btn/.btn-dark из global.css; в узкой колонке с переносом */
+  .fs-item .btn { justify-content: center; text-align: center; white-space: normal; }
+
+  /* — Reveal-каскад (паттерн главной: .reveal + --d) — */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); transition-delay: var(--d, 0s); }
+  .reveal.in { opacity: 1; transform: none; }
+  /* полупрозрачный шаг «приезжает» не к 1, а к своей штатной .55 */
+  .fs-item.is-mid.reveal.in { opacity: .55; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .fs-item.is-mid.reveal, .fs-item.is-mid.reveal.in { opacity: .55; }
+  }
+
+  @media (max-width: 960px) {
+    .fs-strip { grid-template-columns: 1fr; gap: 10px; }
+    .fs-item { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 16px; min-height: 0; padding: 18px 20px; }
+    .fs-item.is-first .btn { grid-column: 1 / -1; margin-top: 6px; justify-self: start; }
+  }
+</style>
+
+<script>
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      }
+    },
+    { threshold: 0.15 }
+  );
+  document.querySelectorAll('.fs-sec .reveal').forEach((el) => io.observe(el));
+</script>

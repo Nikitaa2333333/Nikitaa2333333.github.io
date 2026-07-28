@@ -1,0 +1,196 @@
+---
+/* Hero — первый экран главной (Экран 1 ТЗ): фото клиники на весь вьюпорт,
+   слайдер с плавным crossfade (автоплей только когда блок на экране),
+   текст по низу в два угла на тёмном scrim. Контент — дословно из
+   docs/ТЗ-главная.md. Самодостаточный компонент: разметка + scoped-стили + скрипт. */
+import { clinic } from '../../data/clinic';
+
+const slides = [
+  { src: '/images/clinic/exterior.webp',  alt: 'Клиника трансляционной медицины в Санкт-Петербурге', w: 1920, h: 1080 },
+  { src: '/images/clinic/ward.webp',      alt: 'Палата дневного стационара клиники',                w: 1920, h: 1080 },
+  { src: '/images/clinic/infusion.webp',  alt: 'Инфузионная зона и кресла-реклайнеры',             w: 1920, h: 1080 },
+  { src: '/images/clinic/consult.webp',   alt: 'Кабинет консультаций врача-онколога',               w: 1920, h: 1080 },
+  { src: '/images/clinic/reception.webp', alt: 'Холл и ресепшен клиники в СПб',                    w: 1920, h: 1080 },
+];
+---
+
+<section class="hero-full" aria-label="Клиника лекарственного лечения онкологических заболеваний">
+  <!-- фоновый слайдер: full-bleed фото клиники, crossfade -->
+  <div class="hf-bg" aria-hidden="true">
+    {slides.map((s, idx) => (
+      <img
+        src={s.src}
+        alt={s.alt}
+        width={s.w}
+        height={s.h}
+        loading={idx === 0 ? 'eager' : 'lazy'}
+        fetchpriority={idx === 0 ? 'high' : 'low'}
+        decoding="async"
+        class={`hf-img ${idx === 0 ? 'is-active' : ''}`}
+      />
+    ))}
+    <!-- тёмный градиент-scrim по низу — читаемость текста на фото -->
+    <div class="hf-scrim"></div>
+  </div>
+
+  <div class="wrap hf-grid">
+    <!-- левый нижний угол: киккер + H1 + подзаголовок -->
+    <div class="hf-left">
+      <h1 class="hf-title">Клиника трансляционной медицины: лечение онкологических заболеваний</h1>
+      <p class="hf-sub">Химиотерапия, таргетная и&nbsp;иммунотерапия в&nbsp;современном дневном стационаре.</p>
+    </div>
+
+    <!-- правый нижний угол: абзац из ТЗ + адрес + кнопки -->
+    <div class="hf-right">
+      <p class="hf-text">Вы&nbsp;или ваш близкий столкнулись с&nbsp;диагнозом. Первое, что&nbsp;важно, — понять, что&nbsp;происходит и&nbsp;какие есть варианты. Мы&nbsp;изучим ваши документы, объясним всё без&nbsp;спешки и&nbsp;на&nbsp;понятном языке и&nbsp;вместе выберем план лечения.</p>
+      <p class="hf-addr">
+        <svg viewBox="0 0 24 24" class="hf-pin" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>{clinic.addrShort} — мы&nbsp;настоящие</span>
+      </p>
+      <div class="hf-cta">
+        <a href="#contacts" class="btn btn-dark">Записаться на&nbsp;приём</a>
+        <a href="#tele" class="btn btn-light">Телемедицинская консультация</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* — Полотно: фото на весь вьюпорт, контент прижат к низу — */
+  .hero-full {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--grad-uni); /* подложка, пока фото не загрузилось */
+  }
+
+  /* — Слайдер: кадры друг под другом, плавный crossfade через opacity — */
+  .hf-bg { position: absolute; inset: 0; }
+  .hf-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .hf-img.is-active { opacity: 1; }
+
+  /* — Scrim: тёмный градиент по низу фото (rgba допущен только здесь) — */
+  .hf-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(10, 13, 18, 0.82) 0%,
+      rgba(10, 13, 18, 0.52) 28%,
+      rgba(10, 13, 18, 0.18) 52%,
+      rgba(10, 13, 18, 0) 72%
+    );
+    pointer-events: none;
+  }
+
+  /* — Контент: два нижних угла — */
+  .hf-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    align-items: end;
+    gap: 24px 64px;
+    padding-block: 40px 52px;
+  }
+
+  /* Левый угол: киккер + H1 + подзаголовок */
+  .hf-kicker {
+    font-size: var(--fs-caption);
+    letter-spacing: 0.06em;
+    color: var(--accent-on-dark);
+    margin: 0 0 16px;
+  }
+  .hf-title {
+    font-family: var(--ff-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    /* ~3 строки на ~1280px: колонка ограничена 16em, размер — clamp */
+    font-size: var(--fs-display);
+    max-width: 16em;
+    color: #fff;
+    margin: 0 0 18px;
+  }
+  .hf-sub {
+    font-size: var(--fs-sub);
+    line-height: 1.5;
+    color: #fff;
+    max-width: 30em;
+    margin: 0;
+  }
+
+  /* Правый угол: абзац + адрес + кнопки */
+  .hf-right { max-width: 34em; justify-self: end; }
+  .hf-text {
+    font-size: var(--fs-body-sm);
+    line-height: 1.6;
+    color: #fff;
+    margin: 0 0 18px;
+  }
+  .hf-addr {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--fs-body-sm);
+    color: #fff;
+    margin: 0 0 22px;
+  }
+  .hf-pin { width: 16px; height: 16px; flex: none; color: var(--accent-on-dark); }
+
+  /* — Кнопки: стили в global.css. Вторая кнопка на фото — та же белая
+       заливная (.btn-light), стеклянная ghost-версия с обводкой снята — */
+  .hf-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  /* — Адаптив: ≤960px колонки складываются в одну (слева-снизу) — */
+  @media (max-width: 960px) {
+    .hf-grid { grid-template-columns: 1fr; gap: 22px; padding-block: 32px 36px; }
+    .hf-right { justify-self: start; }
+    .hf-scrim {
+      background: linear-gradient(
+        to top,
+        rgba(10, 13, 18, 0.86) 0%,
+        rgba(10, 13, 18, 0.6) 42%,
+        rgba(10, 13, 18, 0.2) 68%,
+        rgba(10, 13, 18, 0) 85%
+      );
+    }
+  }
+  @media (max-width: 480px) {
+    .hf-cta { flex-direction: column; align-items: stretch; }
+    .btn { justify-content: center; }
+  }
+</style>
+
+<script>
+  // crossfade-слайдер hero: автоплей ходит только когда блок на экране (autoplayIO)
+  const root = document.querySelector('.hero-full');
+  const imgs = root ? [...root.querySelectorAll<HTMLElement>('.hf-img')] : [];
+  let idx = 0;
+  let timer: number | undefined;
+
+  const go = (i: number) => {
+    idx = (i + imgs.length) % imgs.length;
+    imgs.forEach((im, k) => im.classList.toggle('is-active', k === idx));
+  };
+  const stop = () => { if (timer) clearInterval(timer); timer = undefined; };
+  const auto = () => { stop(); timer = window.setInterval(() => go(idx + 1), 5000); };
+
+  if (root && imgs.length > 1) {
+    new IntersectionObserver(
+      ([e]) => (e.isIntersecting ? auto() : stop()),
+      { threshold: 0.1 },
+    ).observe(root);
+  }
+</script>

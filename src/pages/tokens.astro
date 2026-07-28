@@ -1,0 +1,415 @@
+---
+import Base from '../layouts/Base.astro';
+
+// ————— ПАЛИТРА (значения дублируют tokens.base.css — это витрина, показываем hex подписью)
+const accents = [
+  { name: '--c-teal', v: '#3a8ca6', role: 'Северная волна — главный акцент' },
+  { name: '--c-teal-deep', v: '#29697f', role: 'Тёмный teal: текст-ссылки, CTA' },
+  { name: '--c-violet', v: '#7c6cd6', role: 'Фиолетовый — вторичный' },
+  { name: '--c-violet-deep', v: '#574aa8', role: 'Тёмный фиолетовый' },
+  { name: '--c-steel', v: '#6a7f99', role: 'Серо-синий' },
+];
+const inks = [
+  { name: '--c-ink', v: '#0a0d12', role: 'Заголовки и наборный текст' },
+  { name: '--c-graphite', v: '#535862', role: 'Служебные подписи' },
+  { name: '--c-fog', v: '#93979f', role: 'Приглушённые метки' },
+];
+const surfaces = [
+  { name: '--c-sky', v: '#ebf5ff', role: 'Холст страницы' },
+  { name: '--c-bone', v: '#fafdff', role: 'Карточка' },
+  { name: '--c-paper', v: '#ffffff', role: 'Приподнятые слои' },
+  { name: '--c-hairline', v: '#e6edf5', role: 'Бордер 1px' },
+];
+const washes = [
+  { name: '--c-wash-teal', v: '#dcedf3', role: 'Лёд' },
+  { name: '--c-wash-blue', v: '#d9ecff', role: 'Голубой' },
+  { name: '--c-wash-steel', v: '#dde5f0', role: 'Серо-синий' },
+  { name: '--c-wash-violet', v: '#e9e2fb', role: 'Сиреневый' },
+];
+
+// ————— ТИПОШКАЛА
+const scale = [
+  { label: 'display — 72', fs: 'var(--fs-display)', lh: 'var(--lh-display)', tr: 'var(--tr-display)', ff: 'display', t: 'Лечение в дневном стационаре' },
+  { label: 'h-lg — 48', fs: 'var(--fs-h-lg)', lh: 'var(--lh-h-lg)', tr: 'var(--tr-h-lg)', ff: 'display', t: 'Команда экспертов-онкологов' },
+  { label: 'h — 32', fs: 'var(--fs-h)', lh: 'var(--lh-h)', tr: 'var(--tr-h)', ff: 'display', t: 'Молекулярно-генетическая диагностика' },
+  { label: 'sub — 20', fs: 'var(--fs-sub)', lh: 'var(--lh-sub)', tr: 'var(--tr-sub)', ff: 'body', t: 'Стандарты GCP и прозрачность на каждом шаге' },
+  { label: 'body — 16', fs: 'var(--fs-body)', lh: 'var(--lh-body)', tr: 'normal', ff: 'body', t: 'Таргетная и иммунотерапия, сопроводительное лечение, установка венозных порт-систем — в комфортных условиях дневного стационара, без госпитализации.' },
+  { label: 'caption — 12', fs: 'var(--fs-caption)', lh: 'var(--lh-caption)', tr: 'var(--tr-caption)', ff: 'body', t: 'Имеются противопоказания. Необходима консультация специалиста.' },
+];
+
+// ————— ВРАЧИ (те же данные и фото, что на главной)
+const doctors = [
+  { fio: 'Смирнова Анна Викторовна', role: 'Врач-онколог, химиотерапевт', deg: 'к.м.н.', exp: 'стаж 18 лет', spec: 'Химиотерапия', img: '/images/smirnova.webp' },
+  { fio: 'Ковалёв Дмитрий Сергеевич', role: 'Врач-онколог', deg: 'д.м.н.', exp: 'стаж 22 года', spec: 'Иммунотерапия', img: '/images/kovalev.webp' },
+  { fio: 'Орлова Мария Александровна', role: 'Онколог-иммунолог', deg: 'к.м.н.', exp: 'стаж 12 лет', spec: 'Иммунотерапия', img: '/images/orlova.webp' },
+  { fio: 'Гусев Павел Игоревич', role: 'Врач-генетик', deg: 'к.б.н.', exp: 'стаж 10 лет', spec: 'Диагностика', img: '/images/gusev.webp' },
+];
+
+// ————— ФИРМЕННЫЕ 3D-ИЛЛЮСТРАЦИИ (clay-рендеры с плашек преимуществ главной)
+const ills = [
+  { t: 'Дневной стационар', img: '/images/adv/stacionar.webp' },
+  { t: 'Прозрачные цены', img: '/images/adv/price.webp' },
+  { t: 'Команда экспертов', img: '/images/adv/team.webp' },
+];
+
+const radii = [
+  { name: '--r-sm', px: '12px', role: 'Иконки, марка' },
+  { name: '--r-input', px: '16px', role: 'Поля форм' },
+  { name: '--r-glass', px: '24px', role: 'Стекло' },
+  { name: '--r-card', px: '28px', role: 'Карточки, тайлы' },
+  { name: '--r-pill', px: 'pill', role: 'Кнопки, чипы' },
+];
+
+const arrow = `<path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/>`;
+---
+
+<Base title="UI-кит · все элементы дизайна">
+  <div style="position:relative; overflow:hidden; min-height:100vh;">
+    <div class="blob" style="width:520px; height:520px; background:var(--blob-1); top:-140px; left:-80px;"></div>
+    <div class="blob" style="width:460px; height:460px; background:var(--blob-2); top:320px; right:-120px;"></div>
+    <div class="blob" style="width:420px; height:420px; background:var(--blob-3); top:1400px; left:-100px;"></div>
+
+    <main class="wrap" style="position:relative; z-index:1; padding-block:64px 120px;">
+
+      <header style="margin-bottom:64px;">
+        <p class="kicker">UI-кит · единая витрина элементов · <a href="/" style="color:var(--accent);">→ на&nbsp;главную</a></p>
+        <h1 style="font-size:var(--fs-display); margin:0 0 14px;">Все элементы <em class="i-serif">одной</em> страницей</h1>
+        <p style="font-size:var(--fs-sub); line-height:var(--lh-sub); max-width:38em; margin:0;">Шрифтовая пара, палитра, кнопки, маркер, иллюстрации, фотоблоки, карточки врачей и&nbsp;формы — эталон концепции «Воздух». Всё построено только на&nbsp;токенах, без тяжёлых эффектов: никакого backdrop-blur, блобы — через radial-маску.</p>
+      </header>
+
+      <!-- ================= ШРИФТОВАЯ ПАРА ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">01 · Типографика</p><h2>Шрифтовая пара</h2></div>
+        <div class="uk-pair">
+          <div class="uk-card uk-specimen">
+            <span class="uk-glyph" style="font-family:var(--ff-display);">Аа</span>
+            <b>Lora</b>
+            <i>Заголовки · засечка · вес 600 · трекинг −0.02em</i>
+            <p style="font-family:var(--ff-display); font-size:var(--fs-h); line-height:1.2; margin:12px 0 0;">Забота, доказанная <em class="i-serif">наукой</em></p>
+          </div>
+          <div class="uk-card uk-specimen">
+            <span class="uk-glyph" style="font-family:var(--ff-body);">Аа</span>
+            <b>Manrope</b>
+            <i>Наборный текст · гротеск · вес 400–600</i>
+            <p style="font-size:var(--fs-body); line-height:1.6; margin:12px 0 0;">Лечение проходит в&nbsp;дневном стационаре: утром — терапия, вечером пациент дома, в&nbsp;привычной обстановке.</p>
+          </div>
+        </div>
+        <p class="uk-note">Приём «.i-serif»: одно акцентное слово заголовка — засечка Lora, прямое начертание. Italic запрещён везде. Капс запрещён везде.</p>
+
+        <div class="uk-card" style="padding:40px; display:grid; gap:26px; margin-top:20px;">
+          {scale.map((s) => (
+            <div class="uk-scale-row">
+              <span class="uk-scale-label">{s.label}</span>
+              <p style={`margin:0; font-family:var(--ff-${s.ff}); font-size:${s.fs}; line-height:${s.lh}; letter-spacing:${s.tr}; color:var(--text-strong); font-weight:${s.ff === 'display' ? 600 : 500};`}>{s.t}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- ================= ПАЛИТРА ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">02 · Цвет</p><h2>Палитра</h2></div>
+
+        <p class="grp">Акценты — холодная «северная волна» + фиолетовый</p>
+        <div class="sw-row">{accents.map((c) => (
+          <div class="sw"><span class="dot" style={`background:${c.v}`}></span><b>{c.name}</b><i>{c.v}</i><em>{c.role}</em></div>))}
+        </div>
+
+        <p class="grp">Чернила</p>
+        <div class="sw-row">{inks.map((c) => (
+          <div class="sw"><span class="dot" style={`background:${c.v}`}></span><b>{c.name}</b><i>{c.v}</i><em>{c.role}</em></div>))}
+        </div>
+
+        <p class="grp">Холст и&nbsp;поверхности</p>
+        <div class="sw-row">{surfaces.map((c) => (
+          <div class="sw"><span class="dot" style={`background:${c.v}; border:1px solid var(--border-hairline);`}></span><b>{c.name}</b><i>{c.v}</i><em>{c.role}</em></div>))}
+        </div>
+
+        <p class="grp">Пастельные washi — блобы и&nbsp;плашки (не&nbsp;более двух в&nbsp;секции)</p>
+        <div class="sw-row">{washes.map((c) => (
+          <div class="sw"><span class="dot" style={`background:${c.v}`}></span><b>{c.name}</b><i>{c.v}</i><em>{c.role}</em></div>))}
+        </div>
+
+        <p class="grp">Градиенты-муды</p>
+        <div class="uk-grad-row">
+          <div class="uk-grad" style="background:var(--grad-uni);"><span>--grad-uni — единый фон hero/секций</span></div>
+          <div class="uk-grad" style="background:linear-gradient(145deg, var(--g-uni-a), var(--g-uni-b) 55%, var(--g-uni-c));"><span>--g-uni-a/-b/-c — тот же градиент на плашках</span></div>
+        </div>
+      </section>
+
+      <!-- ================= КНОПКИ ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">03 · Действия</p><h2>Кнопки и&nbsp;ссылки</h2></div>
+        <div class="uk-card uk-demo">
+          <div class="uk-demo-row">
+            <a href="#" class="btn btn-dark">Записаться на&nbsp;приём</a>
+            <a href="#" class="btn btn-ice">Получить консультацию <svg viewBox="0 0 24 24" class="ic-s" set:html={arrow}></svg></a>
+            <a href="#" class="btn btn-mini">Смотреть</a>
+            <a href="#" class="link-chip">Чип-ссылка <svg viewBox="0 0 24 24" class="chev-r" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            <a href="#" class="doc-link">Расписание приёма <svg viewBox="0 0 24 24" class="ic-s" set:html={arrow}></svg></a>
+          </div>
+          <p class="uk-cap">Кнопки — только заливка, обводок нет; на&nbsp;hover просто перекрашиваются (без сдвига). btn-dark — брендовая CTA (--cta-fill) · btn-ice — вторичная НА&nbsp;БЕЛОЙ ПЛАШКЕ (ледяная --btn3-fill) · btn-light — вторичная на&nbsp;холсте, фото и&nbsp;градиенте (белая --btn2-fill, см. полосу ниже) · btn-mini — компакт. Чипы&nbsp;— наоборот, контурные (hairline), и&nbsp;если чип куда-то ведёт&nbsp;— обязательно шеврон&nbsp;›.</p>
+          <div class="uk-dark-strip">
+            <a href="#" class="btn btn-light">Записаться на&nbsp;приём</a>
+            <p>btn-light — на&nbsp;тёмном фото и&nbsp;градиентах (слайдер стационара)</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ЧИПЫ И ПИЛЮЛИ ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">04 · Метки</p><h2>Чипы, пилюли, фильтры</h2></div>
+        <div class="uk-card uk-demo">
+          <div class="uk-demo-row">
+            <span class="chip">Онкология</span><span class="chip">Дневной стационар</span><span class="chip">GCP</span>
+          </div>
+          <p class="uk-cap">chip — вуаль + hairline, теги в&nbsp;hero</p>
+          <div class="uk-demo-row">
+            <a href="#" class="dir">Химиотерапия <svg viewBox="0 0 24 24" class="ic-s" set:html={arrow}></svg></a>
+            <a href="#" class="dir">Иммунотерапия <svg viewBox="0 0 24 24" class="ic-s" set:html={arrow}></svg></a>
+          </div>
+          <p class="uk-cap">dir — пилюля-направление, hover красит бордер в&nbsp;акцент</p>
+          <div class="uk-demo-row">
+            <button class="fbtn is-active">Все специалисты</button>
+            <button class="fbtn">Химиотерапия</button>
+            <button class="fbtn">Диагностика</button>
+          </div>
+          <p class="uk-cap">fbtn — фильтры списка врачей</p>
+          <div class="uk-demo-row" style="align-items:baseline;">
+            <p class="kicker" style="margin:0;">Наши преимущества</p>
+            <span class="doc-spec" style="position:static;">Химиотерапия</span>
+          </div>
+          <p class="uk-cap">kicker — надзаголовок секции · doc-spec — вуаль-плашка поверх фото</p>
+        </div>
+      </section>
+
+      <!-- ================= ПЛАШКИ ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">06 · Поверхности</p><h2>Плашки</h2></div>
+        <div class="uk-tiles">
+          <div class="uk-card uk-tile">
+            <h3>Белая карточка</h3>
+            <p>surface-card + hairline-бордер 1px — базовая поверхность. Без backdrop-blur и&nbsp;полупрозрачности: тяжёлый стекломорфизм из&nbsp;дизайна убран (оптимизация).</p>
+          </div>
+          <div class="adv uk-tile" style="--ang:135deg;">
+            <h3>Тайл, угол 135°</h3>
+            <p>ЕДИНЫЙ градиент --g-uni-a → --g-uni-b → --g-uni-c (лёд → бирюза кнопки → голубой). Угол у&nbsp;каждой плашки свой (--ang inline) — «разное движение».</p>
+          </div>
+          <div class="adv uk-tile" style="--ang:205deg;">
+            <h3>Тайл, угол 205°</h3>
+            <p>Тот же градиент под другим углом. Иконки — без белых чипов, единым цветом бирюзы кнопки --tile-uni-icon.</p>
+          </div>
+          <div class="adv uk-tile" style="--ang:320deg;">
+            <h3>Тайл, угол 320°</h3>
+            <p>Тот же градиент, движение в&nbsp;обратную сторону. Текст — чистый тёмный --c-ink, без серости.</p>
+          </div>
+        </div>
+
+        <p class="grp" style="margin-top:28px;">Радиусы</p>
+        <div class="uk-radii">
+          {radii.map((r) => (
+            <div class="uk-radius">
+              <span style={`border-radius:var(${r.name});`}></span>
+              <b>{r.name}</b><i>{r.px} · {r.role}</i>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- ================= 3D-ИЛЛЮСТРАЦИИ ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">07 · Иллюстрации</p><h2>Фирменные 3D-иллюстрации</h2></div>
+        <div class="uk-adv-grid">
+          {ills.map((a) => (
+            <img class="uk-ill" src={a.img} alt={a.t} loading="lazy" />
+          ))}
+        </div>
+        <p class="uk-note">Clay-рендеры в&nbsp;ледяной гамме на&nbsp;чисто белом фоне — единственное утверждённое исключение из&nbsp;правила «не&nbsp;игрушечные 3D». Живут внизу белых карточек преимуществ (surface-card + hairline), вклеены через mix-blend-mode: multiply — без швов. Людей в&nbsp;иллюстрациях не&nbsp;рисуем, только предметы, без&nbsp;надписей. На&nbsp;главной «Прозрачные цены» — не&nbsp;картинка, а&nbsp;живой мини-прейскурант-тикер. Промпты: docs/illustration-prompt-adv.md.</p>
+      </section>
+
+      <!-- ================= ФОТОБЛОКИ ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">08 · Фото</p><h2>Фотоблоки</h2></div>
+        <div class="uk-photos">
+          <figure class="portrait uk-portrait">
+            <img src="/images/smirnova.webp" alt="Врач клиники" class="portrait-img is-active" />
+            <figcaption class="doc-spec">Врач во&nbsp;всю ширину плашки — full-bleed</figcaption>
+          </figure>
+          <figure class="uk-slide">
+            <img src="/images/clinic/ward.webp" alt="Палата дневного стационара" />
+            <div class="uk-slide-veil">
+              <p class="kicker" style="color:var(--accent-on-dark); margin-bottom:8px;">Дневной стационар</p>
+              <h3>Палата дневного стационара</h3>
+              <div class="uk-slide-row">
+                <a href="#" class="btn btn-light">Записаться на&nbsp;приём</a>
+                <span class="uk-dots"><i class="is-active"></i><i></i><i></i><i></i></span>
+              </div>
+            </div>
+          </figure>
+        </div>
+        <p class="uk-note">Слева — портрет hero (радиус --r-card, фон-заглушка только из&nbsp;--c-wash-*). Справа — кадр полноэкранного слайдера: тёмный градиент снизу, белый заголовок, btn-light, точки-навигация.</p>
+      </section>
+
+      <!-- ================= КАРТОЧКИ ВРАЧЕЙ ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">09 · Люди</p><h2>Карточки врачей</h2></div>
+        <div class="doc-grid">
+          {doctors.map((d) => (
+            <article class="uk-card doc">
+              <div class="doc-photo">
+                <img src={d.img} alt={d.fio} class="doc-img" />
+                <span class="doc-spec">{d.spec}</span>
+              </div>
+              <div class="doc-body">
+                <h3 class="doc-fio">{d.fio}</h3>
+                <p class="doc-role">{d.role}</p>
+                <div class="doc-meta"><span>{d.deg}</span><span>·</span><span>{d.exp}</span></div>
+                <a href="#" class="doc-link">Расписание приёма <svg viewBox="0 0 24 24" class="ic-s" set:html={arrow}></svg></a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- ================= ФОРМА ================= -->
+      <section class="uk-sec">
+        <div class="sec-head"><p class="kicker">10 · Формы</p><h2>Поля и&nbsp;согласие</h2></div>
+        <div class="uk-form-wrap">
+          <form class="uk-card contact-form" onsubmit="return false">
+            <h3>Задать вопрос</h3>
+            <input class="fi" type="text" placeholder="Ваше имя" />
+            <input class="fi" type="tel" placeholder="Телефон" />
+            <textarea class="fi" rows="3" placeholder="Ваш вопрос"></textarea>
+            <label class="consent"><input type="checkbox" checked /> Согласен на&nbsp;обработку персональных данных (152-ФЗ). Данные хранятся на&nbsp;серверах в&nbsp;РФ.</label>
+            <button class="btn btn-dark" type="submit">Отправить</button>
+          </form>
+          <div>
+            <p class="uk-note" style="margin-top:0;">Поле .fi: вуаль --veil-strong, радиус --r-input, фокус — бордер в&nbsp;акцент. Согласие на&nbsp;ПДн обязательно при&nbsp;любой отправке данных.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="compliance">Имеются противопоказания. Необходима консультация специалиста.</div>
+    </main>
+  </div>
+
+  <style is:global>
+    /* — секции витрины — */
+    .uk-sec { margin-bottom: 88px; }
+    /* Белая карточка вместо .glass: без backdrop-filter — стекломорфизм убран (оптимизация) */
+    .uk-card { background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--r-glass); }
+    .sec-head { margin-bottom: 26px; }
+    .sec-head h2 { font-size: var(--fs-h-lg); letter-spacing: -0.025em; font-weight: 600; margin: 0; }
+    .kicker { font-size: var(--fs-caption); letter-spacing: 0.06em; text-transform: none; color: var(--accent); margin: 0 0 12px; }
+    .grp { font-size: var(--fs-caption); color: var(--text-muted); margin: 26px 0 12px; }
+    .uk-note { font-size: var(--fs-caption); color: var(--text-muted); margin: 14px 0 0; max-width: var(--measure-text); }
+    .uk-cap { font-size: var(--fs-caption); color: var(--text-muted); margin: 0; }
+    .compliance { font-size: var(--fs-caption); color: var(--text-muted); text-align: center; border-top: 1px solid var(--border-hairline); padding-top: 20px; }
+
+    /* — шрифтовая пара — */
+    .uk-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .uk-specimen { padding: 32px 34px; display: grid; gap: 4px; align-content: start; }
+    .uk-specimen .uk-glyph { font-size: var(--fs-num-lg); line-height: 1; color: var(--text-strong); font-weight: 600; }
+    .uk-specimen b { font-size: var(--fs-body-lg); color: var(--text-strong); margin-top: 10px; }
+    .uk-specimen i { font-size: var(--fs-caption); color: var(--text-muted); font-style: normal; }
+    .uk-scale-row { display: grid; grid-template-columns: 110px 1fr; gap: 24px; align-items: baseline; }
+    .uk-scale-label { font-size: var(--fs-caption); color: var(--text-muted); letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+
+    /* — палитра: КРУГИ — */
+    .sw-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .sw { background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--r-input); padding: 14px; width: 168px; display: grid; gap: 2px; justify-items: start; }
+    .sw .dot { display: block; width: 56px; height: 56px; border-radius: var(--r-pill); margin-bottom: 10px; box-shadow: var(--sh-soft); }
+    .sw b { font-size: var(--fs-caption); color: var(--text-strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sw i { font-size: var(--fs-caption); color: var(--text-muted); font-style: normal; font-variant-numeric: tabular-nums; }
+    .sw em { font-size: var(--fs-caption); color: var(--text-muted); font-style: normal; }
+    .uk-grad-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .uk-grad { height: 220px; border-radius: var(--r-glass); border: 1px solid var(--border-hairline); display: flex; align-items: flex-end; padding: 16px 20px; }
+    .uk-grad span { font-size: var(--fs-caption); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+    /* — маркер внимания — */
+
+    /* — демо-блоки — */
+    .uk-demo { padding: 32px 34px; display: grid; gap: 12px; }
+    .uk-demo-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .uk-demo-row + .uk-cap { margin-bottom: 10px; }
+    .uk-dark-strip { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 8px; background: linear-gradient(150deg, #23303e, #10161e); border-radius: var(--r-glass); padding: 22px 24px; }
+    .uk-dark-strip p { font-size: var(--fs-caption); color: rgba(255, 255, 255, 0.75); margin: 0; }
+
+    /* — кнопки/чипы (эталон, как на главной) — */
+    .ic-s { width: 16px; height: 16px; }
+    .chip { font-size: var(--fs-caption); color: var(--text-body); border: 1px solid var(--border-hairline); border-radius: var(--r-pill); padding: 6px 14px; }
+    .dir { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-body); color: var(--text-strong); border: 1px solid var(--border-strong); border-radius: var(--r-pill); padding: 12px 20px; transition: 0.2s; }
+    .dir:hover { border-color: var(--accent); color: var(--accent); }
+    .dir .ic-s { color: var(--accent); }
+    .fbtn { font-family: var(--ff-body); font-size: var(--fs-body-sm); color: var(--text-body); border: 1px solid var(--border-strong); border-radius: var(--r-pill); padding: 9px 18px; cursor: pointer; }
+    .fbtn.is-active { background: var(--cta-fill); color: var(--cta-text); border-color: transparent; }
+
+    /* — плашки — */
+    .uk-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .adv { border-radius: var(--r-card); background: linear-gradient(var(--ang, 150deg), var(--g-uni-a), var(--g-uni-b) 55%, var(--g-uni-c)); }
+    .uk-tile { padding: 28px 26px; min-height: 210px; }
+    .uk-tile h3 { font-size: var(--fs-sub); margin: 0 0 10px; }
+    .uk-tile p { font-size: var(--fs-body-sm); line-height: 1.55; color: var(--text-body); margin: 0; }
+    .uk-radii { display: flex; flex-wrap: wrap; gap: 12px; }
+    .uk-radius { background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--r-input); padding: 14px; width: 168px; display: grid; gap: 2px; }
+    .uk-radius span { display: block; width: 100%; height: 56px; background: var(--tile-teal); border: 1px solid var(--border-strong); margin-bottom: 10px; }
+    .uk-radius b { font-size: var(--fs-caption); color: var(--text-strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .uk-radius i { font-size: var(--fs-caption); color: var(--text-muted); font-style: normal; }
+
+    /* — фирменные 3D-иллюстрации: картинки целиком, без плашек и обрезки;
+       multiply растворяет белый фон рендера в голубом холсте страницы — */
+    .uk-adv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; align-items: center; }
+    .uk-ill { display: block; width: 100%; height: auto; mix-blend-mode: multiply; transform: scale(1.28); }
+
+    /* — фотоблоки — */
+    .uk-photos { display: grid; grid-template-columns: 2fr 3fr; gap: 20px; align-items: stretch; }
+    .portrait { position: relative; border-radius: var(--r-card); background: linear-gradient(150deg, var(--c-wash-violet), var(--c-wash-blue) 55%, var(--c-wash-teal)); border: 1px solid var(--glass-border); overflow: hidden; margin: 0; }
+    .uk-portrait { aspect-ratio: 4/4.4; }
+    .portrait-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .uk-portrait .doc-spec { position: absolute; left: 14px; bottom: 14px; }
+    .uk-slide { position: relative; border-radius: var(--r-card); overflow: hidden; margin: 0; border: 1px solid var(--glass-border); min-height: 320px; }
+    .uk-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .uk-slide-veil { position: absolute; inset: auto 0 0 0; padding: 72px 28px 24px; background: linear-gradient(180deg, rgba(10, 13, 18, 0) 0%, rgba(10, 13, 18, 0.72) 70%); }
+    .uk-slide-veil h3 { color: #fff; font-size: var(--fs-h); letter-spacing: -0.025em; margin: 0 0 18px; white-space: nowrap; }
+    .uk-slide-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .uk-dots { display: flex; gap: 8px; }
+    .uk-dots i { width: 10px; height: 10px; border-radius: var(--r-pill); background: rgba(255, 255, 255, 0.4); }
+    .uk-dots i.is-active { background: #fff; width: 26px; }
+
+    /* — карточки врачей (эталон с главной) — */
+    .doc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .doc { overflow: hidden; padding: 0; }
+    .doc-photo { position: relative; width: 100%; aspect-ratio: 3/3.5; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .doc-img { width: 100%; height: 100%; object-fit: cover; }
+    .doc-spec { font-size: var(--fs-caption); color: var(--text-strong); background: var(--veil-strong); border: 1px solid var(--glass-border); border-radius: var(--r-pill); padding: 6px 12px; }
+    .doc-photo .doc-spec { position: absolute; left: 14px; bottom: 14px; }
+    .doc-body { padding: 18px 20px 22px; }
+    .doc-fio { font-size: var(--fs-body-lg); font-weight: 600; margin: 0 0 6px; line-height: 1.25; }
+    .doc-role { font-size: var(--fs-caption); color: var(--text-body); margin: 0 0 12px; }
+    .doc-meta { display: flex; gap: 8px; font-size: var(--fs-caption); color: var(--text-muted); margin-bottom: 16px; }
+    .doc-link { font-size: var(--fs-body-sm); color: var(--accent); display: inline-flex; align-items: center; gap: 6px; }
+
+    /* — форма — */
+    .uk-form-wrap { display: grid; grid-template-columns: minmax(320px, 480px) 1fr; gap: 28px; align-items: start; }
+    .contact-form { padding: 32px 34px; display: grid; gap: 14px; }
+    .contact-form h3 { font-size: var(--fs-h); margin: 0 0 6px; }
+    .fi { font-family: var(--ff-body); font-size: var(--fs-body-sm); color: var(--text-strong); background: var(--veil-strong); border: 1px solid var(--border-hairline); border-radius: var(--r-input); padding: 13px 16px; outline: none; transition: border-color 0.2s; resize: vertical; }
+    .fi:focus { border-color: var(--accent); }
+    .fi::placeholder { color: var(--text-muted); }
+    .consent { display: flex; gap: 10px; align-items: flex-start; font-size: var(--fs-caption); color: var(--text-muted); line-height: 1.45; }
+    .contact-form .btn { justify-content: center; }
+
+    /* — адаптив — */
+    @media (max-width: 1080px) {
+      .uk-tiles, .doc-grid { grid-template-columns: repeat(2, 1fr); }
+      .uk-adv-grid { grid-template-columns: repeat(2, 1fr); }
+      .uk-photos { grid-template-columns: 1fr; }
+      .uk-form-wrap { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .uk-pair, .uk-tiles, .doc-grid, .uk-grad-row, .uk-adv-grid { grid-template-columns: 1fr; }
+      .uk-scale-row { grid-template-columns: 1fr; gap: 4px; }
+      .uk-slide-veil h3 { white-space: normal; }
+    }
+  </style>
+</Base>

@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import FooterContacts from '../../components/sections/FooterContacts.astro';
 import PageCta from '../../components/sections/PageCta.astro';
+import { clinic } from '../../data/clinic';
 import '../../styles/page-article.css';
 
 /* ============================================================
@@ -258,9 +259,9 @@ const faq = [
         <p>Сильная сыпь, особенно с&nbsp;пузырями или температурой. Не&nbsp;проходящая головная боль. Учащённое сердцебиение или, наоборот, необычная вялость и&nbsp;зябкость&nbsp;— со&nbsp;стороны щитовидной железы.</p>
         <p>Если вы&nbsp;обратились к&nbsp;другому врачу или попали в&nbsp;больницу, обязательно скажите, что получаете иммунотерапию, и&nbsp;назовите препарат. Тактика лечения этих состояний отличается от&nbsp;обычной, и&nbsp;врач должен об&nbsp;этом знать.</p>
       </div>
-      <p class="sec-note">Телефон для срочных вопросов&nbsp;— [уточняется у&nbsp;клиники].</p>
+      <p class="sec-note">Звоните в&nbsp;клинику&nbsp;— {clinic.hours}. Отдельный телефон для связи в&nbsp;период лечения, в&nbsp;том числе в&nbsp;нерабочее время, вам выдают вместе с&nbsp;выпиской после первого введения&nbsp;— [уточняется у&nbsp;клиники].</p>
       <div class="sec-cta">
-        <a href="#contacts" class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s" set:html={icon.phone}></svg>[уточняется у&nbsp;клиники]</a>
+        <a href={clinic.phoneHref} class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s" set:html={icon.phone}></svg>{clinic.phone}</a>
       </div>
     </div>
   </section>

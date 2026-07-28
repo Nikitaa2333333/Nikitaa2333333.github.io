@@ -1,9 +1,9 @@
 ---
 /* Hero — первый экран главной (Экран 1 ТЗ): фото клиники на весь вьюпорт,
    слайдер с плавным crossfade (автоплей только когда блок на экране),
-   текст по низу в два угла на тёмном scrim. Контент — дословно из
-   docs/ТЗ-главная.md. Самодостаточный компонент: разметка + scoped-стили + скрипт. */
-import { clinic } from '../../data/clinic';
+   текст по низу в два угла на тёмном scrim: слева H1 + подзаголовок + кнопки,
+   справа — описание. Контент — правки заказчика (docs/тексты-главной.md).
+   Самодостаточный компонент: разметка + scoped-стили + скрипт. */
 
 const slides = [
   { src: '/images/clinic/exterior.webp',  alt: 'Клиника трансляционной медицины в Санкт-Петербурге', w: 1920, h: 1080 },
@@ -34,23 +34,23 @@ const slides = [
   </div>
 
   <div class="wrap hf-grid">
-    <!-- левый нижний угол: киккер + H1 + подзаголовок -->
+    <!-- первый ряд сетки: слева H1 + подзаголовок, справа описание.
+         Низ описания выровнен по нижней линии подзаголовка (align end),
+         кнопки — отдельным рядом ниже. -->
     <div class="hf-left">
-      <h1 class="hf-title">Клиника трансляционной медицины: лечение онкологических заболеваний</h1>
-      <p class="hf-sub">Химиотерапия, таргетная и&nbsp;иммунотерапия в&nbsp;современном дневном стационаре.</p>
+      <h1 class="hf-title">Клиника трансляционной медицины: лечение онкологических заболеваний в&nbsp;дневном стационаре</h1>
+      <p class="hf-sub">Химиотерапия, таргетная и&nbsp;иммунотерапия.</p>
     </div>
 
-    <!-- правый нижний угол: абзац из ТЗ + адрес + кнопки -->
+    <!-- правый угол: только описание (адрес остаётся в шапке и контактах) -->
     <div class="hf-right">
-      <p class="hf-text">Вы&nbsp;или ваш близкий столкнулись с&nbsp;диагнозом. Первое, что&nbsp;важно, — понять, что&nbsp;происходит и&nbsp;какие есть варианты. Мы&nbsp;изучим ваши документы, объясним всё без&nbsp;спешки и&nbsp;на&nbsp;понятном языке и&nbsp;вместе выберем план лечения.</p>
-      <p class="hf-addr">
-        <svg viewBox="0 0 24 24" class="hf-pin" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-        <span>{clinic.addrShort} — мы&nbsp;настоящие</span>
-      </p>
-      <div class="hf-cta">
-        <a href="#contacts" class="btn btn-dark">Записаться на&nbsp;приём</a>
-        <a href="#tele" class="btn btn-light">Телемедицинская консультация</a>
-      </div>
+      <p class="hf-text">Вы&nbsp;или ваш близкий узнали о&nbsp;серьёзном диагнозе&nbsp;— злокачественная опухоль. Важно, не&nbsp;теряя самообладания, понять, что&nbsp;происходит, и&nbsp;составить план действий. Мы&nbsp;вместе с&nbsp;вами обсудим ситуацию, внимательно изучим результаты обследований, объясним всё без&nbsp;спешки и&nbsp;на&nbsp;понятном языке. Предложим оптимальный план лечения.</p>
+    </div>
+
+    <!-- второй ряд: кнопки под подзаголовком, в левой колонке -->
+    <div class="hf-cta">
+      <a href="#contacts" class="btn btn-dark">Записаться на&nbsp;приём</a>
+      <a href="#tele" class="btn btn-light">Телемедицинская консультация</a>
     </div>
   </div>
 </section>
@@ -99,7 +99,9 @@ const slides = [
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
+    /* левая колонка шире: клиентский H1 длинный (~76 знаков),
+       узкая колонка рвала его на строки-сироты */
+    grid-template-columns: 1.6fr 1fr;
     align-items: end;
     gap: 24px 64px;
     padding-block: 40px 52px;
@@ -117,9 +119,9 @@ const slides = [
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    /* ~3 строки на ~1280px: колонка ограничена 16em, размер — clamp */
-    font-size: var(--fs-display);
-    max-width: 16em;
+    /* Ступень ниже display (согласовано): длинный клиентский H1 на display-кегле
+       не влезал в колонку — одно слово на строке. Меру задаёт сама колонка. */
+    font-size: var(--fs-h-lg);
     color: #fff;
     margin: 0 0 18px;
   }
@@ -131,27 +133,20 @@ const slides = [
     margin: 0;
   }
 
-  /* Правый угол: абзац + адрес + кнопки */
+  /* Правый угол: только описание. Прижато к низу — лежит на плотной части
+     scrim, поэтому белый читается сплошным, без «прозрачности». */
   .hf-right { max-width: 34em; justify-self: end; }
   .hf-text {
-    font-size: var(--fs-body-sm);
-    line-height: 1.6;
+    font-size: var(--fs-body-lg);
+    line-height: 1.55;
     color: #fff;
-    margin: 0 0 18px;
+    margin: 0;
   }
-  .hf-addr {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: var(--fs-body-sm);
-    color: #fff;
-    margin: 0 0 22px;
-  }
-  .hf-pin { width: 16px; height: 16px; flex: none; color: var(--accent-on-dark); }
 
-  /* — Кнопки: стили в global.css. Вторая кнопка на фото — та же белая
-       заливная (.btn-light), стеклянная ghost-версия с обводкой снята — */
-  .hf-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+  /* — Кнопки: стили в global.css; отдельный ряд сетки в левой колонке —
+       так низ описания справа ложится точно на линию подзаголовка.
+       Вторая кнопка на фото — та же белая заливная (.btn-light) — */
+  .hf-cta { grid-column: 1; display: flex; gap: 14px; flex-wrap: wrap; } /* отступ сверху даёт row-gap сетки */
 
   /* — Адаптив: ≤960px колонки складываются в одну (слева-снизу) — */
   @media (max-width: 960px) {

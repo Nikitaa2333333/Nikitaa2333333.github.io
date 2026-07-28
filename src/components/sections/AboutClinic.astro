@@ -1,0 +1,57 @@
+---
+/* Экран 2 «О клинике» — сразу после hero: кто мы такие.
+   По правкам заказчика (июль 2026) блок про сеть ЕвроСитиКлиник снят:
+   клиника представляется самостоятельно — персонализированное лечение
+   в онкологии, опора на опыт врачей — лидеров практической онкологии СПб.
+   Вёрстка прежняя: заголовок + два простых текстовых столбца, без плашек. */
+---
+
+<section class="wrap sec" id="about-clinic">
+  <div class="sec-head">
+    <h2>Клиника трансляционной медицины&nbsp;— персонализированное лечение в&nbsp;онкологии</h2>
+  </div>
+
+  <div class="ac-grid">
+    <div class="ac-text">
+      <p>
+        Клиника трансляционной медицины&nbsp;— клиника современной онкологии
+        в&nbsp;Санкт-Петербурге. Наша специализация&nbsp;— лекарственное лечение
+        онкологических заболеваний: <mark>химиотерапия, таргетная и&nbsp;иммунотерапия</mark>
+        в&nbsp;дневном стационаре.
+      </p>
+    </div>
+    <div class="ac-text">
+      <p>
+        Клинический опыт и&nbsp;научные достижения наших врачей&nbsp;— лидеров
+        практической онкологии Санкт-Петербурга&nbsp;— реализуем в&nbsp;успешной
+        тактике лечения опухолей.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* h2 длинный (74 знака) — глобальная мера .sec h2 (26ch) рвала его
+     на 4 строки; широкая ступень меры для длинных заголовков */
+  .sec-head h2 { max-width: var(--measure-head-lg); }
+
+  .ac-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-24) var(--s-48);
+    align-items: start;
+  }
+  .ac-text p {
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+    letter-spacing: var(--tr-body-lg);
+    color: var(--text-body);
+    max-width: 62ch;
+    margin: 0 0 var(--s-16);
+  }
+  .ac-text p:last-of-type { margin-bottom: 0; }
+
+  @media (max-width: 960px) {
+    .ac-grid { grid-template-columns: 1fr; }
+  }
+</style>

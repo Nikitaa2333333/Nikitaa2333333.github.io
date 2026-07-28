@@ -20,18 +20,28 @@ const steps = [
   <div class="wrap">
     <div class="fs-head">
       <h2>Ответим на&nbsp;вопросы, которые вас беспокоят</h2>
-      <p>
-        Мы не&nbsp;рассказываем о&nbsp;космических кораблях — мы формируем
-        конкретный пошаговый план действий и&nbsp;идём к&nbsp;результату.
-        На&nbsp;консультации вы получите ответы на&nbsp;свои вопросы
-        и&nbsp;ясное понимание, что делать дальше.
-      </p>
-      <p>
-        Консультация платная — и&nbsp;это осознанная позиция. В&nbsp;её
-        стоимость входит не&nbsp;только профессионализм наших специалистов,
-        но&nbsp;и&nbsp;скорость принятых решений, объективность
-        и&nbsp;ответственность. Мы знаем цену времени в&nbsp;онкологии.
-      </p>
+    </div>
+
+    <!-- два абзаца в две колонки (паттерн AboutClinic / «Рак можно лечить») -->
+    <div class="fs-grid">
+      <div class="fs-col">
+        <p>
+          Мы не&nbsp;рассказываем о&nbsp;космических кораблях — мы формируем
+          конкретный пошаговый план действий и&nbsp;твёрдо идём к&nbsp;лучшему
+          результату. На&nbsp;консультации вы получите ответы на&nbsp;свои
+          вопросы и&nbsp;ясное понимание, что делать дальше.
+        </p>
+      </div>
+      <div class="fs-col">
+        <p>
+          Консультации врачей и&nbsp;лечение в&nbsp;нашей Клинике платные —
+          и&nbsp;это осознанная позиция. В&nbsp;стоимость включены высокий
+          профессионализм и&nbsp;огромный практический опыт наших специалистов,
+          скорость принятия решений, объективность диагноза
+          и&nbsp;ответственность за&nbsp;результат. Мы знаем цену времени
+          в&nbsp;онкологии.
+        </p>
+      </div>
     </div>
 
     <ol class="fs-strip">
@@ -54,10 +64,19 @@ const steps = [
   /* — Шапка секции (паттерн sec-head/kicker главной) — */
   /* Мера — на самих текстовых элементах, НЕ на контейнере: ch считается от кегля
      элемента, на контейнере 16px он даёт совсем другую ширину (+ .sec h2 70% сверху) */
-  .fs-head { margin-bottom: var(--head-gap); }
+  .fs-head { margin-bottom: var(--s-24); }
   .kicker { font-size: var(--fs-caption); letter-spacing: .06em; text-transform: none; color: var(--accent); margin: 0 0 12px; }
   .fs-head h2 { font-size: var(--fs-h-lg); letter-spacing: -.025em; font-weight: 600; margin: 0; max-width: var(--measure-head); }
-  .fs-head p { margin: 16px 0 0; max-width: var(--measure-lead); font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); letter-spacing: var(--tr-body-lg); color: var(--text-body); }
+
+  /* Два абзаца в две колонки: меру задаёт сама колонка, токен не дублируем */
+  .fs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-24) var(--s-48);
+    align-items: start;
+    margin-bottom: var(--head-gap);
+  }
+  .fs-col p { margin: 0; font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); letter-spacing: var(--tr-body-lg); color: var(--text-body); }
 
   /* — Компактная полоса из 5 шагов — */
   .fs-strip {
@@ -135,6 +154,7 @@ const steps = [
   }
 
   @media (max-width: 960px) {
+    .fs-grid { grid-template-columns: 1fr; }
     .fs-strip { grid-template-columns: 1fr; gap: 10px; }
     .fs-item { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 16px; min-height: 0; padding: 18px 20px; }
     .fs-item.is-first .btn { grid-column: 1 / -1; margin-top: 6px; justify-self: start; }

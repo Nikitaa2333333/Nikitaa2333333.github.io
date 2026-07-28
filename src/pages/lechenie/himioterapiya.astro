@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import Header from '../../components/Header.astro';
 import FooterContacts from '../../components/sections/FooterContacts.astro';
 import PageCta from '../../components/sections/PageCta.astro';
+import { clinic } from '../../data/clinic';
 
 /* ============================================================
    «Химиотерапия» — страница раздела «Лечение» (ТЗ, пункт меню 4).
@@ -446,7 +447,7 @@ const faq = [
           </article>
         </div>
         <div class="urg-cta">
-          <a href="tel:+78120000000" class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s" set:html={icon.phone}></svg>+7 (812) 000-00-00</a>
+          <a href={clinic.phoneHref} class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s" set:html={icon.phone}></svg>{clinic.phone}</a>
           <p class="urg-phone-note">Телефон для связи в&nbsp;период лечения, в&nbsp;том числе в&nbsp;нерабочее время,&nbsp;— [уточняется у&nbsp;клиники]. Его вам выдают вместе с&nbsp;выпиской после первого курса.</p>
         </div>
       </div>

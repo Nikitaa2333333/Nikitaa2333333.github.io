@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import FooterContacts from '../components/sections/FooterContacts.astro';
 import PageCta from '../components/sections/PageCta.astro';
+import { clinic } from '../data/clinic';
 
 /* ============================================================
    «Онкомаркеры» — страница хаба «Диагностика» (ТЗ, раздел 3).
@@ -135,7 +136,7 @@ const faq = [
         </button>
         <div class="topbar-info">
           <span class="ti"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><b>ул. Петропавловская, 4</b></span>
-          <a href="tel:+78120000000" class="ti"><svg viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>+7 (812) 000-00-00</b></a>
+          <a href={clinic.phoneHref} class="ti"><svg viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>{clinic.phone}</b></a>
           <span class="ti ti-hours">Пн–Пт 09:00–20:00 · Сб 09:00–18:00 · Вс выходной</span>
         </div>
       </div>
@@ -150,19 +151,22 @@ const faq = [
         <div class="nav-item">
           <a href="#" class="nav-link is-current" aria-current="page">Диагностика <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           <div class="drop">
-            <a href="/molekulyarnaya-diagnostika" class="drop-it"><b>Молекулярно-генетические исследования</b><span>NGS · ПЦР · FISH — подбор препарата</span></a>
+            <a href="/molekulyarnaya-diagnostika" class="drop-it"><b>Молекулярно-генетические исследования</b><span>NGS · ПЦР · FISH — основа выбора лекарственной тактики</span></a>
             <a href="/biopsiya" class="drop-it"><b>Биопсия и гистология</b><span>Пересмотр стёкол — «не отменяем, уточняем»</span></a>
-            <a href="/onkomarkery" class="drop-it is-current" aria-current="page"><b>Онкомаркеры</b><span>Что показывают и как сдать</span></a>
+            <a href="/onkomarkery" class="drop-it is-current" aria-current="page"><b>Онкомаркеры</b><span>Вспомогательный анализ: динамика, не диагноз</span></a>
+            <a href="#" class="drop-it"><b>Анализ крови</b></a>
+            <a href="#" class="drop-it"><b>Ультразвуковая диагностика</b></a>
+            <a href="#" class="drop-it"><b>Другие анализы</b></a>
           </div>
         </div>
         <div class="nav-item">
           <a href="#" class="nav-link">Лечение <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           <div class="drop drop-wide">
-            <a href="/lechenie" class="drop-it"><b>Как выбирается метод</b><span>Обзор: чем отличаются варианты</span></a>
-            <a href="/lechenie/himioterapiya" class="drop-it"><b>Химиотерапия</b><span>Современные схемы в дневном стационаре</span></a>
+            <a href="/lechenie" class="drop-it"><b>Выбор вида лечения</b><span>Задачи лекарственной терапии</span></a>
+            <a href="/lechenie/himioterapiya" class="drop-it"><b>Химиотерапия</b><span>Эффективные схемы лечения</span></a>
             <a href="/lechenie/targetnaya-terapiya" class="drop-it"><b>Таргетная терапия</b><span>Точечное воздействие на мишени</span></a>
             <a href="/lechenie/immunoterapiya" class="drop-it"><b>Иммунотерапия</b><span>Активация собственного иммунитета</span></a>
-            <a href="#" class="drop-it"><b>Побочные эффекты и восстановление</b><span>Сопроводительная терапия, питание</span></a>
+            <a href="#" class="drop-it"><b>Восстановление после лечения</b><span>Сопроводительная и симптоматическая терапия, восстановительное питание</span></a>
             <a href="#" class="drop-it"><b>Клинические исследования</b><span>Реестр активных протоколов, GCP</span></a>
           </div>
         </div>
@@ -172,9 +176,9 @@ const faq = [
         <div class="nav-item">
           <a href="#" class="nav-link">О клинике <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           <div class="drop">
-            <a href="/#stationar" class="drop-it"><b>Дневной стационар</b><span>Палаты, оборудование, условия</span></a>
-            <a href="/litsenzii" class="drop-it"><b>Лицензии и сертификаты</b><span>Документы клиники — приказ 956н</span></a>
-            <a href="/#stories" class="drop-it"><b>Истории пациентов</b><span>Путь от диагноза до результата</span></a>
+            <a href="/#stationar" class="drop-it"><b>Дневной стационар</b><span>Условия лечения</span></a>
+            <a href="/litsenzii" class="drop-it"><b>Лицензии и сертификаты</b><span>Документы клиники</span></a>
+            <a href="/#stories" class="drop-it"><b>Истории пациентов</b><span>Вместе достигаем невозможного</span></a>
           </div>
         </div>
         <div class="nav-item"><a href="#contacts" class="nav-link">Контакты</a></div>

@@ -41,19 +41,22 @@ const { current } = Astro.props;
       <div class="nav-item">
         <a href="#" class={`nav-link${current === 'diagnostika' ? ' is-current' : ''}`}>Диагностика <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="drop">
-          <a href="/molekulyarnaya-diagnostika" class={`drop-it${current === 'mgi' ? ' is-current' : ''}`}><b>Молекулярно-генетические исследования</b><span>NGS · ПЦР · FISH — подбор препарата</span></a>
+          <a href="/molekulyarnaya-diagnostika" class={`drop-it${current === 'mgi' ? ' is-current' : ''}`}><b>Молекулярно-генетические исследования</b><span>NGS · ПЦР · FISH — основа выбора лекарственной тактики</span></a>
           <a href="/biopsiya" class={`drop-it${current === 'biopsiya' ? ' is-current' : ''}`}><b>Биопсия и гистология</b><span>Пересмотр стёкол — «не отменяем, уточняем»</span></a>
-          <a href="/onkomarkery" class={`drop-it${current === 'onkomarkery' ? ' is-current' : ''}`}><b>Онкомаркеры</b><span>Что показывают и как сдать</span></a>
+          <a href="/onkomarkery" class={`drop-it${current === 'onkomarkery' ? ' is-current' : ''}`}><b>Онкомаркеры</b><span>Вспомогательный анализ: динамика, не диагноз</span></a>
+          <a href="#" class="drop-it"><b>Анализ крови</b></a>
+          <a href="#" class="drop-it"><b>Ультразвуковая диагностика</b></a>
+          <a href="#" class="drop-it"><b>Другие анализы</b></a>
         </div>
       </div>
       <div class="nav-item">
         <a href="#" class={`nav-link${current === 'lechenie' ? ' is-current' : ''}`}>Лечение <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="drop drop-wide">
-          <a href="/lechenie" class={`drop-it${current === 'lechenie-obzor' ? ' is-current' : ''}`}><b>Как выбирается метод</b><span>Обзор: чем отличаются варианты</span></a>
-          <a href="/lechenie/himioterapiya" class={`drop-it${current === 'himio' ? ' is-current' : ''}`}><b>Химиотерапия</b><span>Современные схемы в дневном стационаре</span></a>
+          <a href="/lechenie" class={`drop-it${current === 'lechenie-obzor' ? ' is-current' : ''}`}><b>Выбор вида лечения</b><span>Задачи лекарственной терапии</span></a>
+          <a href="/lechenie/himioterapiya" class={`drop-it${current === 'himio' ? ' is-current' : ''}`}><b>Химиотерапия</b><span>Эффективные схемы лечения</span></a>
           <a href="/lechenie/targetnaya-terapiya" class={`drop-it${current === 'target' ? ' is-current' : ''}`}><b>Таргетная терапия</b><span>Точечное воздействие на мишени</span></a>
           <a href="/lechenie/immunoterapiya" class={`drop-it${current === 'immuno' ? ' is-current' : ''}`}><b>Иммунотерапия</b><span>Активация собственного иммунитета</span></a>
-          <a href="#" class="drop-it"><b>Побочные эффекты и восстановление</b><span>Сопроводительная терапия, питание</span></a>
+          <a href="#" class="drop-it"><b>Восстановление после лечения</b><span>Сопроводительная и симптоматическая терапия, восстановительное питание</span></a>
           <a href="#" class="drop-it"><b>Клинические исследования</b><span>Реестр активных протоколов, GCP</span></a>
         </div>
       </div>
@@ -63,9 +66,9 @@ const { current } = Astro.props;
       <div class="nav-item">
         <a href="#" class="nav-link">О клинике <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="drop">
-          <a href="/#stationar" class="drop-it"><b>Дневной стационар</b><span>Палаты, оборудование, условия</span></a>
-          <a href="/litsenzii" class={`drop-it${current === 'litsenzii' ? ' is-current' : ''}`}><b>Лицензии и сертификаты</b><span>Документы клиники — приказ 956н</span></a>
-          <a href="/#stories" class="drop-it"><b>Истории пациентов</b><span>Путь от диагноза до результата</span></a>
+          <a href="/#stationar" class="drop-it"><b>Дневной стационар</b><span>Условия лечения</span></a>
+          <a href="/litsenzii" class={`drop-it${current === 'litsenzii' ? ' is-current' : ''}`}><b>Лицензии и сертификаты</b><span>Документы клиники</span></a>
+          <a href="/#stories" class="drop-it"><b>Истории пациентов</b><span>Вместе достигаем невозможного</span></a>
         </div>
       </div>
       <div class="nav-item"><a href="#contacts" class="nav-link">Контакты</a></div>

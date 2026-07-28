@@ -16,34 +16,41 @@ const links = [
   <div class="wrap">
   <h2 class="ct-title">Рак можно лечить</h2>
 
-  <div class="ct-col">
-    <p>
-      За&nbsp;последние пятнадцать лет лечение опухолей изменилось принципиально.
-      Появились препараты, которые действуют точечно&nbsp;— на&nbsp;конкретную поломку
-      в&nbsp;клетках опухоли, а&nbsp;не&nbsp;на&nbsp;весь организм. Многие виды рака
-      перешли в&nbsp;разряд хронических заболеваний, которые контролируются годами.
-    </p>
-    <p>
-      Мы&nbsp;расскажем всё о&nbsp;вашей опухоли: пересмотрим гистологию, выполним
-      молекулярно-генетические исследования и&nbsp;объясним, что означает каждый
-      результат. Даже на&nbsp;поздних стадиях есть варианты&nbsp;—
-      от&nbsp;продления жизни до&nbsp;длительной ремиссии, и&nbsp;мы&nbsp;честно
-      скажем, что возможно в&nbsp;вашей ситуации.
-    </p>
-  </div>
+  <!-- две колонки: абзац в каждой, ссылки-локализации — во второй, под текстом -->
+  <div class="ct-grid">
+    <div class="ct-col">
+      <p>
+        За&nbsp;последние пятнадцать лет лекарственное лечение опухолей изменилось
+        принципиально. Появились современные препараты, которые действуют
+        избирательно и&nbsp;не&nbsp;повреждают здоровые клетки: точечно выбирают
+        опухоль-«мишень», действуют на&nbsp;конкретную поломку в&nbsp;клетках
+        опухоли, а&nbsp;не&nbsp;на&nbsp;весь организм. Некоторые виды рака перешли
+        в&nbsp;разряд хронических заболеваний, которые контролируются годами.
+      </p>
+    </div>
+    <div class="ct-col">
+      <p>
+        Мы&nbsp;расскажем всё о&nbsp;вашей опухоли: пересмотрим гистологию, выполним
+        молекулярно-генетические исследования и&nbsp;объясним, что означает каждый
+        результат. Даже на&nbsp;поздних стадиях есть варианты&nbsp;—
+        от&nbsp;продления жизни до&nbsp;длительной ремиссии, и&nbsp;мы&nbsp;честно
+        скажем, что возможно в&nbsp;вашей ситуации.
+      </p>
 
-  <nav class="ct-links" aria-label="Страницы по локализациям">
-    {links.map((l) => (
-      <a href={l.href} class="link-chip">
-        {l.t}
-        <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
-      </a>
-    ))}
-    <a href="#" class="link-chip">
-      Все локализации
-      <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
-    </a>
-  </nav>
+      <nav class="ct-links" aria-label="Страницы по локализациям">
+        {links.map((l) => (
+          <a href={l.href} class="link-chip">
+            {l.t}
+            <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
+          </a>
+        ))}
+        <a href="#" class="link-chip">
+          Все локализации
+          <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
+        </a>
+      </nav>
+    </div>
+  </div>
   </div>
 </section>
 
@@ -66,24 +73,31 @@ const links = [
     margin: 0 0 var(--s-24);
   }
 
-  /* Наборный текст — общий body-пресет; колонка узкая, текст по левому краю */
-  .ct-col { max-width: var(--measure-text); }
+  /* Две колонки (паттерн AboutClinic): меру задаёт сама колонка,
+     токен внутри модуля не дублируем */
+  .ct-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-24) var(--s-48);
+    align-items: start;
+  }
+
+  /* Наборный текст — общий body-пресет, по левому краю */
   .ct-col p {
     font-size: var(--fs-body-lg);
     line-height: var(--lh-body-lg);
     letter-spacing: var(--tr-body-lg);
     color: var(--text-onDark);
-    margin: 0 0 var(--s-16);
+    margin: 0;
   }
-  .ct-col p:last-of-type { margin-bottom: 0; }
 
-  /* Ссылки локализаций — глобальный .link-chip */
+  /* Ссылки локализаций — глобальный .link-chip; живут во второй колонке */
   .ct-links {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: var(--s-8) var(--s-12);
-    margin-top: clamp(var(--s-24), 3vw, var(--s-40));
+    margin-top: var(--s-24);
   }
   /* Чипы — как везде, контурные (без заливки); на тёмном полотне
      обводка и текст белые, акцентный — ледяной accent-on-dark */
@@ -94,5 +108,10 @@ const links = [
   .ct-links :global(.link-chip:hover) {
     color: var(--accent-on-dark);
     border-color: var(--accent-on-dark);
+  }
+
+  /* Узкие экраны — одна колонка: абзацы друг под другом, ссылки в конце */
+  @media (max-width: 960px) {
+    .ct-grid { grid-template-columns: 1fr; }
   }
 </style>

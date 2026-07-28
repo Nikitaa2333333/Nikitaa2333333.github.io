@@ -26,7 +26,7 @@ const nav = [
   <div class="sec-head"><h2>Мы&nbsp;рядом и&nbsp;на&nbsp;связи</h2></div>
   <div class="contact-grid">
     <div class="contact-info">
-      <div class="ci-row"><b>Адрес</b><p>{clinic.zip}, г.&nbsp;{clinic.city}, {clinic.street}, {clinic.room}<br/>м.&nbsp;«{clinic.metro}», Аптекарский остров</p></div>
+      <div class="ci-row"><b>Адрес</b><p>{clinic.zip}, г.&nbsp;{clinic.city}, {clinic.addrShort} ({clinic.addrNote})<br/>м.&nbsp;«{clinic.metro}», Аптекарский остров</p></div>
       <div class="ci-row"><b>Телефоны</b><p><a href={clinic.phoneHref} class="ci-link">{clinic.phone}</a> — запись на&nbsp;приём<br/><a href={clinic.phoneStacHref} class="ci-link">{clinic.phoneStac}</a> — дневной стационар<br/>{clinic.hoursShort}</p></div>
       <div class="ci-row"><b>Почта</b><p><a href={`mailto:${clinic.email}`} class="ci-link">{clinic.email}</a></p></div>
       <!-- Заглушка карты: интерактивные Яндекс.Карты подключаются на этапе интеграций -->

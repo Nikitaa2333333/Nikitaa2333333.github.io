@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/sections/Hero.astro';
-import Euroclinic from '../components/sections/Euroclinic.astro';
+import AboutClinic from '../components/sections/AboutClinic.astro';
 import PlanSteps from '../components/sections/PlanSteps.astro';
 import WhoWeHelp from '../components/sections/WhoWeHelp.astro';
 import CancerTreatable from '../components/sections/CancerTreatable.astro';
@@ -11,6 +11,7 @@ import Faq from '../components/sections/Faq.astro';
 import FooterContacts from '../components/sections/FooterContacts.astro';
 import DoctorCard from '../components/DoctorCard.astro';
 import { doctors } from '../data/doctors';
+import { clinic } from '../data/clinic';
 
 // — Иконки (тонкие линейные, stroke=currentColor) —
 const icon: Record<string, string> = {
@@ -60,7 +61,7 @@ const slides = [
   { t: 'Инфузионная зона',           img: '/images/clinic/infusion.webp',   g1: 'var(--c-wash-powder)', g2: 'var(--c-wash-teal)' },
   { t: 'Кабинет консультаций',       img: '/images/clinic/consult.webp',    g1: 'var(--c-wash-aqua)',  g2: 'var(--c-wash-blue)' },
   { t: 'Зона отдыха для близких',    img: '/images/clinic/lounge.webp',     g1: 'var(--c-wash-aqua)',  g2: 'var(--c-wash-powder)' },
-  { t: 'Холл и ресепшен клиники',    img: '/images/clinic/reception.webp',  g1: 'var(--c-wash-powder)', g2: 'var(--c-wash-teal)' },
+  { t: 'Рецепшен и холл ожидания',   img: '/images/clinic/reception.webp',  g1: 'var(--c-wash-powder)', g2: 'var(--c-wash-teal)' },
 ];
 ---
 
@@ -76,7 +77,7 @@ const slides = [
         </button>
         <div class="topbar-info">
           <span class="ti"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><b>ул. Петропавловская, 4</b></span>
-          <a href="tel:+78120000000" class="ti"><svg viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>+7 (812) 000-00-00</b></a>
+          <a href={clinic.phoneHref} class="ti"><svg viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>{clinic.phone}</b></a>
           <span class="ti ti-hours">Пн–Пт 09:00–20:00 · Сб 09:00–18:00 · Вс выходной</span>
         </div>
       </div>
@@ -91,19 +92,22 @@ const slides = [
         <div class="nav-item">
           <a href="#" class="nav-link">Диагностика <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           <div class="drop">
-            <a href="/molekulyarnaya-diagnostika" class="drop-it"><b>Молекулярно-генетические исследования</b><span>NGS · ПЦР · FISH — подбор препарата</span></a>
+            <a href="/molekulyarnaya-diagnostika" class="drop-it"><b>Молекулярно-генетические исследования</b><span>NGS · ПЦР · FISH — основа выбора лекарственной тактики</span></a>
             <a href="/biopsiya" class="drop-it"><b>Биопсия и гистология</b><span>Пересмотр стёкол — «не отменяем, уточняем»</span></a>
             <a href="/onkomarkery" class="drop-it"><b>Онкомаркеры</b><span>Вспомогательный анализ: динамика, не диагноз</span></a>
+            <a href="#" class="drop-it"><b>Анализ крови</b></a>
+            <a href="#" class="drop-it"><b>Ультразвуковая диагностика</b></a>
+            <a href="#" class="drop-it"><b>Другие анализы</b></a>
           </div>
         </div>
         <div class="nav-item">
           <a href="#" class="nav-link">Лечение <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           <div class="drop drop-wide">
-            <a href="/lechenie" class="drop-it"><b>Как выбирается метод</b><span>Обзор: чем отличаются варианты</span></a>
-            <a href="/lechenie/himioterapiya" class="drop-it"><b>Химиотерапия</b><span>Современные схемы в дневном стационаре</span></a>
+            <a href="/lechenie" class="drop-it"><b>Выбор вида лечения</b><span>Задачи лекарственной терапии</span></a>
+            <a href="/lechenie/himioterapiya" class="drop-it"><b>Химиотерапия</b><span>Эффективные схемы лечения</span></a>
             <a href="/lechenie/targetnaya-terapiya" class="drop-it"><b>Таргетная терапия</b><span>Точечное воздействие на мишени</span></a>
             <a href="/lechenie/immunoterapiya" class="drop-it"><b>Иммунотерапия</b><span>Активация собственного иммунитета</span></a>
-            <a href="#" class="drop-it"><b>Побочные эффекты и восстановление</b><span>Сопроводительная терапия, питание</span></a>
+            <a href="#" class="drop-it"><b>Восстановление после лечения</b><span>Сопроводительная и симптоматическая терапия, восстановительное питание</span></a>
             <a href="#" class="drop-it"><b>Клинические исследования</b><span>Реестр активных протоколов, GCP</span></a>
           </div>
         </div>
@@ -113,9 +117,9 @@ const slides = [
         <div class="nav-item">
           <a href="#" class="nav-link">О клинике <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           <div class="drop">
-            <a href="#stationar" class="drop-it"><b>Дневной стационар</b><span>Палаты, оборудование, условия</span></a>
-            <a href="/litsenzii" class="drop-it"><b>Лицензии и сертификаты</b><span>Документы клиники — приказ 956н</span></a>
-            <a href="#stories" class="drop-it"><b>Истории пациентов</b><span>Путь от диагноза до результата</span></a>
+            <a href="#stationar" class="drop-it"><b>Дневной стационар</b><span>Условия лечения</span></a>
+            <a href="/litsenzii" class="drop-it"><b>Лицензии и сертификаты</b><span>Документы клиники</span></a>
+            <a href="#stories" class="drop-it"><b>Истории пациентов</b><span>Вместе достигаем невозможного</span></a>
           </div>
         </div>
         <div class="nav-item"><a href="#contacts" class="nav-link">Контакты</a></div>
@@ -130,8 +134,8 @@ const slides = [
   <!-- ЭКРАН 1. HERO — full-bleed фото-слайдер, текст в нижних углах -->
   <Hero />
 
-  <!-- СЕТЬ: новое направление ЕвроСитиКлиник (работает с 2019) -->
-  <Euroclinic />
+  <!-- ЭКРАН 2. О КЛИНИКЕ — самостоятельное представление (без ЕвроСитиКлиник) -->
+  <AboutClinic />
 
   <!-- ЭКРАН 3. КОМУ МЫ ПОМОГАЕМ — три плашки-сценария -->
   <WhoWeHelp />
@@ -151,23 +155,26 @@ const slides = [
 
   <!-- ДНЕВНОЙ СТАЦИОНАР — обычная секция: заголовок, текст, ниже карточки-фото -->
   <section class="wrap sec" id="stationar">
-    <div class="sec-head">
+    <!-- факты иконками — в строку с заголовком: текст ниже делится на три РАВНЫЕ колонки -->
+    <div class="sec-head sec-head-row st-head">
       <h2>Лечение в&nbsp;дневном стационаре: утром терапия&nbsp;— вечером дома</h2>
+      <div class="st-facts">
+        <span class="st-fact"><svg viewBox="0 0 24 24" class="ic-s"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Длительность процедуры — от&nbsp;1,5&nbsp;часов</span>
+        <span class="st-fact"><svg viewBox="0 0 24 24" class="ic-s" set:html={icon.team}></svg>Сопровождающий родственник может остаться с&nbsp;вами</span>
+        <span class="st-fact"><svg viewBox="0 0 24 24" class="ic-s"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Метро «{clinic.metro}»&nbsp;— {clinic.metroWalk}</span>
+      </div>
     </div>
 
-    <!-- три колонки в один ряд: два текстовых блока + факты иконками -->
+    <!-- три равные текстовые колонки: по одному абзацу в каждой -->
     <div class="st-cols">
       <div>
-        <p>Вы&nbsp;приезжаете в&nbsp;назначенное время, получаете терапию в&nbsp;отдельной палате и&nbsp;в&nbsp;тот&nbsp;же день возвращаетесь домой: без госпитализации, оставаться на&nbsp;ночь не&nbsp;нужно.</p>
-        <p>Без очередей, без больничного режима, без разлуки с&nbsp;семьёй. Рядом&nbsp;— медицинская сестра и&nbsp;дежурный врач.</p>
+        <p>Вы&nbsp;приезжаете в&nbsp;назначенное время, вас осматривает лечащий врач-онколог, после этого вы&nbsp;получаете назначенную лекарственную терапию в&nbsp;дневном стационаре и&nbsp;в&nbsp;тот&nbsp;же день возвращаетесь домой, не&nbsp;оставаясь на&nbsp;ночь в&nbsp;больнице.</p>
       </div>
       <div>
-        <p>Наши сёстры работают с&nbsp;любыми венами: процедура проходит спокойно и&nbsp;бережно. Палата на&nbsp;два места, Wi-Fi, индивидуальное кресло-реклайнер.</p>
+        <p>Лечение проходит без&nbsp;длительного ожидания в&nbsp;очередях, без&nbsp;расставания с&nbsp;семьёй. Всегда рядом будут медицинская сестра и&nbsp;дежурный врач, которым можно задать вопрос.</p>
       </div>
-      <div class="st-facts">
-        <span class="st-fact"><svg viewBox="0 0 24 24" class="ic-s"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Длительность процедуры — от&nbsp;[X]&nbsp;часов</span>
-        <span class="st-fact"><svg viewBox="0 0 24 24" class="ic-s" set:html={icon.team}></svg>Сопровождающий может остаться с&nbsp;вами</span>
-        <span class="st-fact"><svg viewBox="0 0 24 24" class="ic-s"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Парковка на&nbsp;территории · метро [название]&nbsp;— [X]&nbsp;минут пешком</span>
+      <div>
+        <p>Наши сёстры умеют работать с&nbsp;любыми венами: процедура проходит спокойно и&nbsp;бережно. Палата на&nbsp;два места, Wi-Fi, индивидуальное кресло-реклайнер.</p>
       </div>
     </div>
 
@@ -190,7 +197,7 @@ const slides = [
   <section class="wrap sec" id="doctors">
     <div class="sec-head sec-head-row">
       <div>
-        <h2>Ведущие онкологи в&nbsp;нашей клинике</h2>
+        <h2>Ведущие онкологи города в&nbsp;нашей клинике</h2>
         <p class="doctors-sub">Доктора медицинских наук, профессора, члены-корреспонденты РАН&nbsp;— специалисты с&nbsp;многолетним практическим опытом, которые ведут пациентов лично.</p>
       </div>
       <a href="/vrachi" class="btn btn-light">Все врачи <svg viewBox="0 0 24 24" class="ic-s" set:html={icon.arrow}></svg></a>
@@ -246,8 +253,8 @@ const slides = [
     <div class="glass tele">
       <div class="tele-head">
         <h2>Личный кабинет пациента и&nbsp;телемедицина</h2>
-        <p class="tele-sub">Если вы&nbsp;в&nbsp;другом городе или вам тяжело ехать, знакомство с&nbsp;клиникой можно начать дистанционно. Выписки, анализы и&nbsp;снимки загружаются в&nbsp;личный кабинет&nbsp;— врач детально их&nbsp;изучит, <mark>даст предварительную оценку</mark> и&nbsp;пригласит на&nbsp;очный визит. Так мы&nbsp;сокращаем время до&nbsp;начала лечения.</p>
-        <p class="tele-sub tele-note">Повторные консультации и&nbsp;расшифровку анализов можно проходить дистанционно. По&nbsp;закону первичный диагноз дистанционно не&nbsp;устанавливается&nbsp;— для этого нужен очный приём.</p>
+        <p class="tele-sub">Если вы&nbsp;живёте в&nbsp;другом городе или вам сложно приехать, знакомство с&nbsp;врачом можно начать дистанционно. Выписки, анализы и&nbsp;снимки загружаются в&nbsp;личный кабинет&nbsp;— врач детально их&nbsp;изучит, <mark>даст предварительное заключение</mark>, при необходимости порекомендует дополнительное обследование и&nbsp;пригласит на&nbsp;очный визит. Так мы&nbsp;сокращаем время до&nbsp;начала лечения.</p>
+        <p class="tele-sub tele-note">Повторные консультации и&nbsp;интерпретацию анализов можно проходить дистанционно. По&nbsp;закону первичный диагноз дистанционно не&nbsp;устанавливается&nbsp;— для этого нужен очный приём.</p>
         <a href="#" class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s" set:html={icon.upload}></svg>Загрузить документы</a>
         <p class="tele-consent">При загрузке потребуется согласие на&nbsp;обработку персональных данных (ФЗ-152).</p>
       </div>
@@ -410,9 +417,10 @@ const slides = [
     /* телемедицина — стекло на размытых цветных кругах */
     .tele-sec { position:relative; overflow:hidden; }
     .tele-inner { position:relative; z-index:1; }
-    .tele { display:grid; grid-template-columns:1fr 1fr; gap:44px; padding:48px; }
+    /* текстовый модуль шире, колонка плашек-шагов заметно уже */
+    .tele { display:grid; grid-template-columns:1.6fr 1fr; gap:44px; padding:48px; }
     .tele-head h2 { font-size:var(--fs-h-lg); letter-spacing:-.025em; font-weight:600; margin:0 0 14px; }
-    .tele-sub { font-size:var(--fs-body); line-height:1.55; color:var(--text-body); margin:0 0 18px; max-width:30em; }
+    .tele-sub { font-size:var(--fs-body); line-height:1.55; color:var(--text-body); margin:0 0 18px; max-width:var(--measure-text); }
     .tele-note { margin-bottom:26px; }
     .tele-consent { font-size:var(--fs-caption); color:var(--text-muted); margin:12px 0 0; max-width:30em; }
     .doctors-sub { font-size:var(--fs-body); line-height:1.55; color:var(--text-body); max-width:var(--measure-lead); margin:14px 0 0; }
@@ -433,13 +441,14 @@ const slides = [
     .reveal.in { opacity:1; transform:none; }
     @media (prefers-reduced-motion:reduce) { .reveal { opacity:1; transform:none; transition:none; } }
 
-    /* дневной стационар — полноэкранный слайдер, текст зафиксирован */
-    /* дневной стационар: три колонки в ряд — два текстовых блока + факты иконками */
+    /* дневной стационар: факты иконками — в строке заголовка (справа),
+       ниже — три РАВНЫЕ текстовые колонки, по одному абзацу в каждой */
     .st-cols { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px 32px; margin-bottom:34px; }
     .st-cols p { font-size:var(--fs-body-lg); line-height:var(--lh-body-lg); letter-spacing:var(--tr-body-lg); color:var(--text-body); margin:0; }
-    .st-cols p + p { margin-top:14px; }
-    /* практические детали иконками (ТЗ, экран 7) — вертикальный список, читается сверху вниз */
-    .st-facts { display:flex; flex-direction:column; gap:10px; }
+    /* практические детали иконками (ТЗ, экран 7) — вертикальный список, читается сверху вниз;
+       .st-head перекрывает flex:1 от .sec-head-row > div — факты не растягиваются */
+    .st-head .st-facts { display:flex; flex-direction:column; gap:10px; flex:none; }
+    .st-head h2 { max-width:var(--measure-head); }
     .st-fact { display:inline-flex; align-items:center; gap:10px; font-size:var(--fs-body-sm); color:var(--text-body); }
     .st-fact .ic-s { color:var(--accent); flex-shrink:0; }
     /* карточки-фото клиники: 3 в ряд, подпись под фото */
@@ -505,6 +514,7 @@ const slides = [
       .stats-row { gap:24px; }
       .cta-band { grid-template-columns:1fr; }
       .st-cols { grid-template-columns:1fr; gap:14px; }
+      .st-head { flex-direction:column; align-items:flex-start; gap:18px; }
       .st-cards { grid-template-columns:repeat(2,minmax(0,1fr)); }
       .nav { display:none; }
     }

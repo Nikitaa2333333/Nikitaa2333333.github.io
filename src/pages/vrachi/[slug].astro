@@ -118,7 +118,7 @@ const jsonLd = {
                 <tbody>
                   {d.trials.map((t) => (
                     <tr>
-                      <td><b>{t.code}</b></td>
+                      <td>{t.code}</td>
                       <td>{t.area}</td>
                       <td class="text-center">{t.phase}</td>
                       <td>{t.role}</td>
@@ -142,7 +142,7 @@ const jsonLd = {
               <div class="doc-case-body">
                 <div class="doc-case-field">
                   <span class="doc-case-label">Диагноз пациента</span>
-                  <p class="doc-case-value"><strong>{d.caseStudy.diagnosis}</strong></p>
+                  <p class="doc-case-value">{d.caseStudy.diagnosis}</p>
                 </div>
                 <div class="doc-case-field">
                   <span class="doc-case-label">Объективный статус при осмотре</span>

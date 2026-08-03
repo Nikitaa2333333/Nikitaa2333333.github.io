@@ -19,11 +19,12 @@
  *
  * parse5 — транзитивная зависимость Astro, отдельно не ставится.
  */
+import { fileURLToPath } from 'node:url';
 import { parse } from 'parse5';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
 const OUT = path.join(ROOT, 'docs', 'тексты-страниц');
 
@@ -277,7 +278,8 @@ for (const rel of pages) {
     '',
   ].join('\n');
 
-  const outFile = path.join(OUT, `${rel.replaceAll('/', '-')}.md`);
+  const cleanRel = rel.replace(/\\/g, '-').replace(/\//g, '-');
+  const outFile = path.join(OUT, `${cleanRel}.md`);
   fs.writeFileSync(outFile, `${preamble}\n${body}\n`);
   console.log(`✓ ${rel.padEnd(40)} → ${path.relative(ROOT, outFile)}`);
 }

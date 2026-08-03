@@ -29,12 +29,12 @@ const href = `/vrachi/${d.slug}`;
     <div class="doc-stats">
       <div class="doc-stat">
         <span class="doc-exp-n">{d.expN}</span>
-        <span class="doc-exp-l">{d.expW} стажа</span>
+        <span class="doc-exp-l">{d.expW} {d.expLabelCard || 'опыта'}</span>
       </div>
       {d.pubs && (
         <div class="doc-stat">
           <span class="doc-exp-n">{d.pubs}</span>
-          <span class="doc-exp-l">публикаций</span>
+          <span class="doc-exp-l">научных публикаций</span>
         </div>
       )}
     </div>
@@ -73,10 +73,10 @@ const href = `/vrachi/${d.slug}`;
      профессор…») вынесена из подписи к числу отдельной строкой ниже:
      в колонке ~110px она ломалась по слову и распирала блок. */
   .doc-stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 14px; margin:0 0 10px; }
-  .doc-stat { display:flex; flex-direction:row; align-items:baseline; gap:8px; }
+  .doc-stat { display:flex; flex-direction:column; align-items:flex-start; gap:4px; }
   .doc-deg { margin:0 0 14px; font-size:var(--fs-caption); line-height:1.35; color:var(--text-strong); }
   .doc-exp-n { font-family:var(--ff-body); font-size:var(--fs-h); font-weight:600; letter-spacing:-.02em; line-height:1; color:var(--text-strong); flex:none; }
-  .doc-exp-l { flex:1; font-size:var(--fs-caption); line-height:1.3; color:var(--text-strong); }
+  .doc-exp-l { font-size:var(--fs-caption); line-height:1.25; color:var(--text-strong); }
   .doc-bio { font-size:var(--fs-caption); line-height:1.55; color:var(--text-body); margin:0 0 16px; }
   /* «Подробнее о враче» — гиперссылка в потоке текста. Цвет и подчёркивание
      даёт глобальное правило `p a` (global.css); свой border-bottom здесь

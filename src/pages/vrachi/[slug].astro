@@ -65,7 +65,7 @@ const jsonLd = {
           <div class="doc-hero-stats">
             <div class="doc-hero-stat">
               <span class="doc-hero-n">{d.expN}</span>
-              <span class="doc-hero-l">{d.expW} врачебного стажа</span>
+              <span class="doc-hero-l">{d.expW} {d.expLabel || 'врачебного стажа'}</span>
             </div>
             {d.pubs && (
               <div class="doc-hero-stat">
@@ -89,6 +89,88 @@ const jsonLd = {
       <div class="doc-about">
         <h2>О&nbsp;враче</h2>
         {d.back.map((par) => (<p>{par}</p>))}
+
+        {d.services && (
+          <div class="doc-additional-sec">
+            <h3 class="doc-section-title">Специализация и услуги</h3>
+            <div class="doc-services-list">
+              {d.services.map((srv) => (
+                <p class="doc-service-text">{srv}</p>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {d.trials && (
+          <div class="doc-additional-sec">
+            <h3 class="doc-section-title">Участие в клинических исследованиях (GCP)</h3>
+            <div class="doc-table-wrap">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Протокол</th>
+                    <th>Локализация</th>
+                    <th>Фаза</th>
+                    <th>Роль</th>
+                    <th>Период</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {d.trials.map((t) => (
+                    <tr>
+                      <td><b>{t.code}</b></td>
+                      <td>{t.area}</td>
+                      <td class="text-center">{t.phase}</td>
+                      <td>{t.role}</td>
+                      <td>{t.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {d.caseStudy && (
+          <div class="doc-additional-sec">
+            <h3 class="doc-section-title">Пример клинической работы</h3>
+            <div class="doc-case-card">
+              <div class="doc-case-header">
+                <span class="doc-case-date">Случай из практики · {d.caseStudy.date}</span>
+                <h4 class="doc-case-title">Клиническое заключение нутрициолога</h4>
+              </div>
+              <div class="doc-case-body">
+                <div class="doc-case-field">
+                  <span class="doc-case-label">Диагноз пациента</span>
+                  <p class="doc-case-value"><strong>{d.caseStudy.diagnosis}</strong></p>
+                </div>
+                <div class="doc-case-field">
+                  <span class="doc-case-label">Объективный статус при осмотре</span>
+                  <p class="doc-case-value">{d.caseStudy.objective}</p>
+                </div>
+                <div class="doc-case-field">
+                  <span class="doc-case-label">Рекомендации по нутриционной терапии</span>
+                  <div class="doc-case-recs">
+                    {d.caseStudy.recommendations.map((rec) => (
+                      <p class="doc-case-rec-item">{rec}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {d.diplomas && (
+          <div class="doc-additional-sec">
+            <h3 class="doc-section-title">Документы об образовании</h3>
+            <div class="doc-diplomas-list">
+              {d.diplomas.map((dip) => (
+                <p class="doc-diploma-text">{dip}</p>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       <aside class="doc-side">
         <h3>Приём</h3>
@@ -175,9 +257,9 @@ const jsonLd = {
        число и его подпись должны читаться одним блоком. */
     /* подпись сбоку от числа, по базовой линии — как в карточке врача */
     .doc-hero-stats { display:flex; gap:36px; margin:0 0 28px; }
-    .doc-hero-stat { display:flex; flex-direction:row; align-items:baseline; gap:10px; }
+    .doc-hero-stat { display:flex; flex-direction:column; align-items:flex-start; gap:6px; }
     .doc-hero-n { font-family:var(--ff-body); font-size:var(--fs-num); font-weight:600; letter-spacing:-.03em; line-height:1.05; color:var(--text-strong); }
-    .doc-hero-l { font-size:var(--fs-sub); line-height:1.3; color:var(--text-strong); max-width:9em; }
+    .doc-hero-l { font-size:var(--fs-body-sm); line-height:1.35; color:var(--text-strong); max-width:18em; }
     .hero-cta { display:flex; gap:14px; flex-wrap:wrap; }
 
     /* — секции — */
@@ -202,6 +284,35 @@ const jsonLd = {
     .doc-side-note { font-size:var(--fs-caption); line-height:1.5; color:var(--text-body); margin:16px 0 0; }
     /* цвет и подчёркивание ссылок в абзаце — глобальным правилом (global.css) */
     .doc-side-note a:hover { color:var(--accent); }
+
+    /* — дополнительные разделы на странице врача — */
+    .doc-additional-sec { margin-top: 36px; border-top: 1px solid var(--border-hairline); padding-top: 28px; }
+    .doc-section-title { font-size: var(--fs-h); font-weight: 600; letter-spacing: -.02em; color: var(--text-strong); margin: 0 0 20px; }
+    
+    /* Документы и услуги */
+    .doc-diplomas-list, .doc-services-list { display: grid; gap: 12px; }
+    .doc-diploma-text, .doc-service-text { font-size: var(--fs-body-sm); line-height: 1.5; color: var(--text-body); margin: 0; max-width: var(--measure-text); }
+    
+    /* Таблица исследований */
+    .doc-table-wrap { overflow-x: auto; background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--r-card); }
+    .doc-table { width: 100%; border-collapse: collapse; text-align: left; font-size: var(--fs-body-sm); line-height: 1.45; }
+    .doc-table th, .doc-table td { padding: 12px 18px; border-bottom: 1px solid var(--border-hairline); }
+    .doc-table th { font-weight: 600; color: var(--text-strong); background: rgba(58, 140, 166, 0.05); }
+    .doc-table tr:last-child td { border-bottom: 0; }
+    .doc-table td b { font-weight: 600; color: var(--text-strong); }
+    .doc-table .text-center { text-align: center; }
+    
+    /* Карточка клинического случая */
+    .doc-case-card { background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--r-card); padding: 24px; display: grid; gap: 18px; }
+    .doc-case-header { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid var(--border-hairline); padding-bottom: 14px; }
+    .doc-case-date { font-size: var(--fs-caption); color: var(--accent); font-weight: 600; }
+    .doc-case-title { font-family: var(--ff-display); font-size: var(--fs-body-lg); font-weight: 600; color: var(--text-strong); margin: 0; }
+    .doc-case-body { display: grid; gap: 16px; }
+    .doc-case-field { display: grid; gap: 4px; }
+    .doc-case-label { font-size: var(--fs-caption); color: var(--text-muted); }
+    .doc-case-value { font-size: var(--fs-body-sm); line-height: 1.5; color: var(--text-body); margin: 0; }
+    .doc-case-recs { display: grid; gap: 10px; padding-left: 0; }
+    .doc-case-rec-item { font-size: var(--fs-body-sm); line-height: 1.5; color: var(--text-body); margin: 0; }
 
     /* — другие специалисты — */
     .doc-others { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }

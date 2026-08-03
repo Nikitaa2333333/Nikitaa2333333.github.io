@@ -1,0 +1,16 @@
+---
+/* Побочные эффекты и восстановление — страница раздела «Лечение»
+   (пункт меню, до этого висел заглушкой href="#").
+   Контент — данными, рендер — общий ArticlePage. */
+import ArticlePage from '../../components/ArticlePage.astro';
+import article from '../../data/articles/lechenie/vosstanovlenie.json';
+---
+
+<ArticlePage
+  article={article}
+  eyebrow="Лечение"
+  current="vosstanovlenie"
+  crumbs={[{ label: 'Главная', href: '/' }, { label: 'Лечение', href: '/lechenie' }, { label: 'Восстановление после лечения' }]}
+  ctaTitle="Тяжело переносите лечение?"
+  ctaText="Об этом не нужно молчать до планового приёма. Расскажите врачу, что происходит, — сопроводительная терапия подбирается под конкретные жалобы, и чаще всего состояние можно заметно облегчить."
+/>

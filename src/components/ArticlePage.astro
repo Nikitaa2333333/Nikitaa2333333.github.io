@@ -1,0 +1,160 @@
+---
+/* ============================================================
+   ШАБЛОН КОНТЕНТНОЙ СТАТЬИ — общий рендерер для блога и текстовых
+   страниц раздела «Лечение» (восстановление, клинические исследования).
+
+   Статья приходит ДАННЫМИ (src/data/articles/**.json): slug, title,
+   descr, lead[], sections[{id,h,paras[]}], faq[{q,a}], related[].
+   Тексты пишутся с обычными пробелами — неразрывные расставляет
+   мини-типограф (src/lib/typograf.ts) при рендере. В строках допустимы
+   ТОЛЬКО инлайн-теги <mark> и <a href> — никакой жирности (правило
+   дизайн-системы), поэтому set:html здесь безопасен по стилю.
+
+   Вёрстка — целиком на классах page-article.css (единая система
+   внутренних страниц: page-hero, crumbs, sec, faq, chip-row, reveal);
+   своего здесь только .art-p — рядовой абзац секции.
+   ============================================================ */
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import FooterContacts from './sections/FooterContacts.astro';
+import PageCta from './sections/PageCta.astro';
+import { typo } from '../lib/typograf';
+import '../styles/page-article.css';
+
+export interface ArticleData {
+  slug: string;
+  title: string;
+  descr: string;
+  lead: string[];
+  sections: { id: string; h: string; paras: string[] }[];
+  faq: { q: string; a: string }[];
+  related: { label: string; href: string }[];
+}
+
+interface Props {
+  article: ArticleData;
+  eyebrow: string;                          // «Блог» | «Лечение»
+  crumbs: { label: string; href?: string }[]; // последняя крошка — без href
+  current?: string;                         // подсветка пункта меню в Header
+  ctaTitle?: string;
+  ctaText?: string;
+}
+
+const {
+  article: a,
+  eyebrow,
+  crumbs,
+  current,
+  ctaTitle = 'Обсудите вашу ситуацию с врачом',
+  ctaText = 'Статья не заменяет консультацию. Привезите документы — врач разберёт именно ваш случай: диагноз, заключения, снимки, и объяснит, какие шаги имеют смысл дальше.',
+} = Astro.props;
+---
+
+<Base title={`${a.title} — Клиника трансляционной медицины`} description={a.descr}>
+  <Header current={current} />
+
+  <!-- HERO страницы (паттерн внутренних страниц) -->
+  <section class="page-hero">
+    <div class="blob" style="width:480px;height:480px;background:var(--c-wash-teal);top:-160px;left:-60px;"></div>
+    <div class="blob" style="width:420px;height:420px;background:var(--c-wash-blue);top:-80px;right:-40px;"></div>
+    <div class="wrap" style="position:relative;z-index:1;">
+      <nav class="crumbs" aria-label="Хлебные крошки">
+        {crumbs.map((c, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true">/</span>}
+            {c.href ? <a href={c.href}>{c.label}</a> : <span>{c.label}</span>}
+          </>
+        ))}
+      </nav>
+      <div class="page-eyebrow">{eyebrow}</div>
+      <h1 class="page-title" set:html={typo(a.title)} />
+      {a.lead.map((p) => <p class="page-sub" set:html={typo(p)} />)}
+      <div class="hero-cta">
+        <a href="#contacts" class="btn btn-dark">Записаться на&nbsp;консультацию</a>
+        <a href="/s-chego-nachat" class="btn btn-light">С&nbsp;чего начать</a>
+      </div>
+    </div>
+  </section>
+
+  {a.sections.map((s, i) => (
+    <section class="sec reveal" id={s.id} style={`--d:${Math.min(i * 0.04, 0.2)}s`}>
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 set:html={typo(s.h)} />
+          {s.paras.length > 0 && <p class="sec-lead" set:html={typo(s.paras[0])} />}
+        </div>
+        {s.paras.slice(1).map((p) => <p class="art-p" set:html={typo(p)} />)}
+      </div>
+    </section>
+  ))}
+
+  <!-- FAQ — статичный список, две колонки, левый край -->
+  {a.faq.length > 0 && (
+    <section class="sec reveal" id="faq">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Частые вопросы</h2>
+        </div>
+        <div class="faq">
+          {a.faq.map((f) => (
+            <div class="faq-item">
+              <h3 class="faq-q" set:html={typo(f.q)} />
+              <div class="faq-a"><p set:html={typo(f.a)} /></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Перелинковка: контурные чипы с шевроном -->
+  {a.related.length > 0 && (
+    <section class="sec reveal" id="related">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Что почитать дальше</h2>
+        </div>
+        <ul class="chip-row">
+          {a.related.map((r) => (
+            <li>
+              <a class="link-chip" href={r.href}>
+                <span set:html={typo(r.label)} /><svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <PageCta title={ctaTitle} text={ctaText} note="Материал носит информационный характер и не заменяет консультацию врача." />
+  <FooterContacts />
+</Base>
+
+<style is:global>
+  /* Рядовой абзац секции статьи: ступень ниже лида, мера строки токеном.
+     Отступ между абзацами — вертикальный ритм без линий (правило). */
+  .art-p {
+    margin: 0 0 14px;
+    max-width: var(--measure-text);
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    color: var(--text-body);
+  }
+  .art-p:last-child { margin-bottom: 0; }
+</style>
+
+<script>
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      }
+    },
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('.sec.reveal').forEach((el) => io.observe(el));
+</script>

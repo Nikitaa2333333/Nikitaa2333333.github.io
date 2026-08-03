@@ -1,0 +1,26 @@
+---
+/* ============================================================
+   Статья блога: /blog/<slug>. Контент — данными из
+   src/data/articles/blog/*.json, рендер — общий ArticlePage.
+   Новая статья = новый JSON, страница появляется сама.
+   ============================================================ */
+import ArticlePage from '../../components/ArticlePage.astro';
+
+export async function getStaticPaths() {
+  const mods = import.meta.glob<{ default: any }>('../../data/articles/blog/*.json', { eager: true });
+  return Object.values(mods).map((m) => ({
+    params: { slug: m.default.slug },
+    props: { article: m.default },
+  }));
+}
+
+const { article } = Astro.props;
+const short = article.short ?? article.title;
+---
+
+<ArticlePage
+  article={article}
+  eyebrow="Блог"
+  current="blog"
+  crumbs={[{ label: 'Главная', href: '/' }, { label: 'Блог', href: '/blog' }, { label: short }]}
+/>

@@ -13,6 +13,11 @@ const SITE = process.env.PUBLIC_SITE || undefined;
 
 export default defineConfig({
   site: SITE,
+  // Блог переехал по ТЗ на /blog (было /stati). Старый адрес мог разойтись
+  // по ссылкам — держим редирект, а не 404.
+  redirects: {
+    '/stati': '/blog',
+  },
   server: {
     port: 4330,
     host: true,

@@ -6,9 +6,9 @@ const chev =
   '<path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
 
 const links = [
-  { href: '#', t: 'Рак молочной железы' },
-  { href: '#', t: 'Рак лёгкого' },
-  { href: '#', t: 'Рак кишечника' },
+  { href: '/blog/rak-molochnoy-zhelezy', t: 'Рак молочной железы' },
+  { href: '/blog/rak-lyogkogo', t: 'Рак лёгкого' },
+  { href: '/blog/rak-kishechnika', t: 'Рак кишечника' },
 ];
 ---
 
@@ -44,7 +44,7 @@ const links = [
             <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
           </a>
         ))}
-        <a href="#" class="link-chip">
+        <a href="/blog" class="link-chip">
           Все локализации
           <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
         </a>

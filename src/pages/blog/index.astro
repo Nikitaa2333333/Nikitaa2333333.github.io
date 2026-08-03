@@ -1,0 +1,132 @@
+---
+/* ============================================================
+   БЛОГ — листинг статей (/blog). Пришёл на смену /stati (редирект
+   в astro.config.mjs). Прежний /stati держал выдуманный «реестр
+   клинических исследований» (протоколы KTM-114 и т.п.) — снесён:
+   выдуманные данные клиники запрещены; честная страница про КИ —
+   /lechenie/klinicheskie-issledovaniya.
+
+   Карточки — из тех же JSON, что и страницы статей: разошлись
+   не могут. Все карточки одинаковые (белая плашка + hairline),
+   hover красит только заголовок — плашку не трогает (правило).
+   ============================================================ */
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import FooterContacts from '../../components/sections/FooterContacts.astro';
+import PageCta from '../../components/sections/PageCta.astro';
+import { typo } from '../../lib/typograf';
+import '../../styles/page-article.css';
+
+const mods = import.meta.glob<{ default: any }>('../../data/articles/blog/*.json', { eager: true });
+const articles = Object.values(mods)
+  .map((m) => m.default)
+  .sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
+---
+
+<Base
+  title="Блог — статьи о диагностике и лекарственном лечении опухолей — Клиника трансляционной медицины"
+  description="Статьи онкологов клиники: как ставят диагноз, как выбирают лечение при раке молочной железы, лёгкого, кишечника, желудка, предстательной железы и меланоме."
+>
+  <Header current="blog" />
+
+  <section class="page-hero">
+    <div class="blob" style="width:480px;height:480px;background:var(--c-wash-teal);top:-160px;left:-60px;"></div>
+    <div class="blob" style="width:420px;height:420px;background:var(--c-wash-blue);top:-80px;right:-40px;"></div>
+    <div class="wrap" style="position:relative;z-index:1;">
+      <nav class="crumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a><span aria-hidden="true">/</span><span>Блог</span>
+      </nav>
+      <div class="page-eyebrow">Блог</div>
+      <h1 class="page-title">Статьи <em class="i-serif">о болезни</em> и&nbsp;лечении</h1>
+      <p class="page-sub">Мы&nbsp;пишем о&nbsp;том, о&nbsp;чём пациенты спрашивают на&nbsp;приёме: как ставят и&nbsp;уточняют диагноз, от&nbsp;чего зависит выбор лекарств и&nbsp;что происходит во&nbsp;время лечения. Без обещаний и&nbsp;без запугивания&nbsp;— <mark>объясняем, как это устроено</mark>.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="articles">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Статьи по&nbsp;заболеваниям</h2>
+        <p class="sec-lead">Каждая статья&nbsp;— про свою локализацию: какие исследования нужны, какие мишени ищут и&nbsp;какое лекарственное лечение применяется.</p>
+      </div>
+      <div class="blog-grid">
+        {articles.map((a) => (
+          <a class="blog-card" href={`/blog/${a.slug}`}>
+            <h3 set:html={typo(a.short ?? a.title)} />
+            <p set:html={typo(a.descr)} />
+            <span class="blog-more">Читать статью<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="sections-links">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Про методы лечения&nbsp;— в&nbsp;разделе «Лечение»</h2>
+        <p class="sec-lead">Как выбирается вид терапии, как устроены химиотерапия, таргетная и&nbsp;иммунотерапия, что помогает переносить лечение&nbsp;— это постоянные страницы раздела, мы&nbsp;поддерживаем их актуальными.</p>
+      </div>
+      <ul class="chip-row">
+        <li><a class="link-chip" href="/lechenie">Выбор вида лечения<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+        <li><a class="link-chip" href="/lechenie/himioterapiya">Химиотерапия<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+        <li><a class="link-chip" href="/lechenie/targetnaya-terapiya">Таргетная терапия<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+        <li><a class="link-chip" href="/lechenie/immunoterapiya">Иммунотерапия<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+        <li><a class="link-chip" href="/lechenie/vosstanovlenie">Восстановление после лечения<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+        <li><a class="link-chip" href="/lechenie/klinicheskie-issledovaniya">Клинические исследования<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <PageCta
+    title="Не&nbsp;нашли ответа на&nbsp;свой вопрос?"
+    text="Привезите документы на&nbsp;консультацию&nbsp;— врач разберёт именно вашу ситуацию и&nbsp;объяснит, какие шаги имеют смысл дальше."
+    note="Материалы блога носят информационный характер и не заменяют консультацию врача."
+  />
+  <FooterContacts />
+</Base>
+
+<style is:global>
+  /* Сетка карточек: одинаковые белые плашки + hairline. Hover красит
+     ТОЛЬКО заголовок и «Читать статью» — плашка не меняется (правило). */
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--surface-card);
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--r-card);
+    padding: 24px;
+  }
+  .blog-card h3 {
+    font-size: var(--fs-h-sm);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--text-strong);
+    margin: 0;
+    transition: color 0.2s;
+  }
+  .blog-card:hover h3 { color: var(--accent-soft); }
+  .blog-card p {
+    font-size: var(--fs-body-sm);
+    line-height: 1.55;
+    color: var(--text-body);
+    margin: 0;
+  }
+  .blog-more {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-body-sm);
+    color: var(--accent-soft);
+  }
+  .blog-more .chev-r { width: 14px; height: 14px; }
+  @media (max-width: 1100px) { .blog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 720px) { .blog-grid { grid-template-columns: 1fr; } }
+</style>

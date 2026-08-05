@@ -13,6 +13,18 @@
    Вёрстка — целиком на классах page-article.css (единая система
    внутренних страниц: page-hero, crumbs, sec, faq, chip-row, reveal);
    своего здесь только .art-p — рядовой абзац секции.
+
+   СТРУКТУРА ПОВТОРЯЕТ ЗАФИКСИРОВАННЫЕ СТРАНИЦЫ (эталон —
+   lechenie/himioterapiya.astro), а не «заголовок + простыня абзацев»:
+
+   - в hero ОДИН абзац лида (.page-sub). Остальные абзацы лида — вводным
+     блоком после hero, в двух равных колонках;
+   - секция от трёх абзацев раскладывается в .lead-grid (две равные
+     колонки), и широкого лида над колонками нет — правило меры строки;
+   - секция в один-два абзаца остаётся одной колонкой: .sec-lead + .art-p;
+   - у секции могут быть .callout (примечание на холсте) и справочная
+     таблица .mk-table в белой плашке .table-wrap — они приходят в данных
+     статьи полями callout/table и рендерятся, если заданы.
    ============================================================ */
 import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
@@ -26,7 +38,15 @@ export interface ArticleData {
   title: string;
   descr: string;
   lead: string[];
-  sections: { id: string; h: string; paras: string[] }[];
+  sections: {
+    id: string;
+    h: string;
+    paras: string[];
+    /* примечание на холсте под текстом секции (не плашка) */
+    callout?: { h: string; paras: string[] };
+    /* справочная таблица: шапка + строки. Линии строк — часть структуры */
+    table?: { head: string[]; rows: string[][] };
+  }[];
   faq: { q: string; a: string }[];
   related: { label: string; href: string }[];
 }
@@ -48,6 +68,21 @@ const {
   ctaTitle = 'Обсудите вашу ситуацию с врачом',
   ctaText = 'Статья не заменяет консультацию. Привезите документы — врач разберёт именно ваш случай: диагноз, заключения, снимки, и объяснит, какие шаги имеют смысл дальше.',
 } = Astro.props;
+
+// Иконка в кнопке — функциональная (правило: декоративных иконок нет,
+// в кнопках остаются). Тот же контур, что на зафиксированных страницах.
+const iconPhone =
+  '<path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>';
+
+// В hero — только первый абзац лида; остальные уходят вводным блоком ниже.
+const heroLead = a.lead[0];
+const introParas = a.lead.slice(1);
+
+// Разложить абзацы на две равные колонки (первая — с остатком при нечётном).
+const twoCols = (paras: string[]) => {
+  const half = Math.ceil(paras.length / 2);
+  return [paras.slice(0, half), paras.slice(half)];
+};
 ---
 
 <Base title={`${a.title} — Клиника трансляционной медицины`} description={a.descr}>
@@ -68,22 +103,78 @@ const {
       </nav>
       <div class="page-eyebrow">{eyebrow}</div>
       <h1 class="page-title" set:html={typo(a.title)} />
-      {a.lead.map((p) => <p class="page-sub" set:html={typo(p)} />)}
+      <p class="page-sub" set:html={typo(heroLead)} />
       <div class="hero-cta">
-        <a href="#contacts" class="btn btn-dark">Записаться на&nbsp;консультацию</a>
+        <a href="#contacts" class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s" set:html={iconPhone}></svg>Записаться на&nbsp;консультацию</a>
         <a href="/s-chego-nachat" class="btn btn-light">С&nbsp;чего начать</a>
       </div>
     </div>
   </section>
+
+  <!-- Вводный блок: остаток лида в двух равных колонках, без заголовка -->
+  {introParas.length > 0 && (
+    <section class="sec reveal" id="intro">
+      <div class="wrap">
+        {introParas.length > 1 ? (
+          <div class="lead-grid">
+            {twoCols(introParas).map((col) => (
+              <div class="lead-col">
+                {col.map((p) => <p class="lead-para" set:html={typo(p)} />)}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p class="sec-lead" set:html={typo(introParas[0])} />
+        )}
+      </div>
+    </section>
+  )}
 
   {a.sections.map((s, i) => (
     <section class="sec reveal" id={s.id} style={`--d:${Math.min(i * 0.04, 0.2)}s`}>
       <div class="wrap">
         <div class="sec-head">
           <h2 set:html={typo(s.h)} />
-          {s.paras.length > 0 && <p class="sec-lead" set:html={typo(s.paras[0])} />}
+          {/* лид над секцией — только когда текст идёт ОДНОЙ колонкой:
+              широкий лид над двумя колонками запрещён (мера строки) */}
+          {s.paras.length > 0 && s.paras.length < 3 && (
+            <p class="sec-lead" set:html={typo(s.paras[0])} />
+          )}
         </div>
-        {s.paras.slice(1).map((p) => <p class="art-p" set:html={typo(p)} />)}
+
+        {s.paras.length >= 3 ? (
+          <div class="lead-grid">
+            {twoCols(s.paras).map((col) => (
+              <div class="lead-col">
+                {col.map((p) => <p class="lead-para" set:html={typo(p)} />)}
+              </div>
+            ))}
+          </div>
+        ) : (
+          s.paras.slice(1).map((p) => <p class="art-p" set:html={typo(p)} />)
+        )}
+
+        {s.table && (
+          <div class="table-wrap">
+            <table class="mk-table">
+              <thead>
+                <tr>{s.table.head.map((h) => <th set:html={typo(h)} />)}</tr>
+              </thead>
+              <tbody>
+                {s.table.rows.map((row) => (
+                  <tr>{row.map((cell) => <td set:html={typo(cell)} />)}</tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {s.callout && (
+          <div class="callout">
+            <h3 set:html={typo(s.callout.h)} />
+            {s.callout.paras.map((p) => <p set:html={typo(p)} />)}
+          </div>
+        )}
       </div>
     </section>
   ))}

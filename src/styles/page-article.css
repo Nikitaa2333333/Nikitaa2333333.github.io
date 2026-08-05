@@ -15,7 +15,6 @@
 .crumbs a { color:var(--accent-soft); }
 .crumbs a:hover { color:var(--accent); }
 .page-eyebrow { font-size:var(--fs-caption); font-weight:600; letter-spacing:.02em; color:var(--accent); margin:0 0 14px; }
-.page-title { font-size:var(--fs-hero); line-height:1.02; letter-spacing:-.035em; font-weight:600; color:var(--text-strong); margin:0 0 18px; max-width:var(--measure-head-lg); }
 .page-sub { font-size:var(--fs-sub); line-height:1.55; color:var(--text-body); max-width:var(--measure-lead); margin:0 0 30px; }
 .hero-cta { display:flex; gap:14px; flex-wrap:wrap; }
 
@@ -38,7 +37,10 @@
 .callout p:last-child { margin-bottom:0; }
 
 /* — справочная таблица: линии строк — часть структуры, а не декор перечисления — */
-.table-wrap { overflow-x:auto; border:1px solid var(--border-hairline); border-radius:var(--r-card); background:var(--surface-card); }
+/* Отступ сверху нужен, когда таблица идёт ПОСЛЕ текста секции. Сразу за sec-head
+   его снимаем: там расстояние уже задано --head-gap, иначе сложится вдвое. */
+.table-wrap { overflow-x:auto; margin-top:var(--s-32); border:1px solid var(--border-hairline); border-radius:var(--r-card); background:var(--surface-card); }
+.sec-head + .table-wrap { margin-top:0; }
 .mk-table { width:100%; border-collapse:collapse; min-width:760px; }
 .mk-table thead th { text-align:left; font-family:var(--ff-body); font-size:var(--fs-caption); font-weight:600; letter-spacing:.01em; color:var(--text-muted); padding:18px 24px; border-bottom:1px solid var(--border-strong); background:var(--surface-mist); }
 .mk-table tbody td { padding:18px 24px; font-size:var(--fs-body-sm); line-height:1.5; color:var(--text-body); border-bottom:1px solid var(--border-hairline); vertical-align:top; }

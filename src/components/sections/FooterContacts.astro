@@ -26,7 +26,13 @@ const nav = [
 
 <!-- КОНТАКТЫ + ФОРМА (ФЗ-152) -->
 <section class="wrap sec" id="contacts">
-  <div class="sec-head"><h2>Мы&nbsp;рядом и&nbsp;на&nbsp;связи</h2></div>
+  <!-- Знак КРУПНО рядом с заголовком: секция контактов есть на каждой странице,
+       и это единственное место, где логотип может стоять большим, ничего
+       не перекрывая. В шапке он мелкий и служебный, здесь — подпись клиники. -->
+  <div class="sec-head contacts-head">
+    <img src="/images/logo-mark.svg" alt="" class="contacts-mark" width="78" height="175" />
+    <h2>Мы&nbsp;рядом и&nbsp;на&nbsp;связи</h2>
+  </div>
   <div class="contact-grid">
     <div class="contact-info">
       <div class="ci-row"><b>Адрес</b><p>{clinic.zip}, г.&nbsp;{clinic.city}, {clinic.addrShort} ({clinic.addrNote})<br/>м.&nbsp;«{clinic.metro}», Аптекарский остров</p></div>
@@ -98,6 +104,12 @@ const nav = [
   /* кнопка (как в index) */
 
   /* контакты + форма (перенос из index) */
+  /* Знак и заголовок в одну строку, по левому краю. Высота знака привязана
+     к кеглю заголовка (--fs-h-lg резиновый), поэтому пара не разъезжается
+     между экранами. Плашки и рамки под знаком нет — размер задаёт сам svg. */
+  .contacts-head { display: flex; align-items: center; gap: var(--s-24); }
+  .contacts-mark { height: 120px; width: auto; flex: none; }
+
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
   .contact-info { display: grid; gap: 20px; }
   .ci-row b { display: block; font-size: var(--fs-body-sm); font-weight: 600; color: var(--text-strong); margin-bottom: 4px; }
@@ -140,6 +152,10 @@ const nav = [
   }
   @media (max-width: 760px) {
     .foot-grid { grid-template-columns: 1fr; }
+    /* Знак поменьше: на 390px вместе с заголовком в две-три строки он
+       забирает половину первого экрана секции */
+    .contacts-mark { height: 64px; }
+    .contacts-head { gap: var(--s-16); }
     /* Телефон — главное действие на странице контактов, а тап-зона была 20px.
        nowrap оставляем: номер разрывать по строкам нельзя. */
     .ci-link { display: inline-flex; align-items: center; min-height: var(--tap-min); }

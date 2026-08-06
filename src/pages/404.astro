@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import FooterContacts from '../components/sections/FooterContacts.astro';
+
+/* ============================================================
+   404 — страница не найдена. Раньше её не было вовсе: битая ссылка
+   отдавала стандартную страницу хостинга, где нет ни шапки, ни выхода
+   на сайт — человек просто уходил.
+
+   Это единственное место, где ЗНАК клиники несёт нагрузку сам по себе:
+   контента на странице нет, и знак подтверждает, что пользователь
+   не ушёл с сайта. Дальше — короткий список разделов, куда идти.
+   ============================================================ */
+const links = [
+  { t: 'Главная', href: '/' },
+  { t: 'С чего начать', href: '/s-chego-nachat' },
+  { t: 'Лечение', href: '/lechenie' },
+  { t: 'Клинические исследования', href: '/lechenie/klinicheskie-issledovaniya' },
+  { t: 'Врачи', href: '/vrachi' },
+  { t: 'Цены', href: '/stoimost' },
+  { t: 'Блог', href: '/blog' },
+  { t: 'Контакты', href: '/#contacts' },
+];
+const chev =
+  '<path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>';
+---
+
+<Base title="Страница не найдена — Клиника трансляционной медицины">
+  <Header />
+
+  <section class="page-hero nf-hero">
+    <div class="blob" style="width:480px;height:480px;background:var(--c-wash-teal);top:-160px;left:-60px;"></div>
+    <div class="blob" style="width:420px;height:420px;background:var(--c-wash-blue);top:-80px;right:-40px;"></div>
+    <div class="wrap" style="position:relative;z-index:1;">
+      <img src="/images/logo-mark.svg" alt="" class="nf-mark" width="52" height="117" />
+      <h1 class="page-title">Такой страницы <em class="i-serif">нет</em></h1>
+      <p class="page-sub">
+        Возможно, ссылка устарела или в&nbsp;адресе опечатка. Вы&nbsp;по-прежнему
+        на&nbsp;сайте Клиники трансляционной медицины&nbsp;— ниже разделы,
+        с&nbsp;которых удобно продолжить.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap sec">
+    <nav class="nf-links" aria-label="Разделы сайта">
+      {links.map((l) => (
+        <a href={l.href} class="link-chip">
+          {l.t}
+          <svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true" set:html={chev} />
+        </a>
+      ))}
+    </nav>
+    <a href="/#contacts" class="btn btn-dark nf-cta">Записаться на приём</a>
+  </section>
+
+  <FooterContacts />
+</Base>
+
+<style>
+  /* Шапка раздела и ритм секции — как на остальных внутренних страницах
+     (эти правила живут per-page, в global.css вынесен только .page-title) */
+  .page-hero { position: relative; overflow: hidden; background: var(--grad-uni); padding-block: 52px 46px; }
+  .page-sub { font-size: var(--fs-sub); line-height: 1.55; color: var(--text-body); max-width: var(--measure-lead); margin: 0; }
+  .sec { padding-block: var(--section-gap); }
+
+  /* Знак — над заголовком, слева, без плашки и рамки: размер задаёт сам svg */
+  .nf-mark { height: 72px; width: auto; display: block; margin-bottom: var(--s-24); }
+
+  .nf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-8) var(--s-12);
+  }
+  .nf-cta { margin-top: var(--s-32); }
+
+  @media (max-width: 760px) {
+    .nf-mark { height: 56px; }
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+/* КЛИНИЧЕСКИЕ ИССЛЕДОВАНИЯ — отдельный блок перед дневным стационаром.
+   Раньше это был четвёртый ряд «Как проходит лечение» и терялся среди приёмов;
+   вынесен в самостоятельную плашку на фирменном тёмно-синем (тон «Историй
+   пациентов»), чтобы читался как отдельная возможность, а не как этап лечения.
+
+   Почему плашка, а не полоса во всю ширину: секция стоит сразу за тёмной полосой
+   «Как проходит лечение» + «Рак можно лечить» — фон во всю ширину слился бы
+   с ней в одно полотно. Холст вокруг плашки и даёт «отдельно стоящий блок».
+
+   Текст — по правилам medical-copy: без обещания включения (это решают критерии
+   протокола), термины объяснены при первом появлении. */
+---
+
+<section class="sec ki-sec" id="trials">
+  <div class="wrap">
+    <div class="ki-tile reveal">
+      <h2 class="ki-title">Участие в&nbsp;клинических исследованиях новых препаратов</h2>
+
+      <div class="ki-grid">
+        <div class="ki-col">
+          <p>
+            Клиническое исследование&nbsp;— это изучение нового препарата или новой
+            схемы лечения по&nbsp;протоколу: документу, в&nbsp;котором заранее расписано
+            всё, от&nbsp;порядка введения до&nbsp;сроков обследований. Мы&nbsp;работаем
+            по&nbsp;стандартам GCP&nbsp;— надлежащей клинической практики, главный
+            принцип которой сформулирован прямо: права участника выше интересов науки.
+          </p>
+        </div>
+        <div class="ki-col">
+          <p>
+            Исследуемый препарат, визиты и&nbsp;обследования, предусмотренные протоколом,
+            оплачивает организатор исследования&nbsp;— <mark>для участника они бесплатны</mark>.
+            Наблюдение при этом плотнее обычного, а&nbsp;выйти из&nbsp;исследования можно
+            в&nbsp;любой момент без&nbsp;объяснения причин. Подходит&nbsp;ли вам действующий
+            протокол, определяют его критерии и&nbsp;результаты обследований&nbsp;—
+            обещать участие заранее не&nbsp;вправе ни&nbsp;одна клиника.
+          </p>
+
+          <a class="link-chip ki-link" href="/lechenie/klinicheskie-issledovaniya">
+            Как устроено участие<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Секция на холсте: свой ритм секции, фон несёт только плашка внутри */
+  .ki-sec { padding-block: var(--section-gap); }
+
+  /* Плашка — фирменное тёмно-синее полотно (тот же градиент, что «Истории
+     пациентов»), радиус карточки. Обводки нет: тёмное само отделяется от холста. */
+  .ki-tile {
+    background: linear-gradient(160deg, var(--stories-bg-a), var(--stories-bg-b));
+    border-radius: var(--r-card);
+    padding: var(--s-48);
+  }
+
+  /* Заголовок живёт на всю ширину плашки — мера нужна (токен длинных h2) */
+  .ki-title {
+    font-size: var(--fs-h-lg);
+    font-weight: 600;
+    letter-spacing: -.025em;
+    line-height: 1.1;
+    max-width: var(--measure-head-lg);
+    color: var(--text-onDark);
+    margin: 0 0 var(--head-gap);
+  }
+
+  /* Две равные колонки (паттерн «Рак можно лечить»): меру задаёт сама колонка */
+  .ki-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-24) var(--s-48);
+    align-items: start;
+  }
+  .ki-col p {
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body-lg);
+    letter-spacing: var(--tr-body-lg);
+    color: var(--text-onDark);
+    margin: 0;
+  }
+
+  /* Чип — как везде контурный; на тёмном полотне обводка и текст белые */
+  .ki-link {
+    display: inline-flex;
+    margin-top: var(--s-24);
+    color: var(--text-onDark);
+    border-color: var(--text-onDark);
+  }
+  .ki-link:hover {
+    color: var(--accent-on-dark);
+    border-color: var(--accent-on-dark);
+  }
+
+  @media (max-width: 1100px) {
+    .ki-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .ki-tile { padding: var(--s-24); }
+  }
+</style>

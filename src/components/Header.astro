@@ -59,18 +59,25 @@ const { current } = Astro.props;
           <a href="/lechenie/targetnaya-terapiya" class={`drop-it${current === 'target' ? ' is-current' : ''}`}><b>Таргетная терапия</b><span>Точечное воздействие на мишени</span></a>
           <a href="/lechenie/immunoterapiya" class={`drop-it${current === 'immuno' ? ' is-current' : ''}`}><b>Иммунотерапия</b><span>Активация собственного иммунитета</span></a>
           <a href="/lechenie/vosstanovlenie" class="drop-it"><b>Восстановление после лечения</b><span>Сопроводительная и симптоматическая терапия, восстановительное питание</span></a>
-          <a href="/lechenie/klinicheskie-issledovaniya" class="drop-it"><b>Клинические исследования</b><span>Реестр активных протоколов, GCP</span></a>
         </div>
       </div>
+      <!-- Клинические исследования — САМОСТОЯТЕЛЬНЫЙ пункт меню, не подпункт «Лечения»:
+           отдельная возможность, за которой приходят прицельно (страница живёт по
+           прежнему адресу /lechenie/klinicheskie-issledovaniya — ссылки не ломаем) -->
+      <div class="nav-item"><a href="/lechenie/klinicheskie-issledovaniya" class={`nav-link${current === 'ki' ? ' is-current' : ''}`} aria-current={current === 'ki' ? 'page' : undefined}>Клинические исследования</a></div>
       <div class="nav-item"><a href="/vrachi" class={`nav-link${current === 'vrachi' ? ' is-current' : ''}`} aria-current={current === 'vrachi' ? 'page' : undefined}>Врачи</a></div>
       <div class="nav-item"><a href="/stoimost" class={`nav-link${current === 'stoimost' ? ' is-current' : ''}`} aria-current={current === 'stoimost' ? 'page' : undefined}>Цены</a></div>
-      <div class="nav-item"><a href="/blog" class={`nav-link${current === 'blog' ? ' is-current' : ''}`} aria-current={current === 'blog' ? 'page' : undefined}>Блог</a></div>
       <div class="nav-item">
         <a href="#" class="nav-link">О клинике <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <div class="drop">
           <a href="/#stationar" class="drop-it"><b>Дневной стационар</b><span>Условия лечения</span></a>
           <a href="/litsenzii" class={`drop-it${current === 'litsenzii' ? ' is-current' : ''}`}><b>Лицензии и сертификаты</b><span>Документы клиники</span></a>
           <a href="/#stories" class="drop-it"><b>Истории пациентов</b><span>Вместе достигаем невозможного</span></a>
+          <a href="/pamyatka" class={`drop-it${current === 'pamyatka' ? ' is-current' : ''}`}><b>Памятка пациенту</b><span>Запись, визит, права пациента, платные услуги</span></a>
+          <!-- «Блог» переехал сюда из верхнего ряда меню: с отдельным пунктом
+               «Клинические исследования» девять пунктов в строку не помещались.
+               Место временное — переносится одной строкой. -->
+          <a href="/blog" class={`drop-it${current === 'blog' ? ' is-current' : ''}`}><b>Блог</b><span>Статьи и страницы по локализациям</span></a>
         </div>
       </div>
       <div class="nav-item"><a href="#contacts" class="nav-link">Контакты</a></div>
@@ -78,7 +85,7 @@ const { current } = Astro.props;
     <div class="head-actions">
       <button class="a11y" title="Версия для слабовидящих" aria-label="Версия для слабовидящих">Аа</button>
       <a href={clinic.phoneHref} class="head-call" aria-label={`Позвонить ${clinic.phone}`}><svg viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></a>
-      <a href="#contacts" class="btn btn-dark btn--inline head-cta"><svg viewBox="0 0 24 24" class="ic-s"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Записаться на приём</a>
+      <a href="#contacts" class="btn btn-dark btn--inline head-cta"><svg viewBox="0 0 24 24" class="ic-s"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="cta-long">Записаться на&nbsp;приём</span><span class="cta-short">Записаться</span></a>
       <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mobile-menu">
         <span></span><span></span><span></span>
       </button>
@@ -103,16 +110,18 @@ const { current } = Astro.props;
       <a href="/lechenie/targetnaya-terapiya" class="mm-sub">Таргетная терапия</a>
       <a href="/lechenie/immunoterapiya" class="mm-sub">Иммунотерапия</a>
       <a href="/lechenie/vosstanovlenie" class="mm-sub">Восстановление после лечения</a>
-      <a href="/lechenie/klinicheskie-issledovaniya" class="mm-sub">Клинические исследования</a>
 
+      <a href="/lechenie/klinicheskie-issledovaniya" class="mm-link">Клинические исследования</a>
       <a href="/vrachi" class="mm-link">Врачи</a>
       <a href="/stoimost" class="mm-link">Цены</a>
-      <a href="/blog" class="mm-link">Блог</a>
 
       <p class="mm-group">О клинике</p>
       <a href="/#stationar" class="mm-sub">Дневной стационар</a>
       <a href="/litsenzii" class="mm-sub">Лицензии и сертификаты</a>
       <a href="/#stories" class="mm-sub">Истории пациентов</a>
+      <a href="/pamyatka" class="mm-sub">Памятка пациенту</a>
+      <!-- «Блог» здесь же, что и в выпадающем меню десктопа (см. выше) -->
+      <a href="/blog" class="mm-sub">Блог</a>
 
       <a href="/#contacts" class="mm-link">Контакты</a>
     </nav>
@@ -188,6 +197,31 @@ const { current } = Astro.props;
   .drop-it.is-current b { color:var(--c-teal-deep); }
   .head-actions { display:flex; align-items:center; gap:14px; }
   .a11y { width:40px; height:40px; border-radius:var(--r-pill); border:1px solid var(--border-strong); background:var(--veil); color:var(--text-body); font-size:var(--fs-body-sm); cursor:pointer; }
+
+  /* ============================================================
+     ПОДЖАТИЕ МЕНЮ НА УЗКОМ ДЕСКТОПЕ.
+     С появлением отдельного пункта «Клинические исследования» пунктов стало
+     девять, и на реальном вьюпорте ~1280 CSS-px (Windows 150%) строка шапки
+     уезжала за экран на сотню пикселей — вместе со ВСЕЙ страницей, шапка
+     сквозная. Кегль не трогаем: сжимаем поля пунктов и зазоры.
+     ============================================================ */
+  .cta-short { display:none; }
+  @media (max-width:1400px) {
+    .head-inner { gap:6px; }
+    .nav { gap:0; }
+    .nav-link { padding:10px 4px; }
+    /* Название клиники прижимаем к минимальной ширине — иначе оно отбирает
+       у меню те самые пиксели, которых не хватает. ТОЛЬКО десктоп: на мобиле
+       меню в бургере, а название должно лечь в две строки (см. блок ≤760px). */
+    @media (min-width:761px) { .brand-name { max-width:82px; } }
+    .head-actions { gap:8px; }
+    .a11y { width:36px; height:36px; }
+    .head-cta { padding-inline:16px; }
+    /* Кнопка записи короче на ~80px: «Записаться на приём» → «Записаться».
+       Смысл тот же, а именно эти 80px не давали меню уложиться в строку. */
+    .cta-long { display:none; }
+    .cta-short { display:inline; }
+  }
   .a11y.is-on { background:var(--cta-fill); color:var(--cta-text); border-color:transparent; }
 
   /* Бургер и телефон-иконка — только на мобиле (порог 760px, см. tokens.base.css) */

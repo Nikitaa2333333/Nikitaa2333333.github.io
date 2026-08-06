@@ -94,7 +94,12 @@ const l = clinic.license;
 
   <!-- РЕКВИЗИТЫ -->
   <section class="wrap sec">
-    <div class="sec-head"><h2>Реквизиты организации</h2></div>
+    <!-- Знак перед реквизитами: «это документы вот этой организации».
+         Роль функциональная, не декоративная — без плашки и рамки. -->
+    <div class="sec-head req-head">
+      <img src="/images/logo-mark.svg" alt="" class="req-mark" width="26" height="58" />
+      <h2>Реквизиты организации</h2>
+    </div>
     <dl class="license-card license-card--wide">
       <div class="req-line"><dt>Полное наименование</dt><dd>{clinic.nameFull}</dd></div>
       <div class="req-line"><dt>Сокращённое наименование</dt><dd>{clinic.nameShort}</dd></div>
@@ -122,6 +127,9 @@ const l = clinic.license;
     .sec { padding-block:var(--section-gap); }
     .sec-head { margin-bottom:var(--head-gap); }
     .sec-head h2 { font-size:var(--fs-h-lg); letter-spacing:-.025em; font-weight:600; margin:0; max-width:var(--measure-head); }
+    /* Заголовок реквизитов со знаком клиники: знак слева, размер задаёт сам svg */
+    .req-head { display:flex; align-items:center; gap:var(--s-16); }
+    .req-mark { height:44px; width:auto; flex:none; }
     .sec-lead { font-size:var(--fs-body-lg); line-height:var(--lh-body-lg); color:var(--text-body); max-width:var(--measure-text); margin:0 0 28px; }
 
     /* — Лицензия: слева документ, справа его реквизиты и «как проверить».

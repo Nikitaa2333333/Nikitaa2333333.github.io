@@ -1,6 +1,7 @@
 ---
-// Экран 6. «Как мы лечим» — три приёма с выделенным результатом
-// + отдельная плашка про клинические исследования.
+// Экран 6. «Как мы лечим» — три приёма с выделенным результатом.
+// Клинические исследования отсюда вынесены в отдельный блок перед дневным
+// стационаром (ClinicalTrials.astro): это не этап лечения, а отдельная возможность.
 // Стиль: editorial-ряды БЕЗ плашек (контент фундаментальный, важная информация):
 // слева заголовок приёма, справа текст, между рядами hairline-onDark;
 // «Результат» — строка-итог под фирменным <mark>.
@@ -84,23 +85,6 @@
         </p>
       </div>
     </article>
-
-    <!-- Дополнительная возможность: клинические исследования — тот же ряд -->
-    <article class="hwt-row reveal" style="--d:.22s">
-      <div class="hwt-row-head">
-        <h3>Клинические исследования</h3>
-      </div>
-      <div class="hwt-row-body">
-        <p>
-          Бесплатное участие в&nbsp;исследованиях новейших лекарственных
-          противоопухолевых препаратов под&nbsp;нашим контролем с&nbsp;соблюдением
-          безопасных условий протокола: визиты к&nbsp;врачу и&nbsp;анализы в&nbsp;срок.
-        </p>
-        <a class="link-chip hwt-link" href="/lechenie/klinicheskie-issledovaniya">
-          Клинические исследования<svg class="chev-r" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-      </div>
-    </article>
   </div>
   </div>
 </section>
@@ -174,19 +158,6 @@
        поэтому свой цвет ему нужен явно — иначе тёмное по тёмному.
        Текст внутри <mark> перекрашивает глобальное правило (--hl-ink). */
     color: var(--text-onDark);
-  }
-
-  /* Ссылка на раздел КИ — глобальный .link-chip (контурный); на тёмном
-     полотне обводка и текст белые (как чипы локализаций в «Рак лечится») */
-  .hwt-link {
-    display: inline-flex;
-    margin-top: var(--s-8);
-    color: var(--text-onDark);
-    border-color: var(--text-onDark);
-  }
-  .hwt-link:hover {
-    color: var(--accent-on-dark);
-    border-color: var(--accent-on-dark);
   }
 
   /* — Адаптив — */

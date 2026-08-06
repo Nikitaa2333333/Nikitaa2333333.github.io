@@ -7,6 +7,7 @@ import PlanSteps from '../components/sections/PlanSteps.astro';
 import WhoWeHelp from '../components/sections/WhoWeHelp.astro';
 import CancerTreatable from '../components/sections/CancerTreatable.astro';
 import HowWeTreat from '../components/sections/HowWeTreat.astro';
+import ClinicalTrials from '../components/sections/ClinicalTrials.astro';
 import FirstStep from '../components/sections/FirstStep.astro';
 import Faq from '../components/sections/Faq.astro';
 import FooterContacts from '../components/sections/FooterContacts.astro';
@@ -85,7 +86,7 @@ const slides = [
   <!-- ЭКРАНЫ 4 + 6: единая тёмная полоса (тон «Историй пациентов»).
        Фон на общем контейнере — секции встык без субпиксельных швов. -->
   <div class="band-dark">
-    <!-- ЭКРАН 6. КАК МЫ ЛЕЧИМ — две консультации, начало лечения + КИ -->
+    <!-- ЭКРАН 6. КАК МЫ ЛЕЧИМ — две консультации и начало лечения -->
     <HowWeTreat />
 
     <!-- ЭКРАН 4. РАК ЛЕЧИТСЯ — типографический блок -->
@@ -135,6 +136,11 @@ const slides = [
 
     <a href="#" class="btn btn-dark">Записаться на приём</a>
   </section>
+
+  <!-- КЛИНИЧЕСКИЕ ИССЛЕДОВАНИЯ — отдельная тёмная плашка на холсте, после
+       дневного стационара (вынесены из «Как мы лечим» и из шага 06 плана:
+       это не этап лечения, а отдельная возможность) -->
+  <ClinicalTrials />
 
   <!-- ЭКРАН 9. ВРАЧИ -->
   <section class="wrap sec" id="doctors">

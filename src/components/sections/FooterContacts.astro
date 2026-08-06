@@ -13,9 +13,12 @@ const nav = [
   { t: 'С чего начать', href: '/s-chego-nachat' },
   { t: 'Диагностика', href: '#' },
   { t: 'Лечение', href: '/lechenie' },
+  // отдельный пункт меню, как в шапке (не подраздел «Лечения»)
+  { t: 'Клинические исследования', href: '/lechenie/klinicheskie-issledovaniya' },
   { t: 'Врачи', href: '/vrachi' },
   { t: 'Цены', href: '/stoimost' },
-  { t: 'Блог', href: '/stati' },
+  { t: 'Блог', href: '/blog' },
+  { t: 'Памятка пациенту', href: '/pamyatka' },
   { t: 'О клинике', href: '#' },
   { t: 'Контакты', href: '#contacts' },
 ];
@@ -65,17 +68,24 @@ const nav = [
     </nav>
     <div>
       <p class="foot-h">Пациентам</p>
-      <p>Права пациента (ФЗ-323)<br/>Подготовка к&nbsp;визиту<br/>Согласие на&nbsp;обработку ПДн</p>
+      <!-- Раньше здесь были три строки текстом без ссылок — обещание,
+           за которым ничего не стояло. Теперь ведут в разделы памятки. -->
+      <p><a href="/pamyatka#prava">Права пациента (ФЗ-323)</a><br/><a href="/pamyatka#first-visit">Подготовка к&nbsp;визиту</a><br/><a href="/pamyatka#pdn">Обработка персональных данных</a></p>
     </div>
     <div>
       <p class="foot-h">Данные под защитой</p>
       <p>Серверы на&nbsp;территории РФ<br/>Соответствие ФЗ-152<br/>Версия для слабовидящих</p>
     </div>
   </div>
-  <!-- Реквизиты юридического лица — из выписки реестра лицензий (src/data/clinic.ts) -->
+  <!-- Реквизиты юридического лица — из выписки реестра лицензий (src/data/clinic.ts).
+       Знак клиники стоит слева от реквизитов: подпись юрлица под отбивкой —
+       общепринятое место логотипа, а не декоративная пиктограмма. -->
   <div class="foot-legal">
-    <p>{clinic.nameShort} · ИНН {clinic.inn} · КПП {clinic.kpp} · ОГРН {clinic.ogrn}</p>
-    <p>Юридический адрес: {clinic.addrLegal}</p>
+    <img src="/images/logo-mark.svg" alt="" class="foot-mark" width="28" height="63" />
+    <div>
+      <p>{clinic.nameShort} · ИНН {clinic.inn} · КПП {clinic.kpp} · ОГРН {clinic.ogrn}</p>
+      <p>Юридический адрес: {clinic.addrLegal}</p>
+    </div>
   </div>
 </footer>
 
@@ -117,7 +127,10 @@ const nav = [
   .foot-nav a:hover { color: var(--accent); }
 
   /* реквизиты юрлица — мелкая служебная подпись (серый разрешён) */
-  .foot-legal { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-hairline); }
+  .foot-legal { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-hairline);
+    display: flex; align-items: center; gap: var(--s-16); }
+  /* Знак — без плашки и рамки: размер задаёт сам svg (правило «плашки под иконкой нет») */
+  .foot-mark { height: 40px; width: auto; flex: none; }
   .foot-legal p { font-size: var(--fs-caption); line-height: 1.7; color: var(--text-muted); margin: 0; }
 
   /* адаптив — пороги 1100/760/430 (tokens.base.css) */

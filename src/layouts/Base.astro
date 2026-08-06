@@ -1,12 +1,38 @@
 ---
 import '../styles/fonts';
 import '../styles/global.css';
+import { clinic } from '../data/clinic';
 
 interface Props {
   title?: string;
   description?: string; // meta description — нужна страницам под индексацию (врачи, разделы)
 }
 const { title = 'Клиника трансляционной медицины', description } = Astro.props;
+
+/* Разметка организации для поисковиков: карточка клиники в Яндексе и Google
+   берёт название, адрес, телефон и ЗНАК отсюда. Логотип клиники дальше
+   фигурирует уже не только в шапке — это его «невидимое» место.
+   Абсолютный URL знака нужен обязательно: относительный путь поисковик
+   не примет, поэтому берём Astro.site (astro.config.mjs), а без него — домен. */
+const origin = Astro.site?.origin ?? 'https://ctmedspb.ru';
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalClinic',
+  name: clinic.nameBrand,
+  legalName: clinic.nameFull,
+  url: origin,
+  logo: `${origin}/favicon.svg`,
+  image: `${origin}/favicon.svg`,
+  telephone: clinic.phone,
+  email: clinic.email,
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'RU',
+    addressLocality: clinic.city,
+    postalCode: clinic.zip,
+    streetAddress: clinic.addrSchema,
+  },
+};
 ---
 
 <!doctype html>
@@ -29,6 +55,22 @@ const { title = 'Клиника трансляционной медицины', 
     <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#ebf5ff" />
+
+    {/* Карточка ссылки в мессенджерах и соцсетях. Без неё ссылка на клинику
+        в WhatsApp или Telegram уходит голой строкой адреса.
+        Картинка — public/og.png (знак + название на фирменном градиенте),
+        макет лежит в scripts/og-preview: пересобирается скриншотом. */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={clinic.nameBrand} />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:image" content={`${origin}/og.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
   </head>
   <body>
     <slot />

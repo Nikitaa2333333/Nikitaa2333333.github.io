@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
 import Hero from '../components/sections/Hero.astro';
 import AboutClinic from '../components/sections/AboutClinic.astro';
 import PlanSteps from '../components/sections/PlanSteps.astro';
@@ -66,70 +67,8 @@ const slides = [
 ---
 
 <Base title="Клиника трансляционной медицины">
-  <!-- ШАПКА -->
-  <header class="site-head" id="site-head">
-    <!-- верхняя утилити-полоса (сворачивается при скролле) -->
-    <div class="topbar">
-      <div class="wrap topbar-in">
-        <button class="a11y-link" aria-label="Версия для слабовидящих">
-          <svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
-          Версия для слабовидящих
-        </button>
-        <div class="topbar-info">
-          <span class="ti"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><b>ул. Петропавловская, 4</b></span>
-          <a href={clinic.phoneHref} class="ti"><svg viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><b>{clinic.phone}</b></a>
-          <span class="ti ti-hours">Пн–Пт 09:00–20:00 · Сб 09:00–18:00 · Вс выходной</span>
-        </div>
-      </div>
-    </div>
-    <div class="wrap head-inner">
-      <a href="/" class="brand">
-        <img src="/images/logo-mark.svg" alt="Клиника трансляционной медицины" class="brand-mark" />
-        <span class="brand-name">Клиника<br/><b>трансляционной медицины</b></span>
-      </a>
-      <nav class="nav">
-        <div class="nav-item"><a href="/s-chego-nachat" class="nav-link">С чего начать</a></div>
-        <div class="nav-item">
-          <a href="#" class="nav-link">Диагностика <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          <div class="drop">
-            <a href="/molekulyarnaya-diagnostika" class="drop-it"><b>Молекулярно-генетические исследования</b><span>NGS · ПЦР · FISH — основа выбора лекарственной тактики</span></a>
-            <a href="/biopsiya" class="drop-it"><b>Биопсия и гистология</b><span>Пересмотр стёкол — «не отменяем, уточняем»</span></a>
-            <a href="/onkomarkery" class="drop-it"><b>Онкомаркеры</b><span>Вспомогательный анализ: динамика, не диагноз</span></a>
-            <a href="#" class="drop-it"><b>Анализ крови</b></a>
-            <a href="#" class="drop-it"><b>Ультразвуковая диагностика</b></a>
-            <a href="#" class="drop-it"><b>Другие анализы</b></a>
-          </div>
-        </div>
-        <div class="nav-item">
-          <a href="#" class="nav-link">Лечение <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          <div class="drop drop-wide">
-            <a href="/lechenie" class="drop-it"><b>Выбор вида лечения</b><span>Задачи лекарственной терапии</span></a>
-            <a href="/lechenie/himioterapiya" class="drop-it"><b>Химиотерапия</b><span>Эффективные схемы лечения</span></a>
-            <a href="/lechenie/targetnaya-terapiya" class="drop-it"><b>Таргетная терапия</b><span>Точечное воздействие на мишени</span></a>
-            <a href="/lechenie/immunoterapiya" class="drop-it"><b>Иммунотерапия</b><span>Активация собственного иммунитета</span></a>
-            <a href="/lechenie/vosstanovlenie" class="drop-it"><b>Восстановление после лечения</b><span>Сопроводительная и симптоматическая терапия, восстановительное питание</span></a>
-            <a href="/lechenie/klinicheskie-issledovaniya" class="drop-it"><b>Клинические исследования</b><span>Реестр активных протоколов, GCP</span></a>
-          </div>
-        </div>
-        <div class="nav-item"><a href="/vrachi" class="nav-link">Врачи</a></div>
-        <div class="nav-item"><a href="/stoimost" class="nav-link">Цены</a></div>
-        <div class="nav-item"><a href="/blog" class="nav-link">Блог</a></div>
-        <div class="nav-item">
-          <a href="#" class="nav-link">О клинике <svg viewBox="0 0 24 24" class="chev"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          <div class="drop">
-            <a href="#stationar" class="drop-it"><b>Дневной стационар</b><span>Условия лечения</span></a>
-            <a href="/litsenzii" class="drop-it"><b>Лицензии и сертификаты</b><span>Документы клиники</span></a>
-            <a href="#stories" class="drop-it"><b>Истории пациентов</b><span>Вместе достигаем невозможного</span></a>
-          </div>
-        </div>
-        <div class="nav-item"><a href="#contacts" class="nav-link">Контакты</a></div>
-      </nav>
-      <div class="head-actions">
-        <button class="a11y" title="Версия для слабовидящих" aria-label="Версия для слабовидящих">Аа</button>
-        <a href="#" class="btn btn-dark"><svg viewBox="0 0 24 24" class="ic-s"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Записаться на приём</a>
-      </div>
-    </div>
-  </header>
+  <!-- ШАПКА — общий компонент (копия разметки удалена: она разъезжалась с Header.astro) -->
+  <Header />
 
   <!-- ЭКРАН 1. HERO — full-bleed фото-слайдер, текст в нижних углах -->
   <Hero />
@@ -178,16 +117,20 @@ const slides = [
       </div>
     </div>
 
-    <!-- карточки: фото клиники с подписями (бывшие слайды) -->
-    <div class="st-cards">
-      {slides.map((s, idx) => (
-        <figure class="st-card reveal" style={`--d:${idx * 0.06}s`}>
-          <div class="st-photo" style={`background-image:linear-gradient(150deg,${s.g1},${s.g2})`}>
-            <img src={s.img} alt={s.t} width="1600" height="1067" loading="lazy" decoding="async" onerror="this.remove()" />
-          </div>
-          <figcaption>{s.t}</figcaption>
-        </figure>
-      ))}
+    <!-- карточки: фото клиники с подписями (бывшие слайды).
+         Обёртка нужна только мобильной раскладке: на ней лежит градиент,
+         за который уходит лента при горизонтальной прокрутке. -->
+    <div class="st-cards-wrap">
+      <div class="st-cards">
+        {slides.map((s, idx) => (
+          <figure class="st-card reveal" style={`--d:${idx * 0.06}s`}>
+            <div class="st-photo" style={`background-image:linear-gradient(150deg,${s.g1},${s.g2})`}>
+              <img src={s.img} alt={s.t} width="1600" height="1067" loading="lazy" decoding="async" onerror="this.remove()" />
+            </div>
+            <figcaption>{s.t}</figcaption>
+          </figure>
+        ))}
+      </div>
     </div>
 
     <a href="#" class="btn btn-dark">Записаться на приём</a>
@@ -284,36 +227,7 @@ const slides = [
     /* .wrap — глобальное правило (поля ≈15%) в global.css */
     .ic-s { width:16px; height:16px; }
 
-    /* шапка */
-    .site-head { position:sticky; top:0; z-index:50; overflow-anchor:none; background:var(--head-fill); border-bottom:1px solid var(--border-hairline); }
-    .head-inner { display:flex; align-items:center; justify-content:space-between; height:74px; gap:24px; }
-    .brand { display:flex; align-items:center; gap:12px; }
-    .brand-mark { height:44px; width:auto; flex:none; }
-    .brand-name { font-size:var(--fs-caption); line-height:1.25; color:var(--text-body); letter-spacing:.01em; }
-    .brand-name b { color:var(--text-strong); font-weight:600; }
-    .nav { display:flex; gap:6px; }
-    .nav-item { position:relative; }
-    .nav-link { display:inline-flex; align-items:center; gap:5px; font-size:var(--fs-body-sm); color:var(--text-body); padding:10px 12px; border-radius:var(--r-pill); transition:.2s; }
-    .nav-link:hover { color:var(--text-strong); background:var(--veil); }
-    .chev { width:14px; height:14px; opacity:.55; transition:transform .25s; }
-    .nav-item:hover .chev, .nav-item:focus-within .chev { transform:rotate(180deg); }
-    /* выпадающая панель-«ушко» */
-    .drop { position:absolute; top:calc(100% + 10px); left:0; min-width:290px; padding:10px;
-      background:var(--surface-elevated);
-      border:1px solid var(--border-hairline); border-radius:var(--r-glass); box-shadow:var(--sh-glass);
-      display:grid; gap:2px; opacity:0; visibility:hidden; transform:translateY(10px);
-      transition:opacity .22s ease, transform .22s ease, visibility .22s; z-index:60; }
-    .drop::before { content:""; position:absolute; top:-12px; left:0; right:0; height:14px; } /* мостик до пункта */
-    .drop-wide { min-width:340px; }
-    .nav-item:hover .drop, .nav-item:focus-within .drop { opacity:1; visibility:visible; transform:translateY(0); }
-    .drop-it { display:grid; gap:2px; padding:11px 14px; border-radius:var(--r-input); transition:.18s; }
-    .drop-it b { font-size:var(--fs-body-sm); font-weight:600; color:var(--text-strong); }
-    .drop-it span { font-size:var(--fs-caption); color:var(--text-muted); line-height:1.35; }
-    .drop-it:hover { background:var(--c-wash-teal); }
-    .drop-it:hover b { color:var(--c-teal-deep); }
-    .head-actions { display:flex; align-items:center; gap:14px; }
-    .a11y { width:40px; height:40px; border-radius:var(--r-pill); border:1px solid var(--border-strong); background:var(--veil); color:var(--text-body); font-size:var(--fs-body-sm); cursor:pointer; }
-    .a11y.is-on { background:var(--cta-fill); color:var(--cta-text); border-color:transparent; }
+    /* Стили шапки — в Header.astro (дубль удалён: расходился с компонентом) */
 
     /* hero */
     .hero-wrap { position:relative; overflow:hidden; background:var(--grad-uni); }
@@ -488,7 +402,7 @@ const slides = [
     .map-stub span { font-size:var(--fs-caption); letter-spacing:.06em; color:rgba(10,13,18,.4); }
     .contact-form { padding:32px 34px; display:grid; gap:14px; }
     .contact-form h3 { font-size:var(--fs-h); margin:0 0 6px; }
-    .fi { font-family:var(--ff-body); font-size:var(--fs-body-sm); color:var(--text-strong); background:var(--veil-strong); border:1px solid var(--border-hairline); border-radius:var(--r-input); padding:13px 16px; outline:none; transition:border-color .2s; resize:vertical; }
+    .fi { font-family:var(--ff-body); font-size:var(--fs-input); color:var(--text-strong); background:var(--veil-strong); border:1px solid var(--border-hairline); border-radius:var(--r-input); padding:13px 16px; outline:none; transition:border-color .2s; resize:vertical; }
     .fi:focus { border-color:var(--accent); }
     .fi::placeholder { color:var(--text-muted); }
     .consent { display:flex; gap:10px; align-items:flex-start; font-size:var(--fs-caption); color:var(--text-muted); line-height:1.45; }
@@ -503,8 +417,8 @@ const slides = [
     .cta-actions { display:flex; gap:12px; flex-wrap:wrap; }
     .cta-note { grid-column:1 / -1; font-size:var(--fs-caption); color:var(--text-muted); margin:0; padding-top:8px; }
 
-    /* адаптив */
-    @media (max-width:960px) {
+    /* адаптив — пороги 1100/760/430 (tokens.base.css), прежние 960/560 приведены к ним */
+    @media (max-width:1100px) {
       .stories-grid { grid-template-columns:repeat(2,1fr); }
       .stories-head { flex-direction:column; align-items:flex-start; }
       .split { grid-template-columns:1fr; gap:24px; }
@@ -516,12 +430,107 @@ const slides = [
       .st-cols { grid-template-columns:1fr; gap:14px; }
       .st-head { flex-direction:column; align-items:flex-start; gap:18px; }
       .st-cards { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .nav { display:none; }
+      /* Карточки врачей: та же сетка, что и на /vrachi. Раньше правило было
+         только там, а здесь .doc-grid оставалась в 4 колонки — на 360px это
+         давало колонки по 71px: лица врачей в полоску, цифры «34» и «220»
+         слипались в «34220», кнопки обрезались до «ъся н». */
+      .doc-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     }
-    @media (max-width:560px) {
-      .stories-grid { grid-template-columns:1fr; grid-auto-rows:130px; }
+    @media (max-width:760px) {
+      /* Мозаика историй: высота ряда была жёстко 130px и резала цитату
+         («Сейчас ремиссия, наблюдаюсь раз…»). Теперь высота по контенту. */
+      /* ————————————————————————————————————————————————
+         Фото стационара — лента с горизонтальной прокруткой.
+         Пять карточек в столбик давали пять экранов подряд одинаковых
+         кадров. Лентой они занимают один экран и читаются как галерея.
+         Лента выходит за поля контейнера к самому краю экрана
+         (отрицательный margin + равный ему padding), а справа лежит
+         градиент цвета холста — карточки визуально уходят под него,
+         и видно, что прокрутка продолжается.
+         ———————————————————————————————————————————————— */
+      .st-cards-wrap { position:relative; margin-inline:calc(var(--gutter) * -1); }
+      .st-cards {
+        display:flex;
+        grid-template-columns:none;
+        gap:12px;
+        overflow-x:auto;
+        scroll-snap-type:x mandatory;
+        scroll-padding-inline:var(--gutter);
+        padding-inline:var(--gutter);
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
+        /* overflow-x:auto делает overflow-y тоже auto — сдвинутые reveal-ом
+           карточки создавали вертикальную прокрутку внутри ленты и обрезались. */
+        overflow-y:hidden;
+      }
+      /* Reveal в ленте не нужен: карточки и так появляются свайпом, а его
+         translateY как раз и вызывал обрезку. */
+      .st-cards .reveal { opacity:1; transform:none; transition:none; }
+      .st-cards::-webkit-scrollbar { display:none; }
+      /* Кадр почти во всю ширину экрана и квадратный: при 76% и 4:3 фото
+         выходило 262×196 — мелко для главного визуального аргумента секции.
+         Квадрат на 88% даёт ~300×300, площадь кадра больше в полтора раза. */
+      .st-card { flex:0 0 88%; scroll-snap-align:start; }
+      .st-card .st-photo { aspect-ratio:1 / 1; }
+      /* Полоса-растворение у правого края. pointer-events:none — чтобы не
+         перехватывала свайп по ленте. */
+      .st-cards-wrap::after {
+        content:"";
+        position:absolute;
+        inset-block:0;
+        right:0;
+        width:calc(var(--gutter) + 28px);
+        pointer-events:none;
+        background:linear-gradient(to left,
+          var(--bg-canvas) 0%,
+          color-mix(in srgb, var(--bg-canvas) 60%, transparent) 45%,
+          transparent 100%);
+      }
+
+      .stories-grid { grid-template-columns:1fr; grid-auto-rows:auto; }
+      /* Высоту фотокарточкам давал `grid-row: span 2/3` по рядам в 130px.
+         С авто-рядами спаны ничего не задают, и фото схлопывались в полоски
+         по 80–120px. На одной колонке высоту задаёт пропорция кадра. */
+      .story.s-tall, .story.s-mid { grid-row:auto; aspect-ratio:4 / 3; }
+      .story-quote { grid-row:auto; }
+      .doc-grid { grid-template-columns:1fr; }
+      .st-cards { grid-template-columns:1fr; }
       .sec { padding-block:var(--section-gap); }
       .hero-title { font-size:var(--fs-h-lg); }
+      /* Кегль --fs-caption (13px) — роль служебной метки: дата, сноска, номер.
+         Здесь им набран обычный текст (подписи авторов историй, описания шагов
+         телемедицины, согласие на обработку данных), и на телефоне он не читается.
+         Роль ступени выбрана заново, а не «добавлена ступень». */
+      .sq-author, .sc-author, .sc-label, .tele-consent, .tstep-d,
+      .st-cards p, .slide-cap p { font-size:var(--fs-body-sm); }
+
+      /* Внутренние поля плашек рассчитаны на десктоп: 48px с каждой стороны
+         при экране 345px съедали 96px, под текст оставалось 249 — строка
+         ломалась по три-четыре слова. Поджимаем до 22px, как в карточках
+         «Обратитесь к нам, если» (они на мобиле читаются нормально). */
+      .tele { padding:24px 22px; gap:24px; }
+      .cta-band { padding:26px 22px; gap:18px; }
+      .contact-form { padding:24px 22px; }
+      .story-quote { padding:22px; }
+      .story-circle { padding:26px; }
+
+      /* Маркер <mark> обязан укладываться в ОДНУ строку: разорванный
+         переносами на три куска, он выглядит грязно (правило CLAUDE.md).
+         В длинном абзаце телемедицины на телефоне он не помещается никогда —
+         здесь подсветку снимаем, фраза остаётся текстом. */
+      .tele-sub mark { background:transparent; color:inherit; padding:0; }
+
+      /* Строка «заголовок секции + кнопка справа» на телефоне не помещается:
+         кнопка «Все врачи» отъедала половину, и заголовок сжимался до 174px
+         при доступных 344 — ломался в столбик по одному-два слова.
+         Складываем в колонку, кнопка уходит под заголовок. */
+      .sec-head-row { flex-direction:column; align-items:flex-start; gap:16px; }
+      .sec-head-row > div { width:100%; }
+
+      /* На телефоне мозаика из 9 карточек давала 3600px сплошной прокрутки.
+         Оставляем 5: две цитаты пациентов и три фото — смысл блока сохраняется,
+         секция короче вдвое. Остальные видны на планшете и десктопе. */
+      .stories-grid > *:nth-child(n+6) { display:none; }
     }
   </style>
 

@@ -156,7 +156,14 @@ const steps = [
   @media (max-width: 960px) {
     .fs-grid { grid-template-columns: 1fr; }
     .fs-strip { grid-template-columns: 1fr; gap: 10px; }
-    .fs-item { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 16px; min-height: 0; padding: 18px 20px; }
+    /* Первый трек был `auto`, то есть ровно ширина содержимого — а содержимое
+       это одна цифра кеглем 20px, отсюда замеренные 7.4px: «крупный номер»
+       превращался в приписку у заголовка. minmax даёт ему гарантированное поле. */
+    .fs-item { display: grid; grid-template-columns: minmax(34px, auto) minmax(0, 1fr); align-items: center; column-gap: 16px; min-height: 0; padding: 18px 20px; }
+    .fs-num { font-size: var(--fs-num); }
+    /* Общее правило .fs-item .btn { white-space: normal } перебивалось
+       правилом шага 1 — на 320px кнопка распирала карточку. */
+    .fs-item.is-first .btn { white-space: normal; }
     .fs-item.is-first .btn { grid-column: 1 / -1; margin-top: 6px; justify-self: start; }
   }
 </style>

@@ -84,6 +84,19 @@ const href = `/vrachi/${d.slug}`;
   .doc-more { display:inline-flex; align-items:center; gap:4px; vertical-align:baseline; font-weight:600; white-space:nowrap; transition:.2s; }
   /* шеврон — тот же, что у .link-chip (единый приём «стрелочки» на сайте) */
   .doc-more .chev-r { width:13px; height:13px; flex:none; }
+
+  /* ============================================================
+     МОБИЛЬНЫЙ СЛОЙ (порог 760px, tokens.base.css).
+     Карточка встаёт в одну колонку — вместе с ней перестают работать
+     компромиссы, рассчитанные на узкую колонку сетки.
+     ============================================================ */
+  @media (max-width:760px) {
+    /* Подписи врача — это наборный текст, а не служебные метки: на 13px
+       (--fs-caption) он на телефоне нечитаем. Роль ступени выбрана заново. */
+    .doc-role, .doc-deg, .doc-bio, .doc-exp-l { font-size:var(--fs-body-sm); }
+    /* nowrap разрывал карточку: «Подробнее о враче» уезжало за её край на 82px */
+    .doc-more { white-space:normal; min-height:var(--tap-min); }
+  }
   .doc-actions { display:flex; flex-direction:column; align-items:stretch; gap:10px; }
   .doc-actions .btn { justify-content:center; font-size:var(--fs-caption); padding:11px 16px; }
 </style>

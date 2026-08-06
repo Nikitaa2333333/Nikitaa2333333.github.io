@@ -611,6 +611,12 @@ const faq = [
     @supports (-webkit-text-stroke: 1px black) {
       .plan-num { color:transparent; -webkit-text-stroke:1.5px var(--accent); }
     }
+    /* Контур на мобиле заливаем: обводка 1.5px при мелком кегле съедает цифру */
+    @media (max-width:760px) {
+      @supports (-webkit-text-stroke: 1px black) {
+        .plan-num { color:var(--accent); -webkit-text-stroke:0; }
+      }
+    }
     .plan-body h3 { font-size:var(--fs-h); font-weight:600; letter-spacing:-.02em; line-height:1.15; margin:0 0 10px; color:var(--text-strong); }
     .plan-body p { margin:0; max-width:var(--measure-text); font-size:var(--fs-body-lg); line-height:var(--lh-body-lg); color:var(--text-body); }
 

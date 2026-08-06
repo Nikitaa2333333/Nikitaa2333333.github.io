@@ -63,8 +63,12 @@ const slides = [
   /* — Полотно: фото на весь вьюпорт, контент прижат к низу — */
   .hero-full {
     position: relative;
-    min-height: 100vh;
-    min-height: 100svh;
+    /* svh, а не dvh: dvh «прыгает», когда браузер прячет адресную строку.
+       Вычитаем шапку — она липкая и стоит НАД hero в потоке, поэтому чистые
+       100svh давали 75 + 845 = 920px при экране iPhone 844px, и обе кнопки
+       оказывались за сгибом. */
+    min-height: calc(100vh - var(--head-h));
+    min-height: calc(100svh - var(--head-h));
     display: flex;
     align-items: flex-end;
     overflow: hidden;
@@ -176,9 +180,50 @@ const slides = [
       );
     }
   }
-  @media (max-width: 480px) {
+  /* ============================================================
+     МОБИЛЬНЫЙ HERO — фото СВЕРХУ, текст ПОД ним.
+     На телефоне текст поверх фото не работает: заголовок в 5 строк и абзац
+     в 9 строк ложатся на всю высоту кадра, а не на плотную часть scrim —
+     буквы попадают то на светлое окно, то на白 халат, и читаются рвано.
+     Никакой scrim этого не лечит: затемнить весь кадр = убить фото.
+     Поэтому на мобиле кадр становится обычной картинкой сверху (пропорция
+     4:3), а текст живёт под ним на холсте обычными тёмными чернилами.
+     Слайдер и crossfade сохраняются — меняется только раскладка.
+     ============================================================ */
+  @media (max-width: 760px) {
+    .hero-full {
+      min-height: 0;
+      display: block;
+      background: var(--bg-canvas);
+    }
+    /* кадр перестаёт быть фоном и становится блоком в потоке */
+    .hf-bg { position: relative; inset: auto; aspect-ratio: 4 / 3; }
+    /* Затемняющий scrim не нужен — текста на фото больше нет. Вместо него
+       низ кадра растворяется в цвет холста, чтобы граница «фото → текст»
+       не резала экран пополам. */
+    .hf-scrim {
+      background: linear-gradient(
+        to top,
+        var(--bg-canvas) 0%,
+        color-mix(in srgb, var(--bg-canvas) 72%, transparent) 14%,
+        color-mix(in srgb, var(--bg-canvas) 32%, transparent) 30%,
+        transparent 48%
+      );
+    }
+
+    .hf-grid { padding-block: 24px 32px; gap: 18px; }
+    /* Чернила вместо белого: текст теперь на светлом холсте. */
+    .hf-title { color: var(--text-strong); margin-bottom: 14px; }
+    .hf-sub { color: var(--text-strong); }
+    .hf-text { color: var(--text-body); font-size: var(--fs-body); }
+    /* Адрес переезжает НАД кадром — «мы настоящие» должно читаться первым */
+    .hf-tag { margin-bottom: 14px; }
+
     .hf-cta { flex-direction: column; align-items: stretch; }
-    .btn { justify-content: center; }
+    .hf-cta .btn { width: 100%; justify-content: center; }
+    /* Белая кнопка на белом фоне не читается — на холсте берём ледяную
+       заливку (правило .btn-ice из CLAUDE.md). */
+    .hf-cta .btn-light { background: var(--btn3-fill); color: var(--btn3-text); }
   }
 </style>
 

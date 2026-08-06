@@ -97,7 +97,7 @@ const nav = [
   .map-stub span { font-size: var(--fs-caption); letter-spacing: .06em; color: rgba(10, 13, 18, .4); } /* декоративная подпись заглушки */
   .contact-form { padding: 32px 34px; display: grid; gap: 14px; }
   .contact-form h3 { font-size: var(--fs-h); margin: 0 0 6px; }
-  .fi { font-family: var(--ff-body); font-size: var(--fs-body-sm); color: var(--text-strong); background: var(--veil-strong); border: 1px solid var(--border-hairline); border-radius: var(--r-input); padding: 13px 16px; outline: none; transition: border-color .2s; resize: vertical; }
+  .fi { font-family: var(--ff-body); font-size: var(--fs-input); color: var(--text-strong); background: var(--veil-strong); border: 1px solid var(--border-hairline); border-radius: var(--r-input); padding: 13px 16px; outline: none; transition: border-color .2s; resize: vertical; }
   .fi:focus { border-color: var(--accent); }
   .fi::placeholder { color: var(--text-muted); } /* плейсхолдер — разрешённое исключение */
   .consent { display: flex; gap: 10px; align-items: flex-start; font-size: var(--fs-caption); color: var(--text-muted); line-height: 1.45; }
@@ -120,12 +120,23 @@ const nav = [
   .foot-legal { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-hairline); }
   .foot-legal p { font-size: var(--fs-caption); line-height: 1.7; color: var(--text-muted); margin: 0; }
 
-  /* адаптив (как в index) */
-  @media (max-width: 960px) {
+  /* адаптив — пороги 1100/760/430 (tokens.base.css) */
+  @media (max-width: 1100px) {
     .contact-grid { grid-template-columns: 1fr; }
     .foot-grid { grid-template-columns: repeat(2, 1fr); }
   }
-  @media (max-width: 640px) {
+  @media (max-width: 760px) {
     .foot-grid { grid-template-columns: 1fr; }
+    /* Телефон — главное действие на странице контактов, а тап-зона была 20px.
+       nowrap оставляем: номер разрывать по строкам нельзя. */
+    .ci-link { display: inline-flex; align-items: center; min-height: var(--tap-min); }
+    /* Чекбокс согласия был 13×13px — попасть пальцем невозможно, а без него
+       форма не отправляется. */
+    .consent { font-size: var(--fs-body-sm); gap: 12px; align-items: center; }
+    .consent input { width: 22px; height: 22px; flex: none; margin-top: 0; }
+    /* Подписи в подвале — наборный текст, 13px на телефоне не читается */
+    .foot-grid p, .foot-nav a { font-size: var(--fs-body-sm); }
+    .foot-nav a { display: inline-flex; align-items: center; min-height: var(--tap-min); }
+    .map-stub { height: 160px; }
   }
 </style>

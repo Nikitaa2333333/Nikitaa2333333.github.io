@@ -157,10 +157,36 @@ const steps: Step[] = [
   .reveal.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
-  @media (max-width: 720px) {
-    .plan-step { grid-template-columns: 1fr; gap: 4px; }
+  @media (max-width: 760px) {
+    /* minmax(0,1fr), а не 1fr: у `1fr` авто-минимум трека равен min-content
+       содержимого, поэтому чип «Пересмотр гистологических стёкол или блоков»
+       с nowrap раздувал трек до 404px при экране 345 — вместе с ним уезжали
+       заголовок и текст шага, а paint containment у .sec просто срезал их
+       по краю, так что горизонтального скролла видно не было. */
+    .plan-step { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    /* Номер: контурное начертание (-webkit-text-stroke) на мелком кегле
+       рассыпается — линия в 1.5px при цифре 28px съедает саму цифру.
+       На мобиле заливаем сплошным. */
     .plan-num { font-size: var(--fs-num); }
-    .plan-link { justify-self: start; margin-top: 12px; }
+    @supports (-webkit-text-stroke: 1px black) {
+      .plan-num { color: var(--accent); -webkit-text-stroke: 0; }
+    }
+
+    /* Чип-ссылка в две строки внутри «таблетки» выглядит плохо: овал
+       растягивается по высоте и читается как разорванная кнопка. На мобиле
+       длинные чипы становятся тем, чем являются по смыслу, — гиперссылкой
+       с нашим шевроном, без обводки и заливки. */
+    .plan-link {
+      justify-self: start;
+      margin-top: 10px;
+      white-space: normal;
+      border: 0;
+      padding: 0;
+      min-height: 0;
+      color: var(--accent-soft);
+      gap: 6px;
+    }
+    .plan-link .chev-r { margin-right: 0; }
   }
 </style>
 

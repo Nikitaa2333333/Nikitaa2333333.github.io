@@ -1,10 +1,13 @@
 # Публикация сайта.
 #
-# Живая ссылка: https://nikitaa2333333.github.io/
+# Живой сайт: https://ctmedspb.ru/ (хостинг Beget, аккаунт chendee5).
+# Техническая копия: https://nikitaa2333333.github.io/
 #
 # Репозиторий ОДИН: здесь и исходники, и публикация. Пуш в main → GitHub сам
-# собирает сайт и выкладывает его. Переносить сборку руками не нужно, секретов
-# и токенов не нужно: всё происходит внутри одного репозитория.
+# собирает сайт и выкладывает его в ДВА места: GitHub Pages (job build+deploy,
+# без секретов) и Beget (job beget, по SSH-ключу из секретов репозитория:
+# BEGET_SSH_KEY / BEGET_SSH_HOST / BEGET_SSH_USER / BEGET_SITE_PATH).
+# Джобы независимы: падение одного не трогает другой.
 #
 # Репозиторий называется <логин>.github.io, поэтому сайт отдаётся С КОРНЯ домена.
 # Отсюда важное следствие: ссылки в страницах остаются корневыми (`/vrachi`),
@@ -65,3 +68,38 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # Публикация на Beget (живой домен). Отдельная сборка, а не артефакт из build:
+  # у неё другой PUBLIC_SITE — канонические ссылки и sitemap должны указывать
+  # на ctmedspb.ru, а не на github.io.
+  beget:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Сборка сайта
+        run: npm run build
+        env:
+          PUBLIC_SITE: https://ctmedspb.ru
+
+      - name: Ключ и известные хосты
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.BEGET_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "${{ secrets.BEGET_SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      # --delete: на сервере остаётся ровно то, что в dist — удалённые из
+      # репозитория страницы и картинки не копятся мусором в public_html.
+      - name: Выгрузка на Beget
+        run: |
+          rsync -az --delete -e "ssh -i ~/.ssh/id_deploy" \
+            dist/ \
+            "${{ secrets.BEGET_SSH_USER }}@${{ secrets.BEGET_SSH_HOST }}:${{ secrets.BEGET_SITE_PATH }}/"

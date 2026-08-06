@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
+import FooterContacts from '../components/sections/FooterContacts.astro';
 import { clinic } from '../data/clinic';
 
 const dl = '<path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>';
@@ -87,14 +88,10 @@ const priceGroups = [
     <p class="compliance-note">Имеются противопоказания. Необходима консультация специалиста. Цены носят информационный характер и не являются публичной офертой.</p>
   </section>
 
-  <!-- ПОДВАЛ -->
-  <footer class="wrap foot">
-    <div class="foot-grid">
-      <div><p class="foot-h">Сведения о клинике</p><p>Лицензия № Л041-01148-78/05617603 от 20.07.2026<br/>Режим работы: пн–пт 9:00–20:00, сб 9:00–18:00<br/><a href="/litsenzii">Реквизиты и сведения по приказу 956н</a></p></div>
-      <div><p class="foot-h">Пациентам</p><p>Права пациента<br/>Подготовка к визиту<br/>Согласие на обработку ПДн</p></div>
-      <div><p class="foot-h">Данные под защитой</p><p>Серверы на территории РФ<br/>Соответствие ФЗ-152<br/>Версия для слабовидящих</p></div>
-    </div>
-  </footer>
+  <!-- КОНТАКТЫ + ПОДВАЛ — общий компонент.
+       Раньше здесь была своя урезанная копия подвала: без формы «Задать вопрос»,
+       без реквизитов и с мёртвыми строками «Права пациента». -->
+  <FooterContacts />
 
   <style is:global>
     .ic-s { width:16px; height:16px; }
@@ -124,15 +121,10 @@ const priceGroups = [
     .pr:hover { background:color-mix(in srgb, var(--accent) 10%, transparent); }
 
     /* подвал */
-    .foot { padding-block:24px 72px; }
-    .foot-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; border-top:1px solid var(--border-hairline); padding-top:36px; }
-    .foot-h { font-size:var(--fs-body-sm); font-weight:600; color:var(--text-strong); margin:0 0 10px; }
-    .foot-grid p { font-size:var(--fs-caption); line-height:1.7; color:var(--text-body); margin:0; }
 
     @media (max-width:760px) {
       .nav { display:none; }
       .pr { column-gap:12px; }
-      .foot-grid { grid-template-columns:1fr; }
     }
   </style>
 </Base>

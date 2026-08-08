@@ -97,10 +97,15 @@
   .hwt { padding-block: calc(var(--section-gap-roomy) * 2) 0; }
 
   /* — Шапка секции — */
-  /* Осознанное исключение из общего правила «всё по левому краю»
-     (CLAUDE.md): по просьбе заказчика заголовок и вводный абзац здесь
-     центрированы как блок — единственное такое место в разделе. */
-  .hwt-head { margin-bottom: var(--head-gap); text-align: center; }
+  /* Две колонки (паттерн «Клинические исследования»/«Рак лечится»):
+     заголовок слева, вводный абзац справа, оба по левому краю колонки. */
+  .hwt-head {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-24) var(--s-48);
+    align-items: start;
+    margin-bottom: var(--head-gap);
+  }
   .hwt-kicker {
     font-size: var(--fs-caption);
     letter-spacing: .06em;
@@ -113,16 +118,14 @@
     letter-spacing: -.025em;
     font-weight: 600;
     color: var(--text-onDark);
-    max-width: var(--measure-head-lg);
-    margin: 0 auto var(--s-16);
+    margin: 0;
   }
   .hwt-intro {
     font-size: var(--fs-body-lg);
     line-height: var(--lh-body-lg);
     letter-spacing: var(--tr-body-lg);
     color: var(--text-onDark);
-    max-width: 62ch;
-    margin: 0 auto;
+    margin: 0;
   }
 
   /* — Editorial-ряды приёмов: без плашек, hairline-разделители на тёмном — */
@@ -166,6 +169,7 @@
 
   /* — Адаптив — */
   @media (max-width: 960px) {
+    .hwt-head { grid-template-columns: 1fr; gap: var(--s-16); }
     .hwt-row { grid-template-columns: 1fr; gap: var(--s-12); }
     .hwt-row-head h3 { max-width: none; }
   }

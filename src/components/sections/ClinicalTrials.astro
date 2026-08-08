@@ -15,6 +15,7 @@
 <section class="sec ki-sec" id="trials">
   <div class="wrap">
     <div class="ki-tile reveal">
+      <img src="/images/logo-mark.svg" alt="" aria-hidden="true" class="ki-mark" />
       <h2 class="ki-title">Участие в&nbsp;клинических исследованиях новых препаратов</h2>
 
       <div class="ki-grid">
@@ -53,13 +54,22 @@
   /* Плашка — фирменное тёмно-синее полотно (тот же градиент, что «Истории
      пациентов»), радиус карточки. Обводки нет: тёмное само отделяется от холста. */
   .ki-tile {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(160deg, var(--stories-bg-a), var(--stories-bg-b));
     border-radius: var(--r-card);
     padding: var(--s-48);
   }
 
+  /* Водяной знак: фирменный SVG-паттерн, залитый в белый, обрезан краем
+     плашки — узнаваемый след бренда без иконки-декорации. */
+  .ki-mark { position: absolute; z-index: 0; top: -60px; right: 6%; width: 300px; height: auto; opacity: 0.08; filter: brightness(0) invert(1); pointer-events: none; }
+  @media (max-width: 760px) { .ki-mark { width: 190px; top: -30px; right: -20px; } }
+
   /* Заголовок живёт на всю ширину плашки — мера нужна (токен длинных h2) */
   .ki-title {
+    position: relative;
+    z-index: 1;
     font-size: var(--fs-h-lg);
     font-weight: 600;
     letter-spacing: -.025em;
@@ -71,6 +81,8 @@
 
   /* Две равные колонки (паттерн «Рак можно лечить»): меру задаёт сама колонка */
   .ki-grid {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--s-24) var(--s-48);

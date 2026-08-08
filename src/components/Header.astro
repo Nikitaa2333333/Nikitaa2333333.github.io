@@ -64,7 +64,16 @@ const { current } = Astro.props;
       <!-- Клинические исследования — САМОСТОЯТЕЛЬНЫЙ пункт меню, не подпункт «Лечения»:
            отдельная возможность, за которой приходят прицельно (страница живёт по
            прежнему адресу /lechenie/klinicheskie-issledovaniya — ссылки не ломаем) -->
-      <div class="nav-item"><a href="/lechenie/klinicheskie-issledovaniya" class={`nav-link${current === 'ki' ? ' is-current' : ''}`} aria-current={current === 'ki' ? 'page' : undefined}>Клинические исследования</a></div>
+      <div class="nav-item">
+        <a href="/lechenie/klinicheskie-issledovaniya" class={`nav-link nav-link-ticker${current === 'ki' ? ' is-current' : ''}`} aria-current={current === 'ki' ? 'page' : undefined}>
+          <span class="nlt-view">
+            <span class="nlt-track">
+              <span class="nlt-item">Клинические исследования</span>
+              <span class="nlt-item" aria-hidden="true">Клинические исследования</span>
+            </span>
+          </span>
+        </a>
+      </div>
       <div class="nav-item"><a href="/vrachi" class={`nav-link${current === 'vrachi' ? ' is-current' : ''}`} aria-current={current === 'vrachi' ? 'page' : undefined}>Врачи</a></div>
       <div class="nav-item"><a href="/stoimost" class={`nav-link${current === 'stoimost' ? ' is-current' : ''}`} aria-current={current === 'stoimost' ? 'page' : undefined}>Цены</a></div>
       <div class="nav-item">
@@ -84,8 +93,8 @@ const { current } = Astro.props;
     </nav>
     <div class="head-actions">
       <button class="a11y" title="Версия для слабовидящих" aria-label="Версия для слабовидящих">Аа</button>
-      <a href={clinic.phoneHref} class="head-call" aria-label={`Позвонить ${clinic.phone}`}><svg viewBox="0 0 24 24"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></a>
-      <a href="#contacts" class="btn btn-dark btn--inline head-cta"><svg viewBox="0 0 24 24" class="ic-s"><path d="M4 5c0 8 7 15 15 15l2.5-3.2-4.5-2-2 2c-2.5-1.2-5.1-3.8-6.3-6.3l2-2-2-4.5L4 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="cta-long">Записаться на&nbsp;приём</span><span class="cta-short">Записаться</span></a>
+      <a href={clinic.phoneHref} class="head-call" aria-label={`Позвонить ${clinic.phone}`}><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></a>
+      <a href="#contacts" class="btn btn-dark btn--inline head-cta"><svg viewBox="0 0 24 24" class="ic-s" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>Записаться</a>
       <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mobile-menu">
         <span></span><span></span><span></span>
       </button>
@@ -198,6 +207,19 @@ const { current } = Astro.props;
   .head-actions { display:flex; align-items:center; gap:14px; }
   .a11y { width:40px; height:40px; border-radius:var(--r-pill); border:1px solid var(--border-strong); background:var(--veil); color:var(--text-body); font-size:var(--fs-body-sm); cursor:pointer; }
 
+  /* «Клинические исследования» — самый длинный пункт меню, дальше сокращать
+     название нельзя (совпадает с заголовком страницы и URL). Вместо переноса
+     шапки в два ряда текст едет бегущей строкой в узком окошке — приём уже
+     есть в проекте (см. .adv-pricelist на главной), тут та же идея по горизонтали. */
+  .nav-link-ticker { padding-inline:10px; }
+  .nlt-view { display:inline-block; width:112px; overflow:hidden; vertical-align:middle;
+    -webkit-mask-image:linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+    mask-image:linear-gradient(to right, transparent, #000 12%, #000 88%, transparent); }
+  .nlt-track { display:flex; width:max-content; animation:nlt-scroll 9s linear infinite; }
+  .nlt-item { flex:none; padding-right:36px; white-space:nowrap; }
+  @keyframes nlt-scroll { to { transform:translateX(-50%); } }
+  @media (prefers-reduced-motion:reduce) { .nlt-track { animation:none; } }
+
   /* ============================================================
      ПОДЖАТИЕ МЕНЮ НА УЗКОМ ДЕСКТОПЕ.
      С появлением отдельного пункта «Клинические исследования» пунктов стало
@@ -205,7 +227,6 @@ const { current } = Astro.props;
      уезжала за экран на сотню пикселей — вместе со ВСЕЙ страницей, шапка
      сквозная. Кегль не трогаем: сжимаем поля пунктов и зазоры.
      ============================================================ */
-  .cta-short { display:none; }
   @media (max-width:1400px) {
     .head-inner { gap:6px; }
     .nav { gap:0; }
@@ -217,10 +238,6 @@ const { current } = Astro.props;
     .head-actions { gap:8px; }
     .a11y { width:36px; height:36px; }
     .head-cta { padding-inline:16px; }
-    /* Кнопка записи короче на ~80px: «Записаться на приём» → «Записаться».
-       Смысл тот же, а именно эти 80px не давали меню уложиться в строку. */
-    .cta-long { display:none; }
-    .cta-short { display:inline; }
   }
   .a11y.is-on { background:var(--cta-fill); color:var(--cta-text); border-color:transparent; }
 

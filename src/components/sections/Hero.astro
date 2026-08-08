@@ -37,27 +37,30 @@ const slides = [
   </div>
 
   <div class="wrap hf-grid">
-    <!-- первый ряд сетки: слева H1 + подзаголовок, справа описание.
+    <!-- общая верхняя строка: адрес слева и телефон справа — на одной линии,
+         как парный «мы настоящие» + «нам можно позвонить». Оба — <mark>
+         (фирменный приём выделения), поэтому здесь ровно два маркера на секцию. -->
+    <div class="hf-top-row">
+      <p class="hf-tag"><mark>{clinic.city}, {clinic.addrShort}</mark></p>
+      <a href={clinic.phoneHref} class="hf-phone">
+        <svg viewBox="0 0 24 24" class="hf-phone-ic" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        <mark>{clinic.phone}</mark>
+      </a>
+    </div>
+
+    <!-- второй ряд сетки: слева H1 + подзаголовок, справа описание.
          Низ описания выровнен по нижней линии подзаголовка (align end),
          кнопки — отдельным рядом ниже. -->
     <div class="hf-left">
-      <p class="hf-tag"><mark>{clinic.city}, {clinic.addrShort}</mark></p>
       <h1 class="hf-title">Клиника трансляционной медицины: лечение онкологических заболеваний в&nbsp;дневном стационаре</h1>
       <p class="hf-sub">Химиотерапия, таргетная и&nbsp;иммунотерапия.</p>
     </div>
 
-    <!-- правый угол: описание + телефон — «мы настоящие» должно читаться
-         сразу и телефоном тоже, шапка с ним видна не на всех вьюпортах
-         (topbar с номером скрыт на ≤760px) -->
     <div class="hf-right">
-      <a href={clinic.phoneHref} class="hf-phone">
-        <svg viewBox="0 0 24 24" class="hf-phone-ic" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-        {clinic.phone}
-      </a>
       <p class="hf-text">Вы&nbsp;или ваш близкий узнали о&nbsp;серьёзном диагнозе&nbsp;— злокачественная опухоль. Важно, не&nbsp;теряя самообладания, понять, что&nbsp;происходит, и&nbsp;составить план действий. Мы&nbsp;вместе с&nbsp;вами обсудим ситуацию, внимательно изучим результаты обследований, объясним всё без&nbsp;спешки и&nbsp;на&nbsp;понятном языке. Предложим оптимальный план лечения.</p>
     </div>
 
-    <!-- второй ряд: кнопки под подзаголовком, в левой колонке -->
+    <!-- третий ряд: кнопки под подзаголовком, в левой колонке -->
     <div class="hf-cta">
       <a href="#contacts" class="btn btn-dark">Записаться на&nbsp;приём</a>
       <a href="#tele" class="btn btn-light">Телемедицинская консультация</a>
@@ -121,6 +124,19 @@ const slides = [
     padding-block: 40px 52px;
   }
 
+  /* Общая верхняя строка: адрес слева, телефон справа — на одной линии.
+     Полноширинный ряд сетки (span обеих колонок), поэтому align-items:end
+     всей сетки его не касается — высоту строки задаёт только её контент. */
+  .hf-top-row {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin-bottom: 22px;
+  }
+
   /* Левый угол: киккер + H1 + подзаголовок */
   .hf-kicker {
     font-size: var(--fs-caption);
@@ -156,19 +172,21 @@ const slides = [
     color: #fff;
     margin: 0;
   }
+  /* Телефон — пара адресу: тот же приём выделения (<mark>), чтобы номер
+     не терялся на фото так же, как раньше терялся текст без подложки. */
   .hf-phone {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin: 0 0 16px;
+    gap: 8px;
     font-size: var(--fs-h);
     font-weight: 600;
     color: #fff;
-    transition: color 0.2s;
   }
-  .hf-phone-ic { width: 22px; height: 22px; flex: none; color: var(--accent-on-dark); }
-  .hf-phone:hover { color: var(--accent-on-dark); }
-  /* Адрес над заголовком — приём ТЗ «мы настоящие»: реальное место видно
+  .hf-phone-ic { width: 20px; height: 20px; flex: none; color: var(--accent-on-dark); transition: color 0.2s; }
+  .hf-phone:hover .hf-phone-ic { color: var(--accent-on-dark); }
+  .hf-phone mark { transition: background-color 0.2s; }
+  .hf-phone:hover mark { background: var(--accent-on-dark); }
+  /* Адрес рядом с телефоном — приём ТЗ «мы настоящие»: реальное место видно
      на первом же экране. Выделен нашим маркером (<mark> в разметке): чёткий
      прямоугольник --hl-fill, текст внутри перекрашивает глобальное правило
      mark (--hl-ink), поэтому на фото это тёмные буквы на светлой подложке.
@@ -176,7 +194,7 @@ const slides = [
   .hf-tag {
     font-size: var(--fs-body-sm);
     line-height: 1.5;
-    margin: 0 0 18px;
+    margin: 0;
   }
 
   /* — Кнопки: стили в global.css; отдельный ряд сетки в левой колонке —
@@ -234,11 +252,12 @@ const slides = [
     .hf-title { color: var(--text-strong); margin-bottom: 14px; }
     .hf-sub { color: var(--text-strong); }
     .hf-text { color: var(--text-body); font-size: var(--fs-body); }
-    .hf-phone { color: var(--accent-soft); }
+    .hf-phone { color: var(--text-strong); }
     .hf-phone-ic { color: var(--accent-soft); }
-    .hf-phone:hover { color: var(--accent); }
+    .hf-phone:hover .hf-phone-ic { color: var(--accent); }
+    .hf-phone:hover mark { background: var(--accent); }
     /* Адрес переезжает НАД кадром — «мы настоящие» должно читаться первым */
-    .hf-tag { margin-bottom: 14px; }
+    .hf-top-row { margin-bottom: 14px; }
 
     .hf-cta { flex-direction: column; align-items: stretch; }
     .hf-cta .btn { width: 100%; justify-content: center; }

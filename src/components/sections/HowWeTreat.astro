@@ -97,7 +97,10 @@
   .hwt { padding-block: calc(var(--section-gap-roomy) * 2) 0; }
 
   /* — Шапка секции — */
-  .hwt-head { margin-bottom: var(--head-gap); }
+  /* Осознанное исключение из общего правила «всё по левому краю»
+     (CLAUDE.md): по просьбе заказчика заголовок и вводный абзац здесь
+     центрированы как блок — единственное такое место в разделе. */
+  .hwt-head { margin-bottom: var(--head-gap); text-align: center; }
   .hwt-kicker {
     font-size: var(--fs-caption);
     letter-spacing: .06em;
@@ -110,7 +113,8 @@
     letter-spacing: -.025em;
     font-weight: 600;
     color: var(--text-onDark);
-    margin: 0 0 var(--s-16);
+    max-width: var(--measure-head-lg);
+    margin: 0 auto var(--s-16);
   }
   .hwt-intro {
     font-size: var(--fs-body-lg);
@@ -118,7 +122,7 @@
     letter-spacing: var(--tr-body-lg);
     color: var(--text-onDark);
     max-width: 62ch;
-    margin: 0;
+    margin: 0 auto;
   }
 
   /* — Editorial-ряды приёмов: без плашек, hairline-разделители на тёмном — */

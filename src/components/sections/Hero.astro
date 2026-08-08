@@ -50,11 +50,11 @@ const slides = [
          сразу и телефоном тоже, шапка с ним видна не на всех вьюпортах
          (topbar с номером скрыт на ≤760px) -->
     <div class="hf-right">
-      <p class="hf-text">Вы&nbsp;или ваш близкий узнали о&nbsp;серьёзном диагнозе&nbsp;— злокачественная опухоль. Важно, не&nbsp;теряя самообладания, понять, что&nbsp;происходит, и&nbsp;составить план действий. Мы&nbsp;вместе с&nbsp;вами обсудим ситуацию, внимательно изучим результаты обследований, объясним всё без&nbsp;спешки и&nbsp;на&nbsp;понятном языке. Предложим оптимальный план лечения.</p>
       <a href={clinic.phoneHref} class="hf-phone">
         <svg viewBox="0 0 24 24" class="hf-phone-ic" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
         {clinic.phone}
       </a>
+      <p class="hf-text">Вы&nbsp;или ваш близкий узнали о&nbsp;серьёзном диагнозе&nbsp;— злокачественная опухоль. Важно, не&nbsp;теряя самообладания, понять, что&nbsp;происходит, и&nbsp;составить план действий. Мы&nbsp;вместе с&nbsp;вами обсудим ситуацию, внимательно изучим результаты обследований, объясним всё без&nbsp;спешки и&nbsp;на&nbsp;понятном языке. Предложим оптимальный план лечения.</p>
     </div>
 
     <!-- второй ряд: кнопки под подзаголовком, в левой колонке -->
@@ -159,14 +159,14 @@ const slides = [
   .hf-phone {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
-    margin-top: 16px;
-    font-size: var(--fs-sub);
+    gap: 10px;
+    margin: 0 0 16px;
+    font-size: var(--fs-h);
     font-weight: 600;
     color: #fff;
     transition: color 0.2s;
   }
-  .hf-phone-ic { width: 18px; height: 18px; flex: none; color: var(--accent-on-dark); }
+  .hf-phone-ic { width: 22px; height: 22px; flex: none; color: var(--accent-on-dark); }
   .hf-phone:hover { color: var(--accent-on-dark); }
   /* Адрес над заголовком — приём ТЗ «мы настоящие»: реальное место видно
      на первом же экране. Выделен нашим маркером (<mark> в разметке): чёткий
@@ -242,9 +242,10 @@ const slides = [
 
     .hf-cta { flex-direction: column; align-items: stretch; }
     .hf-cta .btn { width: 100%; justify-content: center; }
-    /* Белая кнопка на белом фоне не читается — на холсте берём ледяную
-       заливку (правило .btn-ice из CLAUDE.md). */
-    .hf-cta .btn-light { background: var(--btn3-fill); color: var(--btn3-text); }
+    /* Раньше здесь стояла ледяная заливка --btn3-fill (.btn-ice) — она
+       и есть холст (#dcedf3 на #ebf5ff), кнопка сливалась с фоном.
+       .btn-light (чистый белый + тень из global.css) — тот же приём,
+       что уже используется на холсте в других секциях («Все врачи»). */
   }
 </style>
 

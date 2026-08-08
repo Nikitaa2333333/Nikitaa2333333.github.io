@@ -37,27 +37,26 @@ const slides = [
   </div>
 
   <div class="wrap hf-grid">
-    <!-- первый ряд сетки: слева H1 + подзаголовок, справа описание.
-         Низ описания выровнен по нижней линии подзаголовка (align end),
-         кнопки — отдельным рядом ниже. -->
+    <!-- слева адрес + H1 + подзаголовок, справа описание. Низ описания
+         выровнен по нижней линии подзаголовка (align end), кнопки —
+         отдельным рядом ниже. Телефон (hf-phone) в разметке ниже —
+         виден только на мобиле (≤760px, там топбар с номером скрыт);
+         на десктопе номер и так есть в шапке, отдельно в hero не дублируем. -->
     <div class="hf-left">
       <p class="hf-tag"><mark>{clinic.city}, {clinic.addrShort}</mark></p>
       <h1 class="hf-title">Клиника трансляционной медицины: лечение онкологических заболеваний в&nbsp;дневном стационаре</h1>
       <p class="hf-sub">Химиотерапия, таргетная и&nbsp;иммунотерапия.</p>
     </div>
 
-    <!-- правый угол: описание + телефон — «мы настоящие» должно читаться
-         сразу и телефоном тоже, шапка с ним видна не на всех вьюпортах
-         (topbar с номером скрыт на ≤760px) -->
+    <a href={clinic.phoneHref} class="hf-phone">
+      <svg viewBox="0 0 24 24" class="hf-phone-ic" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      {clinic.phone}
+    </a>
+
     <div class="hf-right">
-      <a href={clinic.phoneHref} class="hf-phone">
-        <svg viewBox="0 0 24 24" class="hf-phone-ic" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-        {clinic.phone}
-      </a>
       <p class="hf-text">Вы&nbsp;или ваш близкий узнали о&nbsp;серьёзном диагнозе&nbsp;— злокачественная опухоль. Важно, не&nbsp;теряя самообладания, понять, что&nbsp;происходит, и&nbsp;составить план действий. Мы&nbsp;вместе с&nbsp;вами обсудим ситуацию, внимательно изучим результаты обследований, объясним всё без&nbsp;спешки и&nbsp;на&nbsp;понятном языке. Предложим оптимальный план лечения.</p>
     </div>
 
-    <!-- второй ряд: кнопки под подзаголовком, в левой колонке -->
     <div class="hf-cta">
       <a href="#contacts" class="btn btn-dark">Записаться на&nbsp;приём</a>
       <a href="#tele" class="btn btn-light">Телемедицинская консультация</a>
@@ -109,6 +108,9 @@ const slides = [
   }
 
   /* — Контент: два нижних угла — */
+  /* Именованные области: hf-phone в разметку включён, но по умолчанию
+     скрыт (display:none) — показывается только на мобиле (≤760px),
+     см. медиа-запрос ниже. На десктопе номер уже есть в шапке сайта. */
   .hf-grid {
     position: relative;
     z-index: 1;
@@ -116,10 +118,16 @@ const slides = [
     /* левая колонка шире: клиентский H1 длинный (~76 знаков),
        узкая колонка рвала его на строки-сироты */
     grid-template-columns: 1.6fr 1fr;
+    grid-template-areas:
+      "left  right"
+      "cta   .";
     align-items: end;
     gap: 24px 64px;
     padding-block: 40px 52px;
   }
+  .hf-left { grid-area: left; }
+  .hf-right { grid-area: right; }
+  .hf-cta { grid-area: cta; }
 
   /* Левый угол: киккер + H1 + подзаголовок */
   .hf-kicker {
@@ -156,18 +164,10 @@ const slides = [
     color: #fff;
     margin: 0;
   }
-  .hf-phone {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 16px;
-    font-size: var(--fs-h);
-    font-weight: 600;
-    color: #fff;
-    transition: color 0.2s;
-  }
-  .hf-phone-ic { width: 22px; height: 22px; flex: none; color: var(--accent-on-dark); }
-  .hf-phone:hover { color: var(--accent-on-dark); }
+  /* Телефон в hero — скрыт по умолчанию, включается только на мобиле
+     (медиа-запрос ниже), где топбар шапки с номером спрятан. */
+  .hf-phone { display: none; }
+  .hf-phone-ic { width: 18px; height: 18px; flex: none; }
   /* Адрес над заголовком — приём ТЗ «мы настоящие»: реальное место видно
      на первом же экране. Выделен нашим маркером (<mark> в разметке): чёткий
      прямоугольник --hl-fill, текст внутри перекрашивает глобальное правило
@@ -179,14 +179,19 @@ const slides = [
     margin: 0 0 18px;
   }
 
-  /* — Кнопки: стили в global.css; отдельный ряд сетки в левой колонке —
+  /* — Кнопки: стили в global.css; область "cta" сама на всю ширину строки —
        так низ описания справа ложится точно на линию подзаголовка.
        Вторая кнопка на фото — та же белая заливная (.btn-light) — */
-  .hf-cta { grid-column: 1; display: flex; gap: 14px; flex-wrap: wrap; } /* отступ сверху даёт row-gap сетки */
+  .hf-cta { display: flex; gap: 14px; flex-wrap: wrap; } /* отступ сверху даёт row-gap сетки */
 
   /* — Адаптив: ≤960px колонки складываются в одну (слева-снизу) — */
   @media (max-width: 960px) {
-    .hf-grid { grid-template-columns: 1fr; gap: 22px; padding-block: 32px 36px; }
+    .hf-grid {
+      grid-template-columns: 1fr;
+      grid-template-areas: "left" "phone" "right" "cta";
+      gap: 22px;
+      padding-block: 32px 36px;
+    }
     .hf-right { justify-self: start; }
     .hf-scrim {
       background: linear-gradient(
@@ -229,15 +234,22 @@ const slides = [
       );
     }
 
-    .hf-grid { padding-block: 24px 32px; gap: 18px; }
+    /* На мобиле телефон — как раньше: между подзаголовком и абзацем,
+       обычным текстом, без маркера — топбар шапки с номером здесь скрыт. */
+    .hf-grid {
+      padding-block: 24px 32px;
+      gap: 18px;
+      grid-template-areas: "left" "phone" "right" "cta";
+    }
+    .hf-phone { display: inline-flex; align-items: center; gap: 9px; justify-self: start; font-size: var(--fs-sub); font-weight: 600; color: var(--accent-soft); }
+    .hf-phone-ic { color: var(--accent-soft); }
+    .hf-phone:hover { color: var(--accent); }
+    .hf-phone:hover .hf-phone-ic { color: var(--accent); }
     /* Чернила вместо белого: текст теперь на светлом холсте. */
     .hf-title { color: var(--text-strong); margin-bottom: 14px; }
     .hf-sub { color: var(--text-strong); }
     .hf-text { color: var(--text-body); font-size: var(--fs-body); }
-    .hf-phone { color: var(--accent-soft); }
-    .hf-phone-ic { color: var(--accent-soft); }
-    .hf-phone:hover { color: var(--accent); }
-    /* Адрес переезжает НАД кадром — «мы настоящие» должно читаться первым */
+    /* Адрес — первая строка над заголовком, как раньше */
     .hf-tag { margin-bottom: 14px; }
 
     .hf-cta { flex-direction: column; align-items: stretch; }

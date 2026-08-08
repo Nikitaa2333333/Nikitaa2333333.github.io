@@ -97,7 +97,15 @@
   .hwt { padding-block: calc(var(--section-gap-roomy) * 2) 0; }
 
   /* — Шапка секции — */
-  .hwt-head { margin-bottom: var(--head-gap); }
+  /* Две колонки (паттерн «Клинические исследования»/«Рак лечится»):
+     заголовок слева, вводный абзац справа, оба по левому краю колонки. */
+  .hwt-head {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-24) var(--s-48);
+    align-items: start;
+    margin-bottom: var(--head-gap);
+  }
   .hwt-kicker {
     font-size: var(--fs-caption);
     letter-spacing: .06em;
@@ -110,14 +118,13 @@
     letter-spacing: -.025em;
     font-weight: 600;
     color: var(--text-onDark);
-    margin: 0 0 var(--s-16);
+    margin: 0;
   }
   .hwt-intro {
     font-size: var(--fs-body-lg);
     line-height: var(--lh-body-lg);
     letter-spacing: var(--tr-body-lg);
     color: var(--text-onDark);
-    max-width: 62ch;
     margin: 0;
   }
 
@@ -162,6 +169,7 @@
 
   /* — Адаптив — */
   @media (max-width: 960px) {
+    .hwt-head { grid-template-columns: 1fr; gap: var(--s-16); }
     .hwt-row { grid-template-columns: 1fr; gap: var(--s-12); }
     .hwt-row-head h3 { max-width: none; }
   }
